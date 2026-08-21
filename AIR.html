@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>COIN · SCHACH · 6D · UNLINEAR · MASSE</title>
+
+<style>
+  :root {
+    --bg: #0a0a12;
+    --fg: #0f0;
+    --axiom: #ffaa00;
+    --coin: #4af;
+    --schach: #f4f;
+    --masse: #4f4;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Consolas', monospace;
+    padding: 20px;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 8px;
+  }
+
+  header {
+    border-bottom: 2px solid var(--axiom);
+    padding-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  header h1 {
+    font-size: 18px;
+    background: linear-gradient(90deg, var(--axiom), var(--coin), var(--schach));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  main {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 8px;
+    min-height: 500px;
+  }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: #05050a;
+    border: 1px solid #1a1a2a;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  .panel .header {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #1a1a2a;
+  }
+  .panel .header h3 { font-size: 12px; }
+  .panel .header span { font-size: 10px; color: #666; }
+
+  .matrix9 {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 2px;
+    margin-top: 10px;
+  }
+  .cell9 {
+    background: #0a0a12;
+    border: 1px solid #1a1a2a;
+    padding: 4px 2px;
+    text-align: center;
+    font-size: 8px;
+    color: #6a8a8a;
+    border-radius: 3px;
+    transition: all 0.3s;
+  }
+  .cell9:hover { border-color: var(--axiom); }
+  .cell9 .axiom { color: var(--axiom); font-weight: bold; }
+  .cell9 .wert { color: var(--masse); }
+
+  .axiom-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px;
+    margin-top: 10px;
+  }
+  .axiom-item {
+    background: #0a0a12;
+    border: 1px solid #1a1a2a;
+    padding: 6px 8px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10px;
+  }
+  .axiom-item .name { color: var(--axiom); font-weight: bold; }
+  .axiom-item .value { color: var(--masse); }
+  .axiom-item .role { color: #666; font-size: 8px; }
+
+  .figure-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px;
+    margin-top: 10px;
+  }
+  .figure-item {
+    background: #0a0a12;
+    border: 1px solid #1a1a2a;
+    padding: 6px 8px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10px;
+  }
+  .figure-item .fig { font-size: 18px; }
+  .figure-item .name { color: var(--schach); }
+  .figure-item .wert { color: var(--masse); }
+
+  #log {
+    flex: 1;
+    overflow-y: auto;
+    font-size: 8px;
+    color: #6a6a8a;
+    line-height: 1.3;
+    min-height: 60px;
+    max-height: 120px;
+    background: #06060a;
+    border-radius: 4px;
+    padding: 4px 6px;
+    margin-top: 10px;
+  }
+  #log .entry { padding: 1px 0; border-bottom: 1px solid #0a0a12; }
+  #log .time { color: #444; }
+  #log .msg.ok { color: #4f4; }
+  #log .msg.warn { color: #ff4; }
+  #log .msg.axiom { color: var(--axiom); }
+  #log .msg.schach { color: var(--schach); }
+  #log .msg.coin { color: var(--coin); }
+
+  #score-display {
+    background: #0a0a12;
+    border: 1px solid #1a1a2a;
+    border-radius: 4px;
+    padding: 8px;
+    margin-top: 10px;
+    font-size: 11px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 4px;
+  }
+  .score-item {
+    text-align: center;
+    padding: 4px;
+    border-radius: 3px;
+    background: #0e0e1a;
+  }
+  .score-item .label { font-size: 7px; color: #666; text-transform: uppercase; }
+  .score-item .value { font-size: 14px; font-weight: bold; }
+  .score-item.coin .value { color: var(--coin); }
+  .score-item.schach .value { color: var(--schach); }
+  .score-item.masse .value { color: var(--masse); }
+
+  button {
+    background: #111;
+    color: var(--fg);
+    border: 1px solid #333;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 9px;
+    transition: 0.2s;
+  }
+  button:hover { background: #1a1a2a; border-color: var(--fg); }
+  button.primary { border-color: var(--axiom); color: var(--axiom); }
+  button.primary:hover { background: var(--axiom); color: #000; }
+  button.schach { border-color: var(--schach); color: var(--schach); }
+  button.schach:hover { background: var(--schach); color: #000; }
+  button.coin { border-color: var(--coin); color: var(--coin); }
+  button.coin:hover { background: var(--coin); color: #000; }
+  button.masse { border-color: var(--masse); color: var(--masse); }
+  button.masse:hover { background: var(--masse); color: #000; }
+
+  .controls {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    padding: 4px 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🪙 COIN · SCHACH · 6D · UNLINEAR · MASSE</h1>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span id="status-led" style="color:var(--masse);">●</span>
+    <span id="clock" style="font-size:11px;color:#666;">⏱️ --:--:--</span>
+    <span id="cycle-count" style="font-size:10px;color:#444;">Zug 0</span>
+  </div>
+</header>
+
+<main>
+  <!-- CANVAS / MATRIX -->
+  <div class="panel">
+    <div class="header">
+      <h3 style="color:var(--coin);">🪙 COIN · 9×9 Matrix</h3>
+      <span id="stats">Axiome: 6 | Figuren: 6</span>
+    </div>
+    <div class="matrix9" id="matrix9"></div>
+
+    <div style="margin-top:10px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div>
+        <div style="font-size:9px;color:#666;margin-bottom:4px;">⚛️ Axiome</div>
+        <div class="axiom-list" id="axiomList"></div>
+      </div>
+      <div>
+        <div style="font-size:9px;color:#666;margin-bottom:4px;">♟️ Figuren</div>
+        <div class="figure-grid" id="figureGrid"></div>
+      </div>
+    </div>
+
+    <div id="score-display">
+      <div class="score-item coin"><div class="label">COIN</div><div class="value" id="coinScore">0</div></div>
+      <div class="score-item schach"><div class="label">SCHACH</div><div class="value" id="schachScore">0</div></div>
+      <div class="score-item masse"><div class="label">MASSE</div><div class="value" id="masseScore">0</div></div>
+      <div class="score-item"><div class="label">ZUG</div><div class="value" id="zugCount">0</div></div>
+    </div>
+
+    <div id="log">
+      <div class="entry"><span class="time">[INIT]</span> <span class="msg coin">🪙 COIN · SCHACH · 6D · UNLINEAR · MASSE</span></div>
+      <div class="entry"><span class="time">[INIT]</span> <span class="msg axiom">⚛️ 6 Axiome: T, X, Y, C, KI, E</span></div>
+      <div class="entry"><span class="time">[INIT]</span> <span class="msg schach">♟️ 6 Figuren: Bauer, Pferd, Läufer, Turm, Dame, König</span></div>
+    </div>
+  </div>
+
+  <!-- DATA PANEL -->
+  <div class="panel">
+    <div class="header">
+      <h3 style="color:var(--schach);">♟️ AIRCHESS · Engine</h3>
+      <span id="engine-status">● bereit</span>
+    </div>
+
+    <div style="margin-top:10px;">
+      <div style="font-size:9px;color:#666;margin-bottom:4px;">📊 ZUG-WERTE</div>
+      <pre id="zugWerte" style="background:#0a0a12;padding:6px;border-radius:4px;font-size:8px;color:#8af;white-space:pre-wrap;min-height:60px;"></pre>
+    </div>
+
+    <div class="controls">
+      <button class="primary" id="btnBoot">▶ BOOT</button>
+      <button class="schach" id="btnZug">♟️ ZUG</button>
+      <button class="coin" id="btnScore">🪙 SCORE</button>
+      <button class="masse" id="btnMasse">⚖️ MASSE</button>
+      <button id="btnReset">⟲ RESET</button>
+      <button id="btnAuto">▶ AUTO</button>
+    </div>
+
+    <div style="margin-top:10px;">
+      <div style="font-size:9px;color:#666;margin-bottom:4px;">📐 SLIDE · WETTE</div>
+      <pre id="slideWette" style="background:#0a0a12;padding:6px;border-radius:4px;font-size:8px;color:#8af;white-space:pre-wrap;min-height:40px;"></pre>
+    </div>
+  </div>
+</main>
+
+<script>
+// ============================================================
+// COIN · SCHACH · 6D · UNLINEAR · MASSE
+// ============================================================
+
+// ─── AXIOME ──────────────────────────────────────────────────
+const AXIOME = {
+  T: { name: 'T-Axiom', role: 'Träger / Halt', value: 1, color: '#ff6b6b' },
+  X: { name: 'X-Axiom', role: 'Kreuzpunkt / Verbindung', value: 2, color: '#ffd93d' },
+  Y: { name: 'Y-Axiom', role: 'Fächer / Richtung', value: 4, color: '#6b6bff' },
+  C: { name: 'C-Axiom', role: 'Konstellation / Mitte', value: 8, color: '#ff44ff' },
+  KI: { name: 'KI-Axiom', role: 'Intelligenz / Muster', value: 16, color: '#4ff' },
+  E: { name: 'E-Axiom', role: 'Energie / Orbit', value: 32, color: '#ffaa00' }
+};
+
+// ─── FIGUREN ──────────────────────────────────────────────────
+const FIGUREN = {
+  Bauer: { symbol: '♟', axiom: 'T', wert: 1 },
+  Pferd: { symbol: '♞', axiom: 'X', wert: 4 },
+  Läufer: { symbol: '♝', axiom: 'Y', wert: 9 },
+  Turm: { symbol: '♜', axiom: 'C', wert: 16 },
+  Dame: { symbol: '♛', axiom: 'KI', wert: 25 },
+  König: { symbol: '♚', axiom: 'E', wert: 36 }
+};
+
+// ─── ZÜGE ────────────────────────────────────────────────────
+const ZUEGE = {
+  Schäferzug: { axiom: 'KI', wert: 25, faktor: 4, ergebnis: 100 },
+  Doppelangriff: { axiom: 'Y', wert: 9, faktor: 3, ergebnis: 27 },
+  Opferzug: { axiom: 'C', wert: 16, faktor: 3, ergebnis: 48 },
+  KO_Schlag: { axiom: 'E', wert: 36, faktor: 4, ergebnis: 144 }
+};
+
+// ─── STATE ───────────────────────────────────────────────────
+const state = {
+  zug: 0,
+  coinScore: 0,
+  schachScore: 0,
+  masseScore: 0,
+  running: false,
+  autoMode: false,
+  matrix: [],
+  history: []
+};
+
+// ─── DOM ─────────────────────────────────────────────────────
+const logDiv = document.getElementById('log');
+
+function log(msg, type = 'info') {
+  const entry = document.createElement('div');
+  entry.className = 'entry';
+  const time = new Date().toLocaleTimeString();
+  const cls = type === 'ok' ? 'ok' : type === 'warn' ? 'warn' :
+              type === 'axiom' ? 'axiom' : type === 'schach' ? 'schach' :
+              type === 'coin' ? 'coin' : '';
+  entry.innerHTML = `<span class="time">[${time}]</span> <span class="msg ${cls}">${msg}</span>`;
+  logDiv.appendChild(entry);
+  logDiv.scrollTop = logDiv.scrollHeight;
+  while (logDiv.children.length > 50) logDiv.removeChild(logDiv.firstChild);
+}
+
+// ─── MATRIX ──────────────────────────────────────────────────
+function buildMatrix() {
+  const matrix = [];
+  const axiomKeys = ['T', 'X', 'Y', 'C', 'KI', 'E'];
+  for (let r = 0; r < 9; r++) {
+    const row = [];
+    for (let c = 0; c < 9; c++) {
+      const key = axiomKeys[(r + c) % 6];
+      row.push({
+        id: `${r}-${c}`,
+        axiom: key,
+        ...AXIOME[key]
+      });
+    }
+    matrix.push(row);
+  }
+  return matrix;
+}
+
+function renderMatrix() {
+  const grid = document.getElementById('matrix9');
+  grid.innerHTML = '';
+  state.matrix.forEach(row => {
+    row.forEach(cell => {
+      const div = document.createElement('div');
+      div.className = 'cell9';
+      div.innerHTML = `<span class="axiom">${cell.axiom}</span><br><span class="wert">${cell.value}</span>`;
+      div.title = `${cell.name}: ${cell.role}`;
+      grid.appendChild(div);
+    });
+  });
+}
+
+function renderAxiome() {
+  const list = document.getElementById('axiomList');
+  list.innerHTML = '';
+  Object.entries(AXIOME).forEach(([key, ax]) => {
+    const div = document.createElement('div');
+    div.className = 'axiom-item';
+    div.innerHTML = `<span class="name">${key}</span><br><span class="value">${ax.value}</span><br><span class="role">${ax.role}</span>`;
+    div.style.borderColor = ax.color + '44';
+    list.appendChild(div);
+  });
+}
+
+function renderFiguren() {
+  const grid = document.getElementById('figureGrid');
+  grid.innerHTML = '';
+  Object.entries(FIGUREN).forEach(([name, fig]) => {
+    const div = document.createElement('div');
+    div.className = 'figure-item';
+    div.innerHTML = `<span class="fig">${fig.symbol}</span><br><span class="name">${name}</span><br><span class="wert">${fig.wert}</span>`;
+    grid.appendChild(div);
+  });
+}
+
+// ─── SCORE ──────────────────────────────────────────────────
+function updateScore() {
+  document.getElementById('coinScore').textContent = state.coinScore;
+  document.getElementById('schachScore').textContent = state.schachScore;
+  document.getElementById('masseScore').textContent = state.masseScore;
+  document.getElementById('zugCount').textContent = state.zug;
+}
+
+// ─── ZUG ────────────────────────────────────────────────────
+function zugMachen() {
+  state.zug++;
+  const zugKeys = Object.keys(ZUEGE);
+  const key = zugKeys[state.zug % zugKeys.length];
+  const zug = ZUEGE[key];
+
+  const axiom = AXIOME[zug.axiom];
+  const punkt = zug.ergebnis + (state.zug * 2);
+
+  state.coinScore += punkt;
+  state.schachScore += zug.wert * zug.faktor;
+  state.masseScore += axiom.value * zug.faktor;
+
+  state.history.push({ zug: state.zug, key, punkt, coin: state.coinScore, schach: state.schachScore, masse: state.masseScore });
+
+  updateScore();
+  renderZugWerte();
+  renderSlideWette();
+
+  log(`♟️ ${key}: ${punkt} Punkte | COIN: ${state.coinScore} | SCHACH: ${state.schachScore} | MASSE: ${state.masseScore}`, 'schach');
+
+  if (state.coinScore >= 2048) log('🪙 SIEG durch COIN-Überladung!', 'coin');
+  if (state.schachScore >= 512) log('♟️ SIEG durch Professionalität!', 'schach');
+  if (state.masseScore >= 4096) log('⚖️ SIEG durch MASSE!', 'ok');
+}
+
+function renderZugWerte() {
+  const el = document.getElementById('zugWerte');
+  let out = '';
+  const zugKeys = Object.keys(ZUEGE);
+  zugKeys.forEach(key => {
+    const z = ZUEGE[key];
+    out += `${key}: ${z.axiom}(${z.wert}) × ${z.faktor} = ${z.ergebnis}\n`;
+  });
+  out += `\n➡️ Letzter Zug: ${state.zug}`;
+  el.textContent = out;
+}
+
+function renderSlideWette() {
+  const el = document.getElementById('slideWette');
+  const slide = Math.sqrt(
+    state.coinScore * state.coinScore +
+    state.schachScore * state.schachScore +
+    state.masseScore * state.masseScore
+  );
+  const wette = {
+    coin: state.coinScore > state.schachScore ? 'COIN führt' :
+          state.schachScore > state.coinScore ? 'SCHACH führt' :
+          'Gleichstand',
+    masse: state.masseScore > 100 ? 'HOCH' : 'NIEDRIG'
+  };
+  el.textContent = `SLIDE: ${slide.toFixed(2)}\nWETTE: ${wette.coin} | MASSE: ${wette.masse}`;
+}
+
+// ─── BOOT ──────────────────────────────────────────────────
+function boot() {
+  state.matrix = buildMatrix();
+  renderMatrix();
+  renderAxiome();
+  renderFiguren();
+  renderZugWerte();
+  renderSlideWette();
+  log('🪙 COIN · SCHACH · 6D · UNLINEAR · MASSE geladen', 'coin');
+  log(`⚛️ ${Object.keys(AXIOME).length} Axiome geladen`, 'axiom');
+  log(`♟️ ${Object.keys(FIGUREN).length} Figuren geladen`, 'schach');
+  updateScore();
+}
+
+// ─── RESET ──────────────────────────────────────────────────
+function reset() {
+  state.zug = 0;
+  state.coinScore = 0;
+  state.schachScore = 0;
+  state.masseScore = 0;
+  state.history = [];
+  state.running = false;
+  state.autoMode = false;
+  document.getElementById('btnAuto').textContent = '▶ AUTO';
+  updateScore();
+  renderZugWerte();
+  renderSlideWette();
+  log('⟲ RESET — Alles zurückgesetzt', 'warn');
+}
+
+// ─── AUTO ──────────────────────────────────────────────────
+let autoInterval = null;
+
+function toggleAuto() {
+  state.autoMode = !state.autoMode;
+  document.getElementById('btnAuto').textContent = state.autoMode ? '⏸ PAUSE' : '▶ AUTO';
+  if (state.autoMode) {
+    state.running = true;
+    log('▶ AUTO-Modus aktiviert', 'warn');
+    if (autoInterval) clearInterval(autoInterval);
+    autoInterval = setInterval(() => {
+      if (state.autoMode) zugMachen();
+    }, 1000);
+  } else {
+    if (autoInterval) clearInterval(autoInterval);
+    log('⏸ AUTO-Modus pausiert', 'warn');
+  }
+}
+
+// ─── UHR ──────────────────────────────────────────────────
+function updateClock() {
+  document.getElementById('clock').textContent = `⏱️ ${new Date().toLocaleTimeString()}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ─── EVENTS ──────────────────────────────────────────────────
+document.getElementById('btnBoot').addEventListener('click', boot);
+document.getElementById('btnZug').addEventListener('click', zugMachen);
+document.getElementById('btnScore').addEventListener('click', () => {
+  log(`🪙 SCORE: COIN=${state.coinScore} | SCHACH=${state.schachScore} | MASSE=${state.masseScore}`, 'coin');
+});
+document.getElementById('btnMasse').addEventListener('click', () => {
+  const slide = Math.sqrt(
+    state.coinScore * state.coinScore +
+    state.schachScore * state.schachScore +
+    state.masseScore * state.masseScore
+  );
+  log(`⚖️ MASSE-SLIDE: ${slide.toFixed(2)}`, 'ok');
+});
+document.getElementById('btnReset').addEventListener('click', reset);
+document.getElementById('btnAuto').addEventListener('click', toggleAuto);
+
+// ─── INIT ──────────────────────────────────────────────────
+boot();
+log('🪙 COIN · SCHACH · 6D · UNLINEAR · MASSE — bereit', 'coin');
+log('⌨️  ZUG = Zug | SCORE = Score | MASSE = Slide | AUTO = Auto-Modus', 'warn');
+</script>
+
+</body>
+</html>
