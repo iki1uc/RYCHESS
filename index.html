@@ -3,168 +3,54 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>♟️ HISTORY CHESS · meKI-756 · KULTUR · GPU</title>
+<title>♟️ HISTORY CHESS · meKI-756 · HSF · MXU · 9 BEWEGUNGEN</title>
 
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
 body {
   background: #0a0a12;
   color: #c8d0d0;
-  font-family: 'Georgia', 'Times New Roman', serif;
+  font-family: 'Georgia', 'Consolas', monospace;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 16px;
+  padding: 12px;
   background-image: radial-gradient(circle at 30% 40%, #1a1a2a, #0a0a12);
 }
-
 .container {
-  max-width: 900px;
+  max-width: 1000px;
   width: 100%;
   background: rgba(10,10,20,0.7);
   border: 1px solid #1a1a2a;
-  border-radius: 20px;
-  padding: 24px;
+  border-radius: 16px;
+  padding: 16px;
   backdrop-filter: blur(10px);
   box-shadow: 0 0 60px rgba(0,0,0,0.5);
 }
-
 .header {
   text-align: center;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 .header h1 {
-  font-size: 24px;
+  font-size: 22px;
   background: linear-gradient(90deg, #ffaa00, #ff4444, #4444ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: 3px;
+  letter-spacing: 2px;
 }
-.header .sub {
-  color: #666;
-  font-size: 13px;
-  font-style: italic;
-}
+.header .sub { color: #666; font-size: 11px; font-style: italic; }
 .header .sub span { color: #ffaa00; }
 .header .sub .meKI { color: #88ddbb; }
 
 .toolbar {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 12px;
+  gap: 4px;
+  margin-bottom: 10px;
   justify-content: center;
 }
 .toolbar button, .toolbar select {
-  background: #111;
-  color: #c8d0d0;
-  border: 1px solid #2a2a3a;
-  padding: 5px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 11px;
-  transition: all 0.3s;
-}
-.toolbar button:hover { background: #1a1a2a; border-color: #ffaa00; }
-.toolbar button.active { background: #2a2a3a; border-color: #ffaa00; color: #ffaa00; }
-.toolbar select { background: #111; cursor: pointer; }
-
-.main {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-@media (max-width: 750px) { .main { grid-template-columns: 1fr; } }
-
-/* ===== CANVAS BRETT ===== */
-.board-wrap {
-  position: relative;
-  width: 100%;
-  max-width: 480px;
-  margin: 0 auto;
-  aspect-ratio: 1/1;
-  background: rgba(0,0,0,0.3);
-  border-radius: 12px;
-  border: 2px solid rgba(60,120,100,0.1);
-  overflow: hidden;
-}
-#chessCanvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-  image-rendering: pixelated;
-}
-
-/* ===== SPIELLISTE ===== */
-.game-list {
-  background: rgba(10,10,20,0.6);
-  border: 1px solid #1a1a2a;
-  border-radius: 12px;
-  padding: 10px;
-  max-height: 480px;
-  overflow-y: auto;
-}
-.game-list::-webkit-scrollbar { width: 4px; }
-.game-list::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 2px; }
-.game-list .item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 8px;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-  cursor: pointer;
-  transition: all 0.2s;
-  border-radius: 4px;
-}
-.game-list .item:hover { background: rgba(255,170,0,0.05); }
-.game-list .item .name { color: #ddd; font-size: 12px; }
-.game-list .item .year { color: #666; font-size: 10px; }
-.game-list .item .emotion { font-size: 14px; }
-.game-list .item .tags { color: #ffaa00; font-size: 9px; }
-
-.detail {
-  margin-top: 10px;
-  padding: 10px;
-  background: rgba(0,0,0,0.2);
-  border-radius: 8px;
-  font-size: 12px;
-  color: #aab;
-  line-height: 1.6;
-  border-left: 3px solid #ffaa00;
-  max-height: 120px;
-  overflow-y: auto;
-}
-.detail .highlight { color: #ffaa00; }
-.detail .emotion { color: #ff4444; }
-.detail .move-text { color: #88ddbb; font-family: monospace; }
-
-.status {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 4px 2px;
-  font-size: 12px;
-  color: #668888;
-  border-top: 1px solid rgba(60,120,100,0.06);
-  margin-top: 8px;
-}
-.status .turn { color: #88ddbb; }
-.status .turn span { color: #aaeedd; }
-.status .moves { color: #558888; }
-.status .moves span { color: #88ddbb; }
-.status .mana { color: #88ddbb; }
-.status .mana span { color: #aaeedd; }
-
-.io-bar {
-  display: flex;
-  gap: 6px;
-  margin-top: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.io-bar button {
   background: #111;
   color: #c8d0d0;
   border: 1px solid #2a2a3a;
@@ -172,21 +58,144 @@ body {
   border-radius: 16px;
   cursor: pointer;
   font-family: inherit;
+  font-size: 9px;
+  transition: all 0.3s;
+}
+.toolbar button:hover { background: #1a1a2a; border-color: #ffaa00; }
+.toolbar button.active { background: #2a2a3a; border-color: #ffaa00; color: #ffaa00; }
+.toolbar button.gold { color: #ffaa00; border-color: #554400; }
+.toolbar button.gold:hover { background: #2a1a00; border-color: #ffaa00; }
+.toolbar button.red { color: #ff4444; border-color: #442222; }
+.toolbar button.red:hover { background: #2a0a0a; border-color: #ff4444; }
+.toolbar button.green { color: #88ff44; border-color: #224422; }
+.toolbar button.green:hover { background: #0a2a0a; border-color: #88ff44; }
+.toolbar select { background: #111; cursor: pointer; }
+
+.main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 750px) { .main { grid-template-columns: 1fr; } }
+
+.board-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+  aspect-ratio: 1/1;
+  background: rgba(0,0,0,0.3);
+  border-radius: 10px;
+  border: 2px solid rgba(60,120,100,0.08);
+  overflow: hidden;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.board-wrap:hover { transform: rotateY(3deg); }
+#chessCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+}
+
+.game-list {
+  background: rgba(10,10,20,0.6);
+  border: 1px solid #1a1a2a;
+  border-radius: 10px;
+  padding: 8px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+.game-list::-webkit-scrollbar { width: 3px; }
+.game-list::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 2px; }
+.game-list .item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 4px;
+}
+.game-list .item:hover { background: rgba(255,170,0,0.04); }
+.game-list .item .name { color: #ddd; font-size: 11px; }
+.game-list .item .year { color: #666; font-size: 9px; }
+.game-list .item .emotion { font-size: 12px; }
+
+.detail {
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 6px;
+  font-size: 11px;
+  color: #aab;
+  line-height: 1.5;
+  border-left: 3px solid #ffaa00;
+  max-height: 100px;
+  overflow-y: auto;
+}
+.detail .highlight { color: #ffaa00; }
+.detail .move-text { color: #88ddbb; font-family: monospace; }
+
+.status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 2px;
   font-size: 10px;
+  color: #668888;
+  border-top: 1px solid rgba(60,120,100,0.04);
+  margin-top: 6px;
+}
+.status .turn { color: #88ddbb; }
+.status .moves { color: #558888; }
+.status .moves span { color: #88ddbb; }
+.status .mana { color: #88ddbb; }
+
+.io-bar {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.io-bar button {
+  background: #111;
+  color: #c8d0d0;
+  border: 1px solid #2a2a3a;
+  padding: 3px 10px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 9px;
   transition: all 0.3s;
 }
 .io-bar button:hover { background: #1a1a2a; border-color: #ffaa00; }
 .io-bar input[type="file"] { display: none; }
 
+#statusBar {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 10px;
+  margin-top: 8px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 6px;
+  font-size: 8px;
+  color: #445555;
+  border: 1px solid rgba(255,255,255,0.01);
+}
+#statusBar span { color: #88ddbb; }
+
 .footer {
   text-align: center;
-  margin-top: 12px;
+  margin-top: 10px;
   color: #333;
-  font-size: 10px;
+  font-size: 8px;
   letter-spacing: 1px;
 }
 .footer span { color: #ffaa00; }
-.footer .meKI { color: #88ddbb; }
 </style>
 </head>
 <body>
@@ -194,42 +203,42 @@ body {
 <div class="container">
 
 <div class="header">
-  <h1>♟️ HISTORY CHESS</h1>
-  <div class="sub"><span class="meKI">meKI-756</span> · KULTUR · GPU · <span>ECHte ZÜGE</span></div>
+  <h1>♟️ HISTORY CHESS · meKI-756</h1>
+  <div class="sub"><span class="meKI">HSF</span> · <span>MXU</span> · <span>9 BEWEGUNGEN</span> · <span class="meKI">GPU-READY</span></div>
 </div>
 
 <div class="toolbar">
   <button class="active" data-filter="all">📚 Alle</button>
   <button data-filter="pferd">🐴 Pferde</button>
-  <button data-filter="laufer">♝ Läufer</button>
-  <button data-filter="schafer">🐑 Schäfer</button>
   <button data-filter="opfer">💥 Opfer</button>
   <button data-filter="remis">⚖️ Remis</button>
-  <select id="sortSelect">
-    <option value="year">Jahr</option>
-    <option value="name">Name</option>
-  </select>
+  <select id="sortSelect"><option value="year">Jahr</option><option value="name">Name</option></select>
   <button id="btnStep">⏭ ZUG</button>
   <button id="btnAuto">▶ AUTO</button>
+  <button class="green" id="btnHelp">🆘 HELP</button>
+  <button class="red" id="btnError">⚠️ ERROR</button>
+  <button id="btnSense">👁️ SENSE</button>
+  <button id="btnWraight">✅ WRAIGHT</button>
+  <button class="gold" id="btnCoach">🧑‍🏫 COACH</button>
+  <button id="btnTmp">🌀 TMP</button>
+  <button id="btnFull">🔮 FULL</button>
+  <button id="btnReset2">⟲ RESET</button>
 </div>
 
 <div class="main">
-  <!-- CANVAS BRETT -->
-  <div class="board-wrap">
+  <div class="board-wrap" id="boardWrap">
     <canvas id="chessCanvas"></canvas>
   </div>
-
-  <!-- SPIELLISTE + DETAIL -->
   <div>
     <div class="game-list" id="gameList"></div>
     <div class="detail" id="detailPanel">
       <span class="highlight">📜 Wähle ein Spiel</span><br>
-      Klick auf eine Partie – die Züge werden auf dem Brett gezeigt.
+      Klick auf eine Partie – die Züge werden gezeigt.
     </div>
     <div class="status">
-      <div class="turn">Zug: <span id="turn-indicator">Weiß</span></div>
-      <div class="moves">Zug <span id="move-count">0</span>/<span id="total-moves">0</span></div>
-      <div class="mana">◉ <span id="mana-indicator">0</span></div>
+      <div class="turn">Zug: <span id="turnIndicator">Weiß</span></div>
+      <div class="moves">Zug <span id="moveCount">0</span>/<span id="totalMoves">0</span></div>
+      <div class="mana">🌀 <span id="manaIndicator">0</span></div>
     </div>
     <div class="io-bar">
       <button id="btnExport">📤 Export</button>
@@ -240,409 +249,279 @@ body {
   </div>
 </div>
 
-<div class="footer">
-  <span>♟️</span> HISTORY CHESS · <span class="meKI">meKI-756</span> · KULTUR · <span>wieimmer4u</span>
+<div id="statusBar">
+  <span>🧠 <span id="agentStatus">bereit</span></span>
+  <span>🌀 WRAIGHT: <span id="wraightStatus">⏳</span></span>
+  <span>🧑‍🏫 COACH: <span id="coachStatus">bereit</span></span>
+  <span>⚡ MXU: <span id="mxuStatus">SYNC</span></span>
 </div>
+
+<div class="footer"><span>♟️</span> HISTORY CHESS · meKI-756 · HSF · MXU · <span>wieimmer4u</span></div>
 
 </div>
 
 <script>
 // ============================================================
-// HISTORY CHESS · meKI-756 · CANVAS · GPU-READY
+// HISTORY CHESS · meKI-756 · HSF · MXU · 9 BEWEGUNGEN
 // ============================================================
 
-// ===== KONFIGURATION =====
-const CELL_SIZE = 60;
-const BOARD_SIZE = 9;
-
-// ===== THEMEN =====
-const THEMES = ['pferd', 'laufer', 'schafer', 'opfer', 'remis', 'könig', 'dame', 'turm', 'bauer'];
-
-// ===== 100 SPIELE GENERIEREN =====
-function generateGames(count = 100) {
-  const games = [];
-  const names = [
-    'Die Unsterbliche', 'Die Opernpartie', 'Die Evergreen', 'Match des Jahrhunderts',
-    'Kasparov vs. Deep Blue', 'Die Unsterbliche Remis', 'Der Schäferzug', 'Der Läufer-Coup',
-    'Die Pferde-Tour', 'Das Opfer von Anderssen', 'Die Remis-Partie', 'Der Königsangriff',
-    'Die Damen-Oper', 'Der Turm-Sprung', 'Die Bauern-Welle', 'Die Verteidigung von Berlin'
-  ];
-  for (let i = 0; i < count; i++) {
-    const year = 1800 + Math.floor(Math.random() * 200);
-    const name = names[i % names.length] + (i > 15 ? ` (${i+1})` : '');
-    const theme = THEMES[i % THEMES.length];
-    const moves = generateMoves(12 + Math.floor(Math.random() * 25));
-    const winner = ['Weiß', 'Schwarz', 'Remis'][Math.floor(Math.random() * 3)];
-    const angst = [
-      'Ein atemberaubender Angriff!', 'Ein Meisterwerk der Verteidigung!',
-      'Ein Opfer, das die Gegner verzweifeln ließ.', 'Die Figuren tanzten über das Brett.',
-      'Der Schäferzug führte zum schnellen Sieg.', 'Ein Remis, das wie ein Sieg gefeiert wurde.',
-      'Die Pferde galoppierten!', 'Der Läufer entschied die Partie.'
-    ];
-    const emotion = ['😱🔥','🎭💎','🌿💥','❄️🔥','🤖🧠','⚖️😰','🐴✨','♝🌟','🐑⚡','💥🎯'][i % 10];
-    games.push({
-      id: i, name, year, theme, moves, winner, angst: angst[i % angst.length],
-      emotion, players: `Meister ${i+1} vs. Meister ${i+2}`
-    });
-  }
-  return games;
+// ===== SETSTATUS =====
+function setStatus(id, value) {
+  document.getElementById(id).textContent = value;
 }
 
-function generateMoves(count) {
-  const moves = [];
-  const pieces = ['♔','♕','♖','♗','♘','♙','♚','♛','♜','♝','♞','♟'];
-  for (let i = 0; i < count; i++) {
-    const p = pieces[Math.floor(Math.random() * pieces.length)];
-    const from = String.fromCharCode(97 + Math.floor(Math.random() * 8)) + (1 + Math.floor(Math.random() * 8));
-    const to = String.fromCharCode(97 + Math.floor(Math.random() * 8)) + (1 + Math.floor(Math.random() * 8));
-    moves.push({ piece: p, from, to, notation: `${p}${from}→${to}` });
-  }
-  return moves;
-}
+// ===== HSF STATE =====
+let hsf = { agent: 'bereit', wraight: '⏳', coach: 'bereit', mxu: 'SYNC' };
 
-// ===== STATE =====
-let allGames = generateGames(100);
-let filteredGames = [...allGames];
-let currentGame = null;
-let moveIndex = 0;
-let currentFilter = 'all';
-let currentSort = 'year';
-let autoMode = false;
-let autoInterval = null;
-let selected = null;
-
-// ===== CANVAS SETUP =====
-const canvas = document.getElementById('chessCanvas');
-const ctx = canvas.getContext('2d');
-
-function resizeCanvas() {
-  const rect = canvas.parentElement.getBoundingClientRect();
-  const size = Math.min(rect.width, rect.height, 480);
-  canvas.width = size;
-  canvas.height = size;
-  renderBoard();
-}
-window.addEventListener('resize', resizeCanvas);
-
-// ===== BOARD ZUSTAND =====
-let boardState = [];
-
-function initBoard() {
-  boardState = [];
-  const backRankW = ['♖','♘','♗','♕','♔','♗','♘','♖','♙'];
-  const backRankB = ['♜','♞','♝','♛','♚','♝','♞','♜','♟'];
-  for (let r = 0; r < 9; r++) {
-    const row = [];
-    for (let c = 0; c < 9; c++) {
-      let p = null, col = null;
-      if (r === 1) { p = '♙'; col = 'white'; }
-      else if (r === 7) { p = '♟'; col = 'black'; }
-      else if (r === 0) { p = backRankW[c]; col = 'white'; if (c === 8) { p = '♙'; col = 'white'; } }
-      else if (r === 8) { p = backRankB[c]; col = 'black'; if (c === 8) { p = '♟'; col = 'black'; } }
-      else { p = null; col = null; }
-      row.push({ piece: p, color: col });
+// ===== 100 SPIELE =====
+function generateGames(n=100) {
+  const g=[], names=['Die Unsterbliche','Opernpartie','Evergreen','Match des Jahrhunderts','Kasparov vs. Deep Blue','Unsterbliche Remis','Schäferzug','Läufer-Coup','Pferde-Tour','Opfer von Anderssen','Remis-Partie','Königsangriff','Damen-Oper','Turm-Sprung','Bauern-Welle','Verteidigung von Berlin'];
+  const themes=['pferd','opfer','remis','laufer','schafer','könig','dame','turm','bauer'];
+  const emotions=['😱🔥','🎭💎','🌿💥','❄️🔥','🤖🧠','⚖️😰','🐴✨','♝🌟','🐑⚡','💥🎯'];
+  for(let i=0;i<n;i++){
+    const year=1800+Math.floor(Math.random()*200);
+    const name=names[i%names.length]+(i>15?` (${i+1})`:'');
+    const theme=themes[i%themes.length];
+    const moves=[];
+    for(let j=0;j<12+Math.floor(Math.random()*25);j++){
+      const from=String.fromCharCode(97+Math.floor(Math.random()*8))+(1+Math.floor(Math.random()*8));
+      const to=String.fromCharCode(97+Math.floor(Math.random()*8))+(1+Math.floor(Math.random()*8));
+      moves.push({piece:'♟',from,to,notation:`${from}→${to}`});
     }
-    boardState.push(row);
+    const winner=['Weiß','Schwarz','Remis'][Math.floor(Math.random()*3)];
+    g.push({id:i,name,year,theme,moves,winner,emotion:emotions[i%emotions.length],players:`Meister ${i+1} vs. ${i+2}`});
   }
+  return g;
 }
 
-function applyMoveToBoard(move) {
-  // Simuliere Zug auf dem Brett (vereinfacht)
-  // In echt würde man die Figur bewegen – hier nur zur Visualisierung
-  const fromFile = move.from.charCodeAt(0) - 97;
-  const fromRank = 8 - parseInt(move.from[1]);
-  const toFile = move.to.charCodeAt(0) - 97;
-  const toRank = 8 - parseInt(move.to[1]);
+let allGames=generateGames(100), filtered=[...allGames], current=null, moveIdx=0, zoom=3;
+let autoMode=false, autoTimer=null;
 
-  if (fromRank >= 0 && fromRank < 9 && fromFile >= 0 && fromFile < 9 &&
-      toRank >= 0 && toRank < 9 && toFile >= 0 && toFile < 9) {
-    const piece = boardState[fromRank][fromFile];
-    boardState[toRank][toFile] = piece;
-    boardState[fromRank][fromFile] = { piece: null, color: null };
-  }
+// ===== CANVAS =====
+const canvas=document.getElementById('chessCanvas'), ctx=canvas.getContext('2d');
+
+function resizeCanvas(){
+  const rect=canvas.parentElement.getBoundingClientRect();
+  const s=Math.min(rect.width,rect.height,460);
+  canvas.width=s; canvas.height=s; renderBoard();
+}
+window.addEventListener('resize',resizeCanvas);
+
+let board=[];
+function initBoard(){
+  board=[]; const w=['♖','♘','♗','♕','♔','♗','♘','♖','♟']; const b=['♜','♞','♝','♛','♚','♝','♞','♜','♟'];
+  for(let r=0;r<9;r++){ const row=[]; for(let c=0;c<9;c++){ let p=null,col=null;
+    if(r===0){p=w[c];col='white';}
+    else if(r===8){p=b[c];col='black';}
+    else if(r===1){p='♟';col='white';}
+    else if(r===7){p='♟';col='black';}
+    row.push({piece:p,color:col}); } board.push(row); }
 }
 
-// ===== RENDER CANVAS =====
-function renderBoard() {
-  const w = canvas.width;
-  const h = canvas.height;
-  const cellSize = w / 9;
-
-  ctx.clearRect(0, 0, w, h);
-
-  // Hintergrund
-  const grad = ctx.createRadialGradient(w/2, h/2, 10, w/2, h/2, w/2);
-  grad.addColorStop(0, '#1a1a2a');
-  grad.addColorStop(1, '#0a0a12');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, w, h);
-
-  // Felder
-  for (let r = 0; r < 9; r++) {
-    for (let c = 0; c < 9; c++) {
-      const x = c * cellSize;
-      const y = r * cellSize;
-      const isLight = (r + c) % 2 === 0;
-      ctx.fillStyle = isLight ? 'rgba(50,70,70,0.25)' : 'rgba(20,35,35,0.25)';
-      ctx.fillRect(x, y, cellSize, cellSize);
-      ctx.strokeStyle = 'rgba(60,120,100,0.05)';
-      ctx.lineWidth = 0.5;
-      ctx.strokeRect(x, y, cellSize, cellSize);
-
-      // Figuren
-      const piece = boardState[r]?.[c];
-      if (piece && piece.piece) {
-        ctx.font = `${cellSize * 0.7}px 'Segoe UI', 'Arial Unicode MS', sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.shadowColor = 'rgba(100,200,180,0.05)';
-        ctx.shadowBlur = 10;
-        ctx.fillStyle = piece.color === 'white' ? '#ddeeee' : '#223333';
-        ctx.fillText(piece.piece, x + cellSize/2, y + cellSize/2 + 2);
-        ctx.shadowBlur = 0;
-      }
+function renderBoard(){
+  const w=canvas.width,h=canvas.height,cs=w/9;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle='#0a0a12'; ctx.fillRect(0,0,w,h);
+  for(let r=0;r<9;r++)for(let c=0;c<9;c++){
+    const x=c*cs,y=r*cs,light=(r+c)%2===0;
+    ctx.fillStyle=light?'rgba(50,70,70,0.2)':'rgba(20,35,35,0.2)';
+    ctx.fillRect(x,y,cs,cs);
+    ctx.strokeStyle='rgba(60,120,100,0.04)'; ctx.lineWidth=0.5; ctx.strokeRect(x,y,cs,cs);
+    const p=board[r]?.[c];
+    if(p&&p.piece){
+      ctx.font=`${cs*0.65}px 'Segoe UI','Arial Unicode MS',sans-serif`;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.shadowColor='rgba(100,200,180,0.05)'; ctx.shadowBlur=8;
+      ctx.fillStyle=p.color==='white'?'#ddeeee':'#223333';
+      ctx.fillText(p.piece,x+cs/2,y+cs/2+2);
+      ctx.shadowBlur=0;
     }
   }
+  ctx.fillStyle='rgba(255,255,255,0.04)'; ctx.font='9px monospace'; ctx.textAlign='center'; ctx.textBaseline='top';
+  for(let i=0;i<9;i++) ctx.fillText(String.fromCharCode(97+i),i*cs+cs/2,2);
+  ctx.textBaseline='bottom';
+  for(let i=0;i<9;i++) ctx.fillText(String(9-i),2,i*cs+cs/2);
+}
 
-  // Randbeschriftung
-  ctx.fillStyle = 'rgba(255,255,255,0.05)';
-  ctx.font = '10px monospace';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'top';
-  for (let i = 0; i < 9; i++) {
-    const label = String.fromCharCode(97 + i);
-    ctx.fillText(label, i * cellSize + cellSize/2, 2);
-  }
-  ctx.textBaseline = 'bottom';
-  for (let i = 0; i < 9; i++) {
-    ctx.fillText(String(9 - i), 2, i * cellSize + cellSize/2);
-  }
-
-  // Markierungen
-  if (selected) {
-    const [sr, sc] = selected;
-    ctx.fillStyle = 'rgba(60,180,160,0.12)';
-    ctx.fillRect(sc * cellSize, sr * cellSize, cellSize, cellSize);
-    ctx.strokeStyle = 'rgba(60,200,180,0.2)';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(sc * cellSize, sr * cellSize, cellSize, cellSize);
+function applyMove(m){
+  const fromFile=m.from.charCodeAt(0)-97, fromRank=8-parseInt(m.from[1]);
+  const toFile=m.to.charCodeAt(0)-97, toRank=8-parseInt(m.to[1]);
+  if(fromRank>=0&&fromRank<9&&fromFile>=0&&fromFile<9&&toRank>=0&&toRank<9&&toFile>=0&&toFile<9){
+    const piece=board[fromRank][fromFile];
+    board[toRank][toFile]=piece;
+    board[fromRank][fromFile]={piece:null,color:null};
   }
 }
 
 // ===== SPIEL LADEN =====
-function loadGame(game) {
-  currentGame = game;
-  moveIndex = 0;
-  initBoard();
-  selected = null;
-
-  document.getElementById('detailPanel').innerHTML = `
-    <span class="highlight">📜 ${game.name}</span><br>
-    ${game.year} · ${game.players} · <span class="emotion">${game.emotion}</span><br>
-    <span class="highlight">🏆 ${game.winner}</span><br>
-    <span style="color:#666;font-size:11px;">${game.angst}</span><br>
-    <span class="move-text">${game.moves.length} Züge</span>
-  `;
-
-  document.getElementById('total-moves').textContent = game.moves.length;
-  document.getElementById('move-count').textContent = '0';
+function loadGame(game){
+  current=game; moveIdx=0; initBoard();
+  document.getElementById('detailPanel').innerHTML=`<span class="highlight">📜 ${game.name}</span><br>${game.year} · ${game.players}<br><span class="move-text">${game.moves.length} Züge</span>`;
+  document.getElementById('totalMoves').textContent=game.moves.length;
+  document.getElementById('moveCount').textContent='0';
   renderBoard();
-  updateStatus();
-
-  // Ersten Zug zeigen
-  if (game.moves.length > 0) {
-    setTimeout(() => nextMove(), 300);
-  }
+  if(game.moves.length>0) setTimeout(nextMove,300);
 }
 
-// ===== NÄCHSTER ZUG =====
-function nextMove() {
-  if (!currentGame || moveIndex >= currentGame.moves.length) {
-    if (autoMode) {
-      clearInterval(autoInterval);
-      autoInterval = null;
-      document.getElementById('btnAuto').textContent = '▶ AUTO';
-      autoMode = false;
-    }
-    return;
-  }
-
-  const move = currentGame.moves[moveIndex];
-  applyMoveToBoard(move);
-  moveIndex++;
-
-  document.getElementById('move-count').textContent = moveIndex;
-  document.getElementById('turn-indicator').textContent = moveIndex % 2 === 0 ? 'Weiß' : 'Schwarz';
-  document.getElementById('mana-indicator').textContent = moveIndex;
-
-  // Detail aktualisieren
-  const detail = document.getElementById('detailPanel');
-  const moveText = move.notation || `${move.piece}${move.from}→${move.to}`;
-  detail.innerHTML = `
-    <span class="highlight">📜 ${currentGame.name}</span><br>
-    ${currentGame.year} · ${currentGame.players}<br>
-    <span class="move-text">Zug ${moveIndex}/${currentGame.moves.length}: ${moveText}</span><br>
-    <span style="color:#666;font-size:11px;">${currentGame.angst}</span>
-  `;
-
+function nextMove(){
+  if(!current||moveIdx>=current.moves.length){ if(autoMode){clearInterval(autoTimer);autoTimer=null;document.getElementById('btnAuto').textContent='▶ AUTO';autoMode=false;} return; }
+  const m=current.moves[moveIdx]; applyMove(m); moveIdx++;
+  document.getElementById('moveCount').textContent=moveIdx;
+  document.getElementById('turnIndicator').textContent=moveIdx%2===0?'Weiß':'Schwarz';
+  document.getElementById('manaIndicator').textContent=moveIdx;
+  document.getElementById('detailPanel').innerHTML=`<span class="highlight">📜 ${current.name}</span><br>Zug ${moveIdx}/${current.moves.length}: <span class="move-text">${m.notation}</span>`;
   renderBoard();
-  updateStatus();
-
-  if (autoMode && moveIndex < currentGame.moves.length) {
-    setTimeout(nextMove, 900);
-  } else if (autoMode && moveIndex >= currentGame.moves.length) {
-    clearInterval(autoInterval);
-    autoInterval = null;
-    document.getElementById('btnAuto').textContent = '▶ AUTO';
-    autoMode = false;
-    detail.innerHTML += `<br><span style="color:#ffaa00;">🏆 PARTIE BEENDET!</span>`;
-  }
-}
-
-// ===== STATUS =====
-function updateStatus() {
-  document.getElementById('turn-indicator').textContent = moveIndex % 2 === 0 ? 'Weiß' : 'Schwarz';
-  document.getElementById('mana-indicator').textContent = moveIndex;
+  if(autoMode&&moveIdx<current.moves.length) setTimeout(nextMove,700);
+  else if(autoMode&&moveIdx>=current.moves.length){ clearInterval(autoTimer); autoTimer=null; document.getElementById('btnAuto').textContent='▶ AUTO'; autoMode=false; }
 }
 
 // ===== LISTE =====
-function renderList() {
-  const list = document.getElementById('gameList');
-  list.innerHTML = '';
-  filteredGames.forEach(game => {
-    const item = document.createElement('div');
-    item.className = 'item';
-    item.innerHTML = `
-      <div>
-        <div class="name">${game.name}</div>
-        <div class="year">${game.year} · ${game.players}</div>
-      </div>
-      <div style="text-align:right;">
-        <div class="tags">${game.theme}</div>
-        <div class="emotion">${game.emotion}</div>
-      </div>
-    `;
-    item.addEventListener('click', () => {
-      if (autoMode) { clearInterval(autoInterval); autoInterval = null; document.getElementById('btnAuto').textContent = '▶ AUTO'; autoMode = false; }
-      loadGame(game);
-    });
-    list.appendChild(item);
+function renderList(){
+  const list=document.getElementById('gameList'); list.innerHTML='';
+  filtered.forEach(g=>{
+    const d=document.createElement('div'); d.className='item';
+    d.innerHTML=`<div><div class="name">${g.name}</div><div class="year">${g.year} · ${g.players}</div></div><div style="text-align:right;"><div style="color:#666;font-size:8px;">${g.theme}</div><div class="emotion">${g.emotion}</div></div>`;
+    d.onclick=()=>{ if(autoMode){clearInterval(autoTimer);autoTimer=null;document.getElementById('btnAuto').textContent='▶ AUTO';autoMode=false;} loadGame(g); };
+    list.appendChild(d);
   });
 }
 
-// ===== FILTER =====
-function applyFilter() {
-  let result = [...allGames];
-  if (currentFilter !== 'all') result = result.filter(g => g.theme === currentFilter);
-  if (currentSort === 'year') result.sort((a, b) => a.year - b.year);
-  else if (currentSort === 'name') result.sort((a, b) => a.name.localeCompare(b.name));
-  filteredGames = result;
-  renderList();
+function filterList(){
+  let res=[...allGames];
+  const f=document.querySelector('[data-filter].active')?.dataset.filter||'all';
+  if(f!=='all') res=res.filter(g=>g.theme===f);
+  const s=document.getElementById('sortSelect').value;
+  if(s==='year') res.sort((a,b)=>a.year-b.year);
+  if(s==='name') res.sort((a,b)=>a.name.localeCompare(b.name));
+  filtered=res; renderList();
 }
 
-// ===== EXPORT / IMPORT =====
-function exportGames() {
-  const data = JSON.stringify(allGames, null, 2);
-  const blob = new Blob([data], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `history_chess_${Date.now()}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
+// ===== HSF MODULE FUNCTIONS =====
+function runHelp() {
+  hsf.agent = 'HELP'; setStatus('agentStatus', 'HELP');
+  document.getElementById('detailPanel').innerHTML = '🆘 HELP · Soforthilfe aktiv';
+  document.querySelector('.board-wrap').style.borderColor = '#88ff44';
 }
-
-function importGames(file) {
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (Array.isArray(data) && data.length > 0 && data[0].moves) {
-        allGames = data;
-        applyFilter();
-        if (allGames.length > 0) loadGame(allGames[0]);
-      }
-    } catch (err) {
-      alert('Import fehlgeschlagen: ' + err.message);
-    }
-  };
-  reader.readAsText(file);
+function runError() {
+  hsf.agent = 'ERROR'; setStatus('agentStatus', 'ERROR');
+  document.getElementById('detailPanel').innerHTML = '⚠️ ERROR · Keine Fehler';
+  document.querySelector('.board-wrap').style.borderColor = '#ff4444';
 }
-
-// ===== RESET =====
-function resetGame() {
-  if (autoMode) { clearInterval(autoInterval); autoInterval = null; document.getElementById('btnAuto').textContent = '▶ AUTO'; autoMode = false; }
-  initBoard();
-  moveIndex = 0;
-  selected = null;
-  renderBoard();
-  updateStatus();
-  document.getElementById('move-count').textContent = '0';
-  document.getElementById('detailPanel').innerHTML = `<span class="highlight">⟲ Zurückgesetzt</span>`;
+function runSense() {
+  const score = (0.6 + Math.random() * 0.4).toFixed(2);
+  hsf.agent = 'SENSE'; setStatus('agentStatus', 'SENSE');
+  document.getElementById('detailPanel').innerHTML = `👁️ 7SENSE · ${score} · ${score > 0.7 ? 'klar' : 'unscharf'}`;
+  document.querySelector('.board-wrap').style.borderColor = '#ffdd00';
+}
+function runWraight() {
+  const erlaubt = Math.random() > 0.25;
+  hsf.wraight = erlaubt ? '✅ GRÜN' : '⛔ ROT';
+  setStatus('wraightStatus', hsf.wraight);
+  hsf.agent = 'WRAIGHT'; setStatus('agentStatus', 'WRAIGHT');
+  document.getElementById('detailPanel').innerHTML = `✅ WRAIGHT · ${erlaubt ? 'GRÜN – Zugang erlaubt' : 'ROT – Zugang blockiert'}`;
+  document.querySelector('.board-wrap').style.borderColor = erlaubt ? '#88ff44' : '#ff4444';
+  return erlaubt;
+}
+function runCoach() {
+  const erlaubt = runWraight();
+  if (!erlaubt) {
+    hsf.coach = 'blockiert'; setStatus('coachStatus', 'blockiert');
+    document.getElementById('detailPanel').innerHTML = '🧑‍🏫 COACH blockiert · WRAIGHT ist ROT';
+    return;
+  }
+  hsf.coach = 'aktiv'; setStatus('coachStatus', 'aktiv');
+  hsf.agent = 'COACH'; setStatus('agentStatus', 'COACH');
+  document.getElementById('detailPanel').innerHTML = '🧑‍🏫 COACH · führend · ich werde nicht geführt';
+  document.querySelector('.board-wrap').style.borderColor = '#ffdd00';
+}
+function runTmp() {
+  hsf.agent = 'TMP'; setStatus('agentStatus', 'TMP');
+  document.getElementById('detailPanel').innerHTML = '🌀 TMP · Temporäre Brücke · Durchfluss stabil';
+  document.querySelector('.board-wrap').style.borderColor = '#33ccff';
+}
+function runFull() {
+  const erlaubt = runWraight();
+  hsf.agent = 'FULL'; setStatus('agentStatus', 'FULL');
+  document.getElementById('detailPanel').innerHTML = `🔮 VOLLSCHALTUNG · ${erlaubt ? '✅ System aktiv' : '⛔ System blockiert'}`;
+  document.querySelector('.board-wrap').style.borderColor = '#ffdd00';
+}
+function runResetAll() {
+  hsf = { agent: 'bereit', wraight: '⏳', coach: 'bereit', mxu: 'SYNC' };
+  setStatus('agentStatus', 'bereit'); setStatus('wraightStatus', '⏳'); setStatus('coachStatus', 'bereit');
+  document.getElementById('detailPanel').innerHTML = '⟲ RESET · System zurückgesetzt';
+  document.querySelector('.board-wrap').style.borderColor = 'rgba(60,120,100,0.08)';
+  if (autoMode) { clearInterval(autoTimer); autoTimer=null; document.getElementById('btnAuto').textContent='▶ AUTO'; autoMode=false; }
+  initBoard(); moveIdx=0; renderBoard(); document.getElementById('moveCount').textContent='0';
 }
 
 // ===== EVENTS =====
-document.querySelectorAll('[data-filter]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentFilter = btn.dataset.filter;
-    applyFilter();
-  });
+document.querySelectorAll('[data-filter]').forEach(b=>{
+  b.onclick=()=>{ document.querySelectorAll('[data-filter]').forEach(x=>x.classList.remove('active')); b.classList.add('active'); filterList(); };
 });
+document.getElementById('sortSelect').onchange=filterList;
+document.getElementById('btnStep').onclick=nextMove;
+document.getElementById('btnAuto').onclick=function(){
+  if(autoMode){ clearInterval(autoTimer); autoTimer=null; this.textContent='▶ AUTO'; autoMode=false; return; }
+  if(!current){ if(filtered.length) loadGame(filtered[0]); else return; }
+  autoMode=true; this.textContent='⏸ STOP';
+  if(moveIdx===0) nextMove(); else if(moveIdx<current.moves.length) nextMove(); else loadGame(current);
+};
+document.getElementById('btnReset').onclick=resetAll;
+document.getElementById('btnReset2').onclick=resetAll;
+document.getElementById('btnHelp').onclick=runHelp;
+document.getElementById('btnError').onclick=runError;
+document.getElementById('btnSense').onclick=runSense;
+document.getElementById('btnWraight').onclick=runWraight;
+document.getElementById('btnCoach').onclick=runCoach;
+document.getElementById('btnTmp').onclick=runTmp;
+document.getElementById('btnFull').onclick=runFull;
 
-document.getElementById('sortSelect').addEventListener('change', (e) => {
-  currentSort = e.target.value;
-  applyFilter();
-});
+function resetAll() { runResetAll(); filterList(); if(allGames.length) loadGame(allGames[0]); }
 
-document.getElementById('btnStep').addEventListener('click', nextMove);
-
-document.getElementById('btnAuto').addEventListener('click', function() {
-  if (autoMode) {
-    clearInterval(autoInterval);
-    autoInterval = null;
-    this.textContent = '▶ AUTO';
-    autoMode = false;
-    return;
-  }
-  if (!currentGame) {
-    if (filteredGames.length > 0) loadGame(filteredGames[0]);
-    else return;
-  }
-  autoMode = true;
-  this.textContent = '⏸ STOP';
-  if (moveIndex === 0) nextMove();
-  else if (moveIndex < currentGame.moves.length) nextMove();
-  else {
-    loadGame(currentGame);
-  }
-});
-
-document.getElementById('btnExport').addEventListener('click', exportGames);
-document.getElementById('btnImport').addEventListener('click', () => document.getElementById('fileInput').click());
-document.getElementById('fileInput').addEventListener('change', (e) => {
-  if (e.target.files.length) { importGames(e.target.files[0]); e.target.value = ''; }
-});
-document.getElementById('btnReset').addEventListener('click', resetGame);
+// ===== EXPORT / IMPORT =====
+document.getElementById('btnExport').onclick=function(){
+  const data=JSON.stringify(allGames,null,2);
+  const blob=new Blob([data],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download=`history_chess_${Date.now()}.json`; a.click(); URL.revokeObjectURL(url);
+};
+document.getElementById('btnImport').onclick=()=>document.getElementById('fileInput').click();
+document.getElementById('fileInput').onchange=function(e){
+  if(!e.target.files.length) return;
+  const reader=new FileReader();
+  reader.onload=(ev)=>{
+    try{ const data=JSON.parse(ev.target.result); if(Array.isArray(data)&&data.length>0&&data[0].moves){ allGames=data; filterList(); if(allGames.length) loadGame(allGames[0]); } }
+    catch(err){ alert('Import fehlgeschlagen: '+err.message); }
+  };
+  reader.readAsText(e.target.files[0]);
+  e.target.value='';
+};
 
 // ===== TASTATUR =====
 document.addEventListener('keydown', (e) => {
   if (e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); nextMove(); }
-  if (e.key === 'r' || e.key === 'R') resetGame();
+  if (e.key === 'r' || e.key === 'R') resetAll();
   if (e.key === 'a' || e.key === 'A') document.getElementById('btnAuto').click();
+  if (e.key === 'h' || e.key === 'H') runHelp();
+  if (e.key === 'e' || e.key === 'E') runError();
+  if (e.key === 'w' || e.key === 'W') runWraight();
+  if (e.key === 'c' || e.key === 'C') runCoach();
+  if (e.key === 't' || e.key === 'T') runTmp();
+  if (e.key === 'f' || e.key === 'F') runFull();
 });
 
 // ===== INIT =====
-initBoard();
-applyFilter();
-if (allGames.length > 0) loadGame(allGames[0]);
-resizeCanvas();
-setTimeout(resizeCanvas, 100);
-
-console.log('♟️ HISTORY CHESS · meKI-756 · geladen');
-console.log(`📚 ${allGames.length} Spiele · KULTUR · GPU-READY`);
-console.log('⌨️  Leertaste=Nächster Zug  r=Reset  a=Auto');
+function init() {
+  initBoard();
+  filterList();
+  if(allGames.length) loadGame(allGames[0]);
+  resizeCanvas();
+  setTimeout(resizeCanvas,100);
+  console.log('♟️ HISTORY CHESS · meKI-756 · HSF · MXU · geladen');
+  console.log('⌨️  Leertaste=Nächster Zug  r=Reset  a=Auto  h=HELP  e=ERROR  w=WRAIGHT  c=COACH  t=TMP  f=FULL');
+}
+init();
 </script>
+
 </body>
 </html>
