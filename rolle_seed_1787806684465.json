@@ -1,0 +1,26 @@
+{
+  "ORT": {
+    "value": "Position",
+    "content": "—"
+  },
+  "USER": {
+    "value": "Zugriff",
+    "content": "—"
+  },
+  "USE": {
+    "value": "Funktion",
+    "content": "—"
+  },
+  "SEED": {
+    "value": "Ursprung",
+    "content": "—"
+  },
+  "OUT": {
+    "value": "Ausgabe",
+    "content": "—"
+  },
+  "ROLLE": {
+    "value": "Gesamtform",
+    "content": "—"
+  }
+}
