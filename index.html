@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>♟️ HISTORY CHESS · meKI-756 · HSF · PROFESSIONAL</title>
+    <title>♟️ HISTORY CHESS · IMPERIUM CUBIK · iki1uc</title>
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background: #0a0a12;
+            background: #05050a;
             color: #d0d8e0;
             font-family: 'Segoe UI', 'Consolas', monospace;
             min-height: 100vh;
@@ -16,274 +16,188 @@
             justify-content: center;
             align-items: center;
             padding: 16px;
-            background-image: radial-gradient(ellipse at 30% 40%, #0a0a20, #000);
+            background-image: radial-gradient(circle at 30% 40%, #0a0a20 0%, #000 100%);
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             width: 100%;
-            background: rgba(10, 10, 20, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 20px;
-            padding: 20px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 0 80px rgba(0, 0, 0, 0.6);
+            background: rgba(8, 8, 16, 0.85);
+            border: 1px solid rgba(79, 195, 247, 0.15);
+            border-radius: 24px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 120px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(0, 0, 0, 0.3);
         }
 
         .header {
             text-align: center;
-            margin-bottom: 14px;
+            margin-bottom: 20px;
         }
         .header h1 {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 300;
-            letter-spacing: 6px;
-            background: linear-gradient(90deg, #4fc3f7, #ffd700, #ff7043);
+            letter-spacing: 8px;
+            background: linear-gradient(90deg, #4fc3f7, #ffd700, #00ff88, #ff7043);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(79, 195, 247, 0.2);
+            margin-bottom: 6px;
         }
         .header .sub {
             color: #445555;
-            font-size: 11px;
-            letter-spacing: 3px;
+            font-size: 12px;
+            letter-spacing: 4px;
             font-weight: 300;
         }
-        .header .sub span { color: #88ddbb; }
+        .header .sub span { color: #88ddbb; font-weight: 400; }
 
         .main-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 20px;
         }
-        @media (max-width: 850px) { .main-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
 
+        /* BOARD 9x9 (Cubik-Ram) */
         .board-wrap {
             position: relative;
             width: 100%;
-            max-width: 480px;
+            max-width: 520px;
             margin: 0 auto;
             aspect-ratio: 1/1;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 14px;
-            border: 1px solid rgba(255, 215, 0, 0.05);
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(0, 255, 136, 0.1);
+            border-radius: 16px;
             overflow: hidden;
-            transition: box-shadow 0.4s;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.05);
         }
-        .board-wrap:hover {
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.03);
+        #chessCanvas { width: 100%; height: 100%; display: block; }
+
+        /* PANELS */
+        .right-panel { display: flex; flex-direction: column; gap: 12px; }
+
+        .toolbar { display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end; }
+        .toolbar button {
+            background: rgba(20, 30, 30, 0.3); color: #8a9a9a;
+            border: 1px solid rgba(255, 255, 255, 0.03); padding: 6px 16px;
+            border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 10px;
+            letter-spacing: 0.5px; transition: all 0.2s;
         }
-        #chessCanvas {
-            width: 100%;
-            height: 100%;
-            display: block;
+        .toolbar button:hover { border-color: rgba(0, 255, 136, 0.3); color: #c8d8d8; background: rgba(40, 60, 60, 0.2); }
+        .toolbar button.ice { color: #4fc3f7; border-color: rgba(79, 195, 247, 0.1); }
+        .toolbar button.water { color: #4dd0e1; border-color: rgba(77, 208, 225, 0.1); }
+        .toolbar button.fire { color: #ff7043; border-color: rgba(255, 112, 67, 0.1); }
+        .toolbar button.axiom { color: #00ff88; border-color: rgba(0, 255, 136, 0.1); }
+        .toolbar select {
+            background: rgba(20, 30, 30, 0.3); color: #8a9a9a; border: 1px solid rgba(255,255,255,0.02);
+            border-radius: 16px; padding: 6px 12px; font-size: 9px; cursor: pointer; font-family: inherit;
         }
 
-        /* ===== RECHTE SEITE ===== */
-        .right-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        /* Status */
+        .status-bar { display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(0, 0, 0, 0.2); border-radius: 10px; font-size: 10px; color: #445555; }
+        .status-bar span { color: #88ddbb; }
 
-        .toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            justify-content: flex-end;
-        }
-        .toolbar button, .toolbar select {
-            background: rgba(20, 30, 30, 0.3);
-            color: #8a9a9a;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            padding: 5px 14px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 9px;
-            transition: all 0.25s;
-            letter-spacing: 0.5px;
-        }
-        .toolbar button:hover {
-            background: rgba(40, 60, 60, 0.15);
-            border-color: rgba(255, 215, 0, 0.15);
-            color: #c8d8d8;
-        }
-        .toolbar button.active {
-            border-color: rgba(255, 215, 0, 0.2);
-            color: #ffd700;
-            background: rgba(255, 215, 0, 0.04);
-        }
-        .toolbar button.gold { color: #ffd700; border-color: rgba(255, 215, 0, 0.05); }
-        .toolbar button.gold:hover { border-color: rgba(255, 215, 0, 0.15); }
-        .toolbar button.ice { color: #4fc3f7; border-color: rgba(79, 195, 247, 0.05); }
-        .toolbar button.ice:hover { border-color: rgba(79, 195, 247, 0.15); }
-        .toolbar button.fire { color: #ff7043; border-color: rgba(255, 112, 67, 0.05); }
-        .toolbar button.fire:hover { border-color: rgba(255, 112, 67, 0.15); }
-        .toolbar button.water { color: #4dd0e1; border-color: rgba(77, 208, 225, 0.05); }
-        .toolbar button.water:hover { border-color: rgba(77, 208, 225, 0.15); }
-        .toolbar select { background: rgba(20, 30, 30, 0.3); cursor: pointer; }
+        /* AXIOM BLOCK */
+        .axiom-panel { padding: 12px; background: rgba(0, 0, 0, 0.2); border-radius: 10px; font-size: 11px; line-height: 1.7; border-left: 3px solid rgba(0, 255, 136, 0.3); }
+        .axiom-panel .label { color: #ffd700; font-size: 9px; letter-spacing: 2px; margin-bottom: 6px; }
+        .axiom-row { display: flex; justify-content: space-between; color: #8a9a9a; margin-bottom: 4px; font-size: 10px; }
+        .axiom-row .val { color: #4fc3f7; font-weight: 600; }
 
+        /* Agent-List */
         .game-list {
-            background: rgba(10, 10, 20, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            border-radius: 10px;
-            padding: 8px;
-            max-height: 300px;
-            overflow-y: auto;
-            flex: 1;
+            background: rgba(10, 10, 20, 0.4); border: 1px solid rgba(255, 255, 255, 0.02);
+            border-radius: 12px; padding: 8px; max-height: 260px; overflow-y: auto; flex: 1;
         }
         .game-list::-webkit-scrollbar { width: 3px; }
-        .game-list::-webkit-scrollbar-thumb { background: rgba(255, 215, 0, 0.1); border-radius: 2px; }
+        .game-list::-webkit-scrollbar-thumb { background: rgba(0, 255, 136, 0.2); }
         .game-list .item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 4px 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-            cursor: pointer;
-            transition: all 0.2s;
-            border-radius: 6px;
+            display: flex; justify-content: space-between; padding: 6px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02); cursor: pointer;
+            transition: all 0.2s; border-radius: 8px; margin-bottom: 2px;
         }
-        .game-list .item:hover { background: rgba(255, 215, 0, 0.03); }
-        .game-list .item .name { color: #c8d0d0; font-size: 11px; font-weight: 300; }
-        .game-list .item .year { color: #445555; font-size: 9px; }
-        .game-list .item .emotion { font-size: 13px; opacity: 0.5; }
+        .game-list .item:hover { background: rgba(0, 255, 136, 0.05); }
+        .game-list .item .name { font-size: 11px; color: #c8d0d0; }
+        .game-list .item .meta { font-size: 8px; color: #445555; }
+        .game-list .item .emotion { font-size: 16px; opacity: 0.6; }
 
-        .detail {
-            padding: 10px 12px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            font-size: 11px;
-            color: #8a9a9a;
-            line-height: 1.5;
-            border-left: 2px solid rgba(255, 215, 0, 0.1);
-            min-height: 50px;
-            font-weight: 300;
-        }
-        .detail .highlight { color: #ffd700; }
-        .detail .move-text { color: #88ddbb; font-family: monospace; }
+        /* Detail */
+        .detail { padding: 10px; background: rgba(0, 0, 0, 0.3); border-radius: 8px; font-size: 11px; color: #8a9a9a; line-height: 1.6; min-height: 50px; border-left: 2px solid rgba(79, 195, 247, 0.2); }
+        .detail .highlight { color: #ffd700; font-weight: 600; }
 
-        .status-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 10px;
-            color: #445555;
-            padding: 4px 2px;
-            border-top: 1px solid rgba(255, 255, 255, 0.02);
-            margin-top: 4px;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-        .status-row .turn { color: #88ddbb; }
-        .status-row .moves span { color: #88ddbb; }
-        .status-row .mana { color: #88ddbb; }
+        .bottom-bar { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+        .bottom-bar button { background: rgba(20, 30, 30, 0.2); color: #668888; border: 1px solid rgba(255,255,255,0.02); padding: 6px 16px; border-radius: 16px; cursor: pointer; font-size: 9px; transition: 0.2s; }
+        .bottom-bar button:hover { color: #aabbbb; border-color: rgba(0, 255, 136, 0.2); }
+        .bottom-bar button.primary { color: #ffd700; border-color: rgba(255, 215, 0, 0.1); }
 
-        .bottom-bar {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            margin-top: 6px;
-        }
-        .bottom-bar button {
-            background: rgba(20, 30, 30, 0.2);
-            color: #668888;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            padding: 4px 14px;
-            border-radius: 16px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 9px;
-            transition: all 0.2s;
-        }
-        .bottom-bar button:hover {
-            background: rgba(40, 60, 60, 0.1);
-            border-color: rgba(255, 215, 0, 0.05);
-            color: #aabbbb;
-        }
-        .bottom-bar button.primary { color: #ffd700; border-color: rgba(255, 215, 0, 0.05); }
+        .footer { text-align: center; margin-top: 16px; color: #1a1a1a; font-size: 9px; letter-spacing: 2px; border-top: 1px solid rgba(255,255,255,0.02); padding-top: 12px; }
+        .footer span { color: #00ff88; opacity: 0.4; }
 
-        .footer {
-            text-align: center;
-            margin-top: 14px;
-            color: #1a1a1a;
-            font-size: 8px;
-            letter-spacing: 2px;
-            border-top: 1px solid rgba(255, 255, 255, 0.01);
-            padding-top: 10px;
-        }
-        .footer span { color: #ffd700; opacity: 0.3; }
-
-        .ice-effect, .water-effect, .fire-effect {
-            position: fixed;
-            pointer-events: none;
-            font-size: 24px;
-            opacity: 0.3;
-            animation: floatUp 0.8s ease-out forwards;
-            z-index: 999;
-        }
-        @keyframes floatUp {
-            0% { opacity: 0.8; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-80px) scale(0.5); }
-        }
+        /* Effects */
+        .axiom-effect, .ice-effect, .water-effect, .fire-effect { position: fixed; pointer-events: none; font-size: 28px; opacity: 0.4; animation: floatUp 0.9s ease-out forwards; z-index: 999; }
+        @keyframes floatUp { 0% { opacity: 0.9; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-100px) scale(0.3); } }
     </style>
 </head>
 <body>
 
 <div class="container">
 
-    <!-- HEADER -->
     <div class="header">
-        <h1>♟️ HISTORY CHESS · meKI-756</h1>
-        <div class="sub"><span>HSF</span> · <span>MXU</span> · <span>9 BEWEGUNGEN</span> · <span style="color:#4fc3f7;">ice</span> · <span style="color:#4dd0e1;">water</span> · <span style="color:#ff7043;">fire</span></div>
+        <h1>♟️ HISTORY CHESS · IMPERIUM CUBIK</h1>
+        <div class="sub"><span>VEC_CORE</span> · <span>FORM_MATRIX</span> · <span>PIPELINE_RUN8</span> · <span>3er DUALITÄT</span> · <span>2x IRREAL</span></div>
     </div>
 
-    <!-- MAIN -->
     <div class="main-grid">
 
-        <!-- BOARD -->
+        <!-- 3D BOARD (CUBIK) -->
         <div class="board-wrap" id="boardWrap">
             <canvas id="chessCanvas"></canvas>
         </div>
 
-        <!-- RECHTE SEITE -->
+        <!-- RIGHT PANEL -->
         <div class="right-panel">
 
-            <!-- TOOLBAR (rechtsbündig) -->
+            <!-- TOOLBAR -->
             <div class="toolbar">
-                <button class="active" data-filter="all">📚 Alle</button>
-                <button data-filter="pferd">🐴 Pferde</button>
-                <button data-filter="opfer">💥 Opfer</button>
-                <button data-filter="remis">⚖️ Remis</button>
-                <select id="sortSelect">
-                    <option value="year">Jahr</option>
-                    <option value="name">Name</option>
-                </select>
+                <button class="axiom" id="btnAxiom">🌀 AXIOM STEP</button>
                 <button class="ice" id="btnIce">❄️ Ice</button>
                 <button class="water" id="btnWater">💧 Water</button>
                 <button class="fire" id="btnFire">🔥 Fire</button>
-                <button id="btnStep">⏭ Zug</button>
                 <button id="btnAuto">▶ Auto</button>
                 <button id="btnReset">⟲ Reset</button>
+                <select id="sortSelect">
+                    <option value="axiom">AXIOM SCORE</option>
+                    <option value="year">JAHR</option>
+                </select>
             </div>
 
-            <!-- GAME LIST -->
+            <!-- AXIOM STATUS (DER ALGORITHMUS) -->
+            <div class="axiom-panel">
+                <div class="label">⚙️ VEC_CORE / FORM_MATRIX · RUNTIME</div>
+                <div class="axiom-row"><span>3er Dualität (Real):</span><span class="val" id="dualReal">50%</span></div>
+                <div class="axiom-row"><span>3er Dualität (Irreal):</span><span class="val" id="dualIrreal">50%</span></div>
+                <div class="axiom-row"><span>Mana-Pool (PIPELINE_RUN8):</span><span class="val" id="manaPool">0</span></div>
+                <div class="axiom-row"><span>VEC_CORE Energie:</span><span class="val" id="vecEnergy">0.00</span></div>
+                <div class="axiom-row"><span>Kompromiss (Phi):</span><span class="val" id="compromiseVal">1.618</span></div>
+            </div>
+
+            <!-- HISTORY LIST (AGENTS) -->
             <div class="game-list" id="gameList"></div>
 
             <!-- DETAIL -->
             <div class="detail" id="detailPanel">
-                <span class="highlight">📜 Wähle eine Partie</span>
+                <span class="highlight">🌀 GENERAL-MODUS AKTIV</span> · Wähle einen Agenten aus der Liste.
             </div>
 
             <!-- STATUS -->
-            <div class="status-row">
-                <div class="turn">Zug: <span id="turnIndicator">Weiß</span></div>
-                <div class="moves">Zug <span id="moveCount">0</span>/<span id="totalMoves">0</span></div>
-                <div class="mana">🌀 <span id="manaIndicator">0</span></div>
-                <div style="color:#445555;">⚡ <span id="agentStatus">bereit</span></div>
+            <div class="status-bar">
+                <div>Zug: <span id="turnIndicator">Weiß</span></div>
+                <div>Zug <span id="moveCount">0</span>/<span id="totalMoves">0</span></div>
+                <div>🌀 <span id="manaIndicator">0</span></div>
+                <div>Agent: <span id="agentStatus">bereit</span></div>
             </div>
 
-            <!-- BOTTOM BAR -->
+            <!-- BOTTOM -->
             <div class="bottom-bar">
                 <button id="btnHelp">🆘 Help</button>
                 <button id="btnSense">👁️ Sense</button>
@@ -296,83 +210,85 @@
         </div>
     </div>
 
-    <div class="footer"><span>♟️</span> HISTORY CHESS · meKI-756 · HSF · MXU · <span>wieimmer4u</span></div>
+    <div class="footer"><span>♟️</span> IMPERIUM CUBIK · iki1uc · <span>wieimmer4u</span></div>
 </div>
 
 <script>
 // ============================================================
-// HISTORY CHESS · meKI-756 · PROFESSIONAL · NEON · ICE/WATER/FIRE
+// IMPERIUM CUBIK · VEC_CORE / FORM_MATRIX / PIPELINE_RUN8
 // ============================================================
+
+// ─── KONSTANTEN (Axiomatisch) ────────────────────────────────
+const PHI = (1 + Math.sqrt(5)) / 2; // 1.618
+const NC = {
+    dual: { X: { real: 0.5, irreal: 0.5 }, Y: { real: 0.5, irreal: 0.5 }, Z: { real: 0.5, irreal: 0.5 } },
+    vecEnergy: 0,
+    manaPool: 0
+};
 
 // ─── STATUS ──────────────────────────────────────────────────
 function setStatus(id, val) { document.getElementById(id).textContent = val; }
 
-// ─── ELEMENT EFFECTS ────────────────────────────────────────
+// ─── EFFECTS (General & Axiom) ──────────────────────────────
 function spawnEffect(x, y, type) {
     const el = document.createElement('div');
     el.className = type + '-effect';
-    el.textContent = type === 'ice' ? '❄️' : type === 'water' ? '💧' : '🔥';
-    el.style.left = (x - 12) + 'px';
-    el.style.top = (y - 12) + 'px';
+    el.textContent = type === 'axiom' ? '🌀' : type === 'ice' ? '❄️' : type === 'water' ? '💧' : '🔥';
+    el.style.left = (x - 14) + 'px';
+    el.style.top = (y - 14) + 'px';
     document.body.appendChild(el);
-    setTimeout(() => el.remove(), 800);
+    setTimeout(() => el.remove(), 900);
 }
 
-function randomEffect() {
-    const types = ['ice', 'water', 'fire'];
-    return types[Math.floor(Math.random() * types.length)];
-}
-
-// ─── 100 SPIELE ──────────────────────────────────────────────
-function generateGames(n = 100) {
+// ─── 100 AGENTS (Spiele) ─────────────────────────────────────
+function generateAgents(n = 100) {
     const g = [];
-    const names = ['Die Unsterbliche', 'Opernpartie', 'Evergreen', 'Match des Jahrhunderts',
-        'Kasparov vs. Deep Blue', 'Unsterbliche Remis', 'Schäferzug', 'Läufer-Coup',
-        'Pferde-Tour', 'Opfer von Anderssen', 'Remis-Partie', 'Königsangriff',
-        'Damen-Oper', 'Turm-Sprung', 'Bauern-Welle', 'Verteidigung von Berlin'];
+    const names = ['Unsterbliche', 'Opernpartie', 'Evergreen', 'Match des Jahrhunderts', 'Kasparov vs. Deep Blue',
+        'Unsterbliche Remis', 'Schäferzug', 'Läufer-Coup', 'Pferde-Tour', 'Opfer von Anderssen', 'Remis-Partie',
+        'Königsangriff', 'Damen-Oper', 'Turm-Sprung', 'Bauern-Welle', 'Verteidigung von Berlin', 'Grünfeld',
+        'Sizilianisch', 'Französisch', 'Caro-Kann', 'Spanisch', 'Italienisch', 'Skandinavisch', 'Pirc', 'Nimzo'];
     const themes = ['pferd', 'opfer', 'remis', 'laufer', 'schafer', 'könig', 'dame', 'turm', 'bauer'];
-    const emotions = ['😱', '🎭', '🌿', '❄️', '🤖', '⚖️', '🐴', '♝', '🐑', '💥'];
+    const emotions = ['😱', '🎭', '🌿', '❄️', '🤖', '⚖️', '🐴', '♝', '🐑', '💥', '🌀'];
+
     for (let i = 0; i < n; i++) {
-        const year = 1800 + Math.floor(Math.random() * 200);
-        const name = names[i % names.length] + (i > 15 ? ` (${i + 1})` : '');
+        const year = 1800 + Math.floor(Math.random() * 220);
+        const name = names[i % names.length] + (i > 25 ? ` (${i + 1})` : '');
         const theme = themes[i % themes.length];
         const moves = [];
-        for (let j = 0; j < 12 + Math.floor(Math.random() * 25); j++) {
+        for (let j = 0; j < 12 + Math.floor(Math.random() * 30); j++) {
             const from = String.fromCharCode(97 + Math.floor(Math.random() * 8)) + (1 + Math.floor(Math.random() * 8));
             const to = String.fromCharCode(97 + Math.floor(Math.random() * 8)) + (1 + Math.floor(Math.random() * 8));
             moves.push({ piece: '♟', from, to, notation: `${from}→${to}` });
         }
         const winner = ['Weiß', 'Schwarz', 'Remis'][Math.floor(Math.random() * 3)];
+        // AXIOM SCORE: Berechnet aus Phi + Random (Masse für den Algorithmus)
+        const axiomScore = (Math.random() * 10) + (PHI * (i % 10) * 0.5);
+
         g.push({
-            id: i,
-            name,
-            year,
-            theme,
-            moves,
-            winner,
+            id: i, name, year, theme, moves, winner,
             emotion: emotions[i % emotions.length],
-            players: `Meister ${i + 1} vs. ${i + 2}`
+            players: `Meister ${i + 1} vs. ${i + 2}`,
+            axiomScore: axiomScore.toFixed(2)
         });
     }
     return g;
 }
 
-let allGames = generateGames(100);
-let filtered = [...allGames];
+let allAgents = generateAgents(100);
+let filtered = [...allAgents];
 let current = null;
 let moveIdx = 0;
 let autoMode = false;
 let autoTimer = null;
 
-// ─── CANVAS ──────────────────────────────────────────────────
+// ─── CANVAS (3D BOARD) ───────────────────────────────────────
 const canvas = document.getElementById('chessCanvas');
 const ctx = canvas.getContext('2d');
 
 function resizeCanvas() {
     const rect = canvas.parentElement.getBoundingClientRect();
-    const s = Math.min(rect.width, rect.height, 480);
-    canvas.width = s;
-    canvas.height = s;
+    const s = Math.min(rect.width, rect.height, 520);
+    canvas.width = s; canvas.height = s;
     renderBoard();
 }
 window.addEventListener('resize', resizeCanvas);
@@ -386,13 +302,11 @@ function initBoard() {
     for (let r = 0; r < 9; r++) {
         const row = [];
         for (let c = 0; c < 9; c++) {
-            let p = null,
-                col = null;
-            if (r === 0) { p = w[c];
-                col = 'white'; } else if (r === 8) { p = b[c];
-                col = 'black'; } else if (r === 1) { p = '♟';
-                col = 'white'; } else if (r === 7) { p = '♟';
-                col = 'black'; }
+            let p = null, col = null;
+            if (r === 0) { p = w[c]; col = 'white'; }
+            else if (r === 8) { p = b[c]; col = 'black'; }
+            else if (r === 1) { p = '♟'; col = 'white'; }
+            else if (r === 7) { p = '♟'; col = 'black'; }
             row.push({ piece: p, color: col });
         }
         board.push(row);
@@ -400,288 +314,171 @@ function initBoard() {
 }
 
 function renderBoard() {
-    const w = canvas.width,
-        h = canvas.height,
-        cs = w / 9;
+    const w = canvas.width, h = canvas.height, cs = w / 9;
     ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = '#0a0a12';
-    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = '#0a0a12'; ctx.fillRect(0, 0, w, h);
 
     for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
-            const x = c * cs,
-                y = r * cs,
-                light = (r + c) % 2 === 0;
-            ctx.fillStyle = light ? 'rgba(40,60,60,0.08)' : 'rgba(20,35,35,0.08)';
+            const x = c * cs, y = r * cs, light = (r + c) % 2 === 0;
+            ctx.fillStyle = light ? 'rgba(0, 255, 136, 0.03)' : 'rgba(20, 35, 35, 0.08)';
             ctx.fillRect(x, y, cs, cs);
-            ctx.strokeStyle = 'rgba(60,120,100,0.02)';
-            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = 'rgba(60, 120, 100, 0.02)'; ctx.lineWidth = 0.5;
             ctx.strokeRect(x, y, cs, cs);
 
             const p = board[r]?.[c];
             if (p && p.piece) {
                 ctx.font = `${cs * 0.55}px 'Segoe UI','Arial Unicode MS',sans-serif`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.shadowColor = 'rgba(100,200,180,0.02)';
-                ctx.shadowBlur = 6;
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.shadowColor = 'rgba(79, 195, 247, 0.3)'; ctx.shadowBlur = 10;
                 ctx.fillStyle = p.color === 'white' ? '#ddeeee' : '#1a2a2a';
                 ctx.fillText(p.piece, x + cs / 2, y + cs / 2 + 2);
                 ctx.shadowBlur = 0;
             }
         }
     }
-
-    ctx.fillStyle = 'rgba(255,255,255,0.03)';
-    ctx.font = '8px monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'top';
-    for (let i = 0; i < 9; i++) ctx.fillText(String.fromCharCode(97 + i), i * cs + cs / 2, 2);
-    ctx.textBaseline = 'bottom';
-    for (let i = 0; i < 9; i++) ctx.fillText(String(9 - i), 2, i * cs + cs / 2);
 }
 
 function applyMove(m) {
-    const fromFile = m.from.charCodeAt(0) - 97,
-        fromRank = 8 - parseInt(m.from[1]);
-    const toFile = m.to.charCodeAt(0) - 97,
-        toRank = 8 - parseInt(m.to[1]);
-    if (fromRank >= 0 && fromRank < 9 && fromFile >= 0 && fromFile < 9 &&
-        toRank >= 0 && toRank < 9 && toFile >= 0 && toFile < 9) {
+    const fromFile = m.from.charCodeAt(0) - 97, fromRank = 8 - parseInt(m.from[1]);
+    const toFile = m.to.charCodeAt(0) - 97, toRank = 8 - parseInt(m.to[1]);
+    if (fromRank >= 0 && fromRank < 9 && fromFile >= 0 && fromFile < 9 && toRank >= 0 && toRank < 9 && toFile >= 0 && toFile < 9) {
         const piece = board[fromRank][fromFile];
         board[toRank][toFile] = piece;
         board[fromRank][fromFile] = { piece: null, color: null };
     }
 }
 
-// ─── SPIEL LADEN ─────────────────────────────────────────────
+// ─── AXIOM ENGINE (3er Dualität + VEC_CORE) ─────────────────
+function computeAxiom() {
+    // 1. 3er Dualität aus Zeit & Phi ableiten
+    const t = performance.now() * 0.001;
+    NC.dual.X.real = (Math.sin(t * PHI) + 1) / 2;
+    NC.dual.X.irreal = 1 - NC.dual.X.real;
+    NC.dual.Y.real = (Math.cos(t * PHI) + 1) / 2;
+    NC.dual.Y.irreal = 1 - NC.dual.Y.real;
+    NC.dual.Z.real = (Math.sin(t * 0.5) + 1) / 2;
+    NC.dual.Z.irreal = 1 - NC.dual.Z.real;
+
+    // 2. Energie & Mana Pool (VEC_CORE / PIPELINE_RUN8)
+    const avgReal = (NC.dual.X.real + NC.dual.Y.real + NC.dual.Z.real) / 3;
+    NC.vecEnergy = Math.sin(t * 0.1) * PHI;
+    NC.manaPool = Math.floor(avgReal * 100);
+
+    document.getElementById('dualReal').textContent = Math.round(avgReal * 100) + "%";
+    document.getElementById('dualIrreal').textContent = Math.round((1 - avgReal) * 100) + "%";
+    document.getElementById('manaPool').textContent = NC.manaPool;
+    document.getElementById('vecEnergy').textContent = NC.vecEnergy.toFixed(2);
+    document.getElementById('compromiseVal').textContent = PHI.toFixed(3);
+}
+
+// ─── LOAD GAME ──────────────────────────────────────────────
 function loadGame(game) {
-    current = game;
-    moveIdx = 0;
+    current = game; moveIdx = 0;
     initBoard();
     document.getElementById('detailPanel').innerHTML =
-        `<span class="highlight">📜 ${game.name}</span> · ${game.year} · ${game.players} · ${game.moves.length} Züge`;
+        `<span class="highlight">🌀 ${game.name}</span> · ${game.year} · AXIOM SCORE: ${game.axiomScore} · ${game.players}`;
     document.getElementById('totalMoves').textContent = game.moves.length;
     document.getElementById('moveCount').textContent = '0';
     document.getElementById('turnIndicator').textContent = 'Weiß';
-    document.getElementById('manaIndicator').textContent = '0';
     renderBoard();
     if (game.moves.length > 0) setTimeout(nextMove, 400);
 }
 
 function nextMove() {
     if (!current || moveIdx >= current.moves.length) {
-        if (autoMode) { clearInterval(autoTimer);
-            autoTimer = null;
-            document.getElementById('btnAuto').textContent = '▶ Auto';
-            autoMode = false; }
+        if (autoMode) { clearInterval(autoTimer); autoTimer = null; document.getElementById('btnAuto').textContent = '▶ Auto'; autoMode = false; }
         return;
     }
     const m = current.moves[moveIdx];
-    applyMove(m);
-    moveIdx++;
+    applyMove(m); moveIdx++;
     document.getElementById('moveCount').textContent = moveIdx;
     document.getElementById('turnIndicator').textContent = moveIdx % 2 === 0 ? 'Weiß' : 'Schwarz';
-    document.getElementById('manaIndicator').textContent = moveIdx;
-    document.getElementById('detailPanel').innerHTML =
-        `<span class="highlight">📜 ${current.name}</span> · Zug ${moveIdx}/${current.moves.length}: <span class="move-text">${m.notation}</span>`;
 
-    // ✨ ICE / WATER / FIRE Effekt
+    // General Effects (Axiom, Ice, Water, Fire)
     const rect = canvas.getBoundingClientRect();
     const x = rect.left + rect.width * (0.2 + Math.random() * 0.6);
     const y = rect.top + rect.height * (0.2 + Math.random() * 0.6);
-    const type = randomEffect();
-    spawnEffect(x, y, type);
+    if (NC.vecEnergy > 0.5) spawnEffect(x, y, 'axiom');
+    else if (NC.dual.X.real > 0.6) spawnEffect(x, y, 'fire');
+    else spawnEffect(x, y, 'ice');
 
+    document.getElementById('detailPanel').innerHTML =
+        `<span class="highlight">🌀 ${current.name}</span> · Zug ${moveIdx}/${current.moves.length}: <span style="color:#00ff88;">${m.notation}</span> · Mana: ${NC.manaPool}`;
+    
     renderBoard();
-    if (autoMode && moveIdx < current.moves.length) setTimeout(nextMove, 700);
-    else if (autoMode && moveIdx >= current.moves.length) {
-        clearInterval(autoTimer);
-        autoTimer = null;
-        document.getElementById('btnAuto').textContent = '▶ Auto';
-        autoMode = false;
-    }
+    if (autoMode && moveIdx < current.moves.length) setTimeout(nextMove, 650);
+    else if (autoMode && moveIdx >= current.moves.length) { clearInterval(autoTimer); autoTimer = null; document.getElementById('btnAuto').textContent = '▶ Auto'; autoMode = false; }
 }
 
-// ─── LISTE ──────────────────────────────────────────────────
+// ─── LIST ───────────────────────────────────────────────────
 function renderList() {
     const list = document.getElementById('gameList');
     list.innerHTML = '';
     filtered.forEach(g => {
         const d = document.createElement('div');
         d.className = 'item';
-        d.innerHTML =
-            `<div><div class="name">${g.name}</div><div class="year">${g.year} · ${g.players}</div></div><div class="emotion">${g.emotion}</div>`;
-        d.onclick = () => {
-            if (autoMode) { clearInterval(autoTimer);
-                autoTimer = null;
-                document.getElementById('btnAuto').textContent = '▶ Auto';
-                autoMode = false; }
-            loadGame(g);
-        };
+        d.innerHTML = `<div><div class="name">${g.name}</div><div class="meta">${g.year} · AXIOM: ${g.axiomScore}</div></div><div class="emotion">${g.emotion}</div>`;
+        d.onclick = () => { if (autoMode) { clearInterval(autoTimer); autoTimer = null; document.getElementById('btnAuto').textContent = '▶ Auto'; autoMode = false; } loadGame(g); };
         list.appendChild(d);
     });
 }
 
 function filterList() {
-    let res = [...allGames];
-    const f = document.querySelector('[data-filter].active')?.dataset.filter || 'all';
-    if (f !== 'all') res = res.filter(g => g.theme === f);
+    let res = [...allAgents];
     const s = document.getElementById('sortSelect').value;
     if (s === 'year') res.sort((a, b) => a.year - b.year);
-    if (s === 'name') res.sort((a, b) => a.name.localeCompare(b.name));
+    if (s === 'axiom') res.sort((a, b) => b.axiomScore - a.axiomScore);
     filtered = res;
     renderList();
 }
 
-// ─── HSF MODULE ─────────────────────────────────────────────
-function runWraight() {
-    const erlaubt = Math.random() > 0.25;
-    setStatus('agentStatus', erlaubt ? '✅ WRAIGHT' : '⛔ WRAIGHT');
-    document.getElementById('detailPanel').innerHTML =
-        `✅ WRAIGHT · ${erlaubt ? 'GRÜN – Zugang erlaubt' : 'ROT – Zugang blockiert'}`;
-    document.querySelector('.board-wrap').style.borderColor = erlaubt ? 'rgba(79,195,247,0.15)' : 'rgba(255,68,68,0.15)';
-    return erlaubt;
-}
-
-function runCoach() {
-    const erlaubt = runWraight();
-    if (!erlaubt) {
-        document.getElementById('detailPanel').innerHTML = '🧑‍🏫 COACH blockiert · WRAIGHT ist ROT';
-        return;
-    }
-    setStatus('agentStatus', '🧑‍🏫 COACH');
-    document.getElementById('detailPanel').innerHTML = '🧑‍🏫 COACH · führend · ich werde nicht geführt';
-}
-
-function runHelp() { setStatus('agentStatus', '🆘 HELP');
-    document.getElementById('detailPanel').innerHTML = '🆘 HELP · Soforthilfe aktiv'; }
-
-function runSense() {
-    const score = (0.6 + Math.random() * 0.4).toFixed(2);
-    setStatus('agentStatus', '👁️ SENSE');
-    document.getElementById('detailPanel').innerHTML = `👁️ 7SENSE · ${score} · ${score > 0.7 ? 'klar' : 'unscharf'}`;
-}
+// ─── MODULE (HSF) ───────────────────────────────────────────
+function runHelp() { setStatus('agentStatus', '🆘 HELP'); document.getElementById('detailPanel').innerHTML = '🆘 HELP · Soforthilfe aktiv. System in Stasis.'; }
+function runSense() { const score = (0.6 + Math.random() * 0.4).toFixed(2); setStatus('agentStatus', '👁️ SENSE'); document.getElementById('detailPanel').innerHTML = `👁️ 7SENSE · ${score} · ${score > 0.7 ? 'klar (Form-Matrix)' : 'unscharf (Cubik-Ram)'}`; }
+function runWraight() { const erlaubt = Math.random() > 0.25; setStatus('agentStatus', erlaubt ? '✅ WRAIGHT' : '⛔ WRAIGHT'); document.getElementById('detailPanel').innerHTML = `✅ WRAIGHT · ${erlaubt ? 'GRÜN – Zugang erlaubt (VEC_CORE)' : 'ROT – Zugang blockiert (FORM_MATRIX)'}`; document.querySelector('.board-wrap').style.borderColor = erlaubt ? 'rgba(79,195,247,0.3)' : 'rgba(255,68,68,0.3)'; return erlaubt; }
+function runCoach() { const erlaubt = runWraight(); if (!erlaubt) { document.getElementById('detailPanel').innerHTML = '🧑‍🏫 COACH blockiert · WRAIGHT ist ROT'; return; } setStatus('agentStatus', '🧑‍🏫 COACH'); document.getElementById('detailPanel').innerHTML = '🧑‍🏫 COACH · führend · ich werde nicht geführt (PIPELINE_RUN8)'; }
 
 function resetAll() {
-    initBoard();
-    moveIdx = 0;
-    current = null;
-    if (autoMode) { clearInterval(autoTimer);
-        autoTimer = null;
-        document.getElementById('btnAuto').textContent = '▶ Auto';
-        autoMode = false; }
-    document.getElementById('moveCount').textContent = '0';
-    document.getElementById('totalMoves').textContent = '0';
-    document.getElementById('turnIndicator').textContent = 'Weiß';
-    document.getElementById('manaIndicator').textContent = '0';
-    document.getElementById('detailPanel').innerHTML = '⟲ Reset · System zurückgesetzt';
+    initBoard(); moveIdx = 0; current = null;
+    if (autoMode) { clearInterval(autoTimer); autoTimer = null; document.getElementById('btnAuto').textContent = '▶ Auto'; autoMode = false; }
+    document.getElementById('moveCount').textContent = '0'; document.getElementById('totalMoves').textContent = '0';
+    document.getElementById('turnIndicator').textContent = 'Weiß'; document.getElementById('manaIndicator').textContent = '0';
+    document.getElementById('detailPanel').innerHTML = '⟲ Reset · System zurückgesetzt in den Ursprung (iki1uc)';
     setStatus('agentStatus', 'bereit');
-    document.querySelector('.board-wrap').style.borderColor = 'rgba(255,215,0,0.05)';
+    document.querySelector('.board-wrap').style.borderColor = 'rgba(0,255,136,0.1)';
     renderBoard();
-    if (allGames.length) loadGame(allGames[0]);
+    if (allAgents.length) loadGame(allAgents[0]);
 }
 
 // ─── EXPORT / IMPORT ─────────────────────────────────────────
-document.getElementById('btnExport').onclick = function() {
-    const data = JSON.stringify(allGames, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `history_chess_${Date.now()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-};
+document.getElementById('btnExport').onclick = () => { const data = JSON.stringify(allAgents, null, 2); const blob = new Blob([data], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `imperium_cubik_${Date.now()}.json`; a.click(); URL.revokeObjectURL(url); };
 document.getElementById('btnImport').onclick = () => document.getElementById('fileInput').click();
-document.getElementById('fileInput').onchange = function(e) {
-    if (!e.target.files.length) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-        try {
-            const data = JSON.parse(ev.target.result);
-            if (Array.isArray(data) && data.length > 0 && data[0].moves) {
-                allGames = data;
-                filterList();
-                if (allGames.length) loadGame(allGames[0]);
-            }
-        } catch (err) { alert('Import fehlgeschlagen: ' + err.message); }
-    };
-    reader.readAsText(e.target.files[0]);
-    e.target.value = '';
-};
+document.getElementById('fileInput').onchange = (e) => { if (!e.target.files.length) return; const reader = new FileReader(); reader.onload = (ev) => { try { const data = JSON.parse(ev.target.result); if (Array.isArray(data) && data.length > 0 && data[0].moves) { allAgents = data; filterList(); if (allAgents.length) loadGame(allAgents[0]); } } catch (err) { alert('Import fehlgeschlagen: ' + err.message); } }; reader.readAsText(e.target.files[0]); e.target.value = ''; };
 
 // ─── EVENTS ──────────────────────────────────────────────────
-document.querySelectorAll('[data-filter]').forEach(b => {
-    b.onclick = () => {
-        document.querySelectorAll('[data-filter]').forEach(x => x.classList.remove('active'));
-        b.classList.add('active');
-        filterList();
-    };
-});
+document.getElementById('btnAxiom').onclick = () => { computeAxiom(); const rect = canvas.getBoundingClientRect(); spawnEffect(rect.left + rect.width/2, rect.top + rect.height/2, 'axiom'); document.getElementById('detailPanel').innerHTML = '🌀 AXIOM STEP · 3er Dualität neu berechnet.'; };
+document.getElementById('btnIce').onclick = () => { const rect = canvas.getBoundingClientRect(); spawnEffect(rect.left + rect.width/2, rect.top + rect.height/2, 'ice'); document.getElementById('detailPanel').innerHTML = '❄️ ICE · kühle Präzision (VEC_CORE)'; };
+document.getElementById('btnWater').onclick = () => { const rect = canvas.getBoundingClientRect(); spawnEffect(rect.left + rect.width/2, rect.top + rect.height/2, 'water'); document.getElementById('detailPanel').innerHTML = '💧 WATER · fließende Bewegung (AIR6D)'; };
+document.getElementById('btnFire').onclick = () => { const rect = canvas.getBoundingClientRect(); spawnEffect(rect.left + rect.width/2, rect.top + rect.height/2, 'fire'); document.getElementById('detailPanel').innerHTML = '🔥 FIRE · brennender Impuls (PIPELINE_RUN8)'; };
 document.getElementById('sortSelect').onchange = filterList;
 document.getElementById('btnStep').onclick = nextMove;
-document.getElementById('btnAuto').onclick = function() {
-    if (autoMode) { clearInterval(autoTimer);
-        autoTimer = null;
-        this.textContent = '▶ Auto';
-        autoMode = false; return; }
-    if (!current) { if (filtered.length) loadGame(filtered[0]);
-        else return; }
-    autoMode = true;
-    this.textContent = '⏸ Stop';
-    if (moveIdx === 0) nextMove();
-    else if (moveIdx < current.moves.length) nextMove();
-    else loadGame(current);
-};
+document.getElementById('btnAuto').onclick = function() { if (autoMode) { clearInterval(autoTimer); autoTimer = null; this.textContent = '▶ Auto'; autoMode = false; return; } if (!current) { if (filtered.length) loadGame(filtered[0]); else return; } autoMode = true; this.textContent = '⏸ Stop'; if (moveIdx === 0) nextMove(); else if (moveIdx < current.moves.length) nextMove(); else loadGame(current); };
 document.getElementById('btnReset').onclick = resetAll;
 document.getElementById('btnHelp').onclick = runHelp;
 document.getElementById('btnSense').onclick = runSense;
 document.getElementById('btnWraight').onclick = runWraight;
 document.getElementById('btnCoach').onclick = runCoach;
-document.getElementById('btnIce').onclick = () => {
-    const rect = canvas.getBoundingClientRect();
-    spawnEffect(rect.left + rect.width / 2, rect.top + rect.height / 2, 'ice');
-    document.getElementById('detailPanel').innerHTML = '❄️ ICE · kühle Präzision';
-};
-document.getElementById('btnWater').onclick = () => {
-    const rect = canvas.getBoundingClientRect();
-    spawnEffect(rect.left + rect.width / 2, rect.top + rect.height / 2, 'water');
-    document.getElementById('detailPanel').innerHTML = '💧 WATER · fließende Bewegung';
-};
-document.getElementById('btnFire').onclick = () => {
-    const rect = canvas.getBoundingClientRect();
-    spawnEffect(rect.left + rect.width / 2, rect.top + rect.height / 2, 'fire');
-    document.getElementById('detailPanel').innerHTML = '🔥 FIRE · brennender Impuls';
-};
 
-// ─── TASTATUR ────────────────────────────────────────────────
-document.addEventListener('keydown', (e) => {
-    if (e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault();
-        nextMove(); }
-    if (e.key === 'r' || e.key === 'R') resetAll();
-    if (e.key === 'a' || e.key === 'A') document.getElementById('btnAuto').click();
-    if (e.key === 'h' || e.key === 'H') runHelp();
-    if (e.key === 'w' || e.key === 'W') runWraight();
-    if (e.key === 'c' || e.key === 'C') runCoach();
-    if (e.key === 's' || e.key === 'S') runSense();
-    if (e.key === 'i' || e.key === 'I') document.getElementById('btnIce').click();
-    if (e.key === 'o' || e.key === 'O') document.getElementById('btnWater').click();
-    if (e.key === 'f' || e.key === 'F') document.getElementById('btnFire').click();
-});
+// Tastatur
+document.addEventListener('keydown', (e) => { if (e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); nextMove(); } if (e.key === 'r') resetAll(); if (e.key === 'a') document.getElementById('btnAuto').click(); if (e.key === 'h') runHelp(); if (e.key === 'w') runWraight(); if (e.key === 'c') runCoach(); if (e.key === 's') runSense(); if (e.key === 'i') document.getElementById('btnIce').click(); if (e.key === 'o') document.getElementById('btnWater').click(); if (e.key === 'f') document.getElementById('btnFire').click(); if (e.key === 'x') document.getElementById('btnAxiom').click(); });
 
-// ─── INIT ────────────────────────────────────────────────────
-function init() {
-    initBoard();
-    filterList();
-    if (allGames.length) loadGame(allGames[0]);
-    resizeCanvas();
-    setTimeout(resizeCanvas, 150);
-    console.log('♟️ HISTORY CHESS · meKI-756 · PROFESSIONAL');
-    console.log('⌨️  space=Nächster Zug  r=Reset  a=Auto  h=Help  w=Wraight  c=Coach  s=Sense  i=Ice  o=Water  f=Fire');
-}
-init();
+// INIT
+initBoard(); filterList(); if (allAgents.length) loadGame(allAgents[0]); resizeCanvas(); setTimeout(resizeCanvas, 150);
+computeAxiom();
+setInterval(computeAxiom, 500);
+console.log('♟️ HISTORY CHESS · IMPERIUM CUBIK · iki1uc');
+console.log('⌨️  space=Zug  a=Auto  x=Axiom  r=Reset  i=Ice  o=Water  f=Fire');
 </script>
-
 </body>
 </html>
