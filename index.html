@@ -724,7 +724,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btnRandom').addEventListener('click', ()=>engine.randomize());
     document.getElementById('btnPump').addEventListener('click', ()=>engine.pumpCycle());
     document.getElementById('btnLoop').addEventListener('click', ()=>engine.loopAll());
-
+ 
     document.getElementById('btnStep').addEventListener('click', playNextMove);
     document.getElementById('btnAuto').addEventListener('click', () => {
         if (autoMode) { stopAuto(); return; }
