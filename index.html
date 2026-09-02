@@ -3,945 +3,425 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>♟️ HISTORY CHESS · meKI-756 · LEGO EDITION</title>
+    <title>3‑STERNE · GENERAL · PREFETCH · PREDICT · CACHE · VEREINHEITLICHT</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            background: #0a0a12;
-            color: #d0d8e0;
-            font-family: 'Segoe UI', 'Consolas', monospace;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-            background: radial-gradient(ellipse at 30% 40%, #0a0a20, #000);
-        }
-        .container {
-            max-width: 1300px;
-            width: 100%;
-            background: rgba(10,10,20,0.6);
-            border: 1px solid rgba(255,255,255,0.03);
-            border-radius: 20px;
-            padding: 20px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 0 80px rgba(0,0,0,0.6);
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 14px;
-        }
-        .header h1 {
-            font-size: 24px;
-            font-weight: 300;
-            letter-spacing: 6px;
-            background: linear-gradient(90deg, #4fc3f7, #ffd700, #ff7043);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .header .sub {
-            color: #445555;
-            font-size: 11px;
-            letter-spacing: 3px;
-        }
-
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-        @media (max-width: 850px) { .main-grid { grid-template-columns: 1fr; } }
-
-        .board-wrap {
-            position: relative;
-            width: 100%;
-            max-width: 480px;
-            margin: 0 auto;
-            aspect-ratio: 1/1;
-            background: rgba(0,0,0,0.2);
-            border-radius: 14px;
-            border: 1px solid rgba(255,215,0,0.05);
-            overflow: hidden;
-        }
-        #chessCanvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        /* ===== RECHTE SEITE ===== */
-        .right-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            justify-content: flex-end;
-        }
-        .toolbar button, .toolbar select {
-            background: rgba(20,30,30,0.3);
-            color: #8a9a9a;
-            border: 1px solid rgba(255,255,255,0.02);
-            padding: 5px 14px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 9px;
-            transition: all 0.25s;
-        }
-        .toolbar button:hover {
-            background: rgba(40,60,60,0.15);
-            border-color: rgba(255,215,0,0.15);
-            color: #c8d8d8;
-        }
-        .toolbar button.active { border-color: rgba(255,215,0,0.2); color: #ffd700; }
-        .toolbar button.gold { color: #ffd700; }
-        .toolbar button.ice { color: #4fc3f7; }
-        .toolbar button.water { color: #4dd0e1; }
-        .toolbar button.fire { color: #ff7043; }
-
-        .game-list {
-            background: rgba(10,10,20,0.3);
-            border: 1px solid rgba(255,255,255,0.02);
-            border-radius: 10px;
-            padding: 8px;
-            max-height: 200px;
-            overflow-y: auto;
-            flex: 1;
-        }
-        .game-list::-webkit-scrollbar { width: 3px; }
-        .game-list::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.1); border-radius: 2px; }
-        .game-list .item {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.02);
-            cursor: pointer;
-            border-radius: 6px;
-        }
-        .game-list .item:hover { background: rgba(255,215,0,0.03); }
-        .game-list .item .name { color: #c8d0d0; font-size: 11px; }
-        .game-list .item .year { color: #445555; font-size: 9px; }
-        .game-list .item .emotion { font-size: 13px; opacity: 0.5; }
-
-        .detail {
-            padding: 10px 12px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 8px;
-            font-size: 11px;
-            color: #8a9a9a;
-            border-left: 2px solid rgba(255,215,0,0.1);
-            min-height: 40px;
-        }
-        .detail .highlight { color: #ffd700; }
-        .detail .move-text { color: #88ddbb; }
-
-        .status-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 10px;
-            color: #445555;
-            padding: 4px 2px;
-            border-top: 1px solid rgba(255,255,255,0.02);
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-        .status-row .turn { color: #88ddbb; }
-
-        /* ===== TÜFTEL-PANEL ===== */
-        .tueftel-panel {
-            background: rgba(10,10,20,0.3);
-            border: 1px solid rgba(255,255,255,0.02);
-            border-radius: 10px;
-            padding: 10px 14px;
-        }
-        .tueftel-panel h3 {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #556;
-            margin-bottom: 6px;
-        }
-        .tueftel-panel .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 10px;
-            padding: 3px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.02);
-        }
-        .tueftel-panel .row .label { color: #667; }
-        .tueftel-panel .row .value { color: #ffd700; }
-        .tueftel-panel input[type="range"] {
-            width: 100%;
-            height: 3px;
-            -webkit-appearance: none;
-            background: #1a2240;
-            border-radius: 10px;
-            outline: none;
-            margin: 4px 0;
-        }
-        .tueftel-panel input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
-            background: #ffd700;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        .tueftel-panel select {
-            background: rgba(20,30,30,0.3);
-            color: #8a9a9a;
-            border: 1px solid rgba(255,255,255,0.02);
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 9px;
-            cursor: pointer;
-        }
-        .tueftel-panel .btn-group { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
-        .tueftel-panel .btn-group button {
-            background: rgba(20,30,30,0.2);
-            color: #668888;
-            border: 1px solid rgba(255,255,255,0.02);
-            padding: 3px 12px;
-            border-radius: 14px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 8px;
-            transition: all 0.2s;
-        }
-        .tueftel-panel .btn-group button:hover {
-            background: rgba(40,60,60,0.1);
-            border-color: rgba(255,215,0,0.05);
-            color: #aabbbb;
-        }
-        .tueftel-panel .btn-group button.primary { color: #ffd700; border-color: rgba(255,215,0,0.05); }
-        .tueftel-panel .btn-group button.good { color: #4caf50; }
-        .tueftel-panel .btn-group button.bad { color: #f44336; }
-
-        .footer {
-            text-align: center;
-            margin-top: 14px;
-            color: #1a1a1a;
-            font-size: 8px;
-            letter-spacing: 2px;
-            border-top: 1px solid rgba(255,255,255,0.01);
-            padding-top: 10px;
-        }
-        .footer span { color: #ffd700; opacity: 0.3; }
-    </style #boardWrap { position:relative; }
-
-#atmoCanvas {
-    position:absolute;
-    top:0; left:0;
-    width:100%; height:100%;
-    z-index:0;
-    pointer-events:none;
-}
-
-#chessCanvas {
-    position:absolute;
-    top:0; left:0;
-    width:100%; height:100%;
-    z-index:1;
-}
-
-#atmoCanvas {
-    position:absolute;
-    top:0; left:0;
-    width:100%; height:100%;
-    z-index:0;
-    pointer-events:none;
-}
-
-#chessCanvas {
-    position:absolute;
-    top:0; left:0;
-    width:100%; height:100%;
-    z-index:1;
-}
-
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:#0a0a12;color:#d0d9e6;font-family:'Consolas',monospace;padding:10px;min-height:100vh}
+        h1{text-align:center;letter-spacing:3px;font-weight:300;font-size:22px;background:linear-gradient(90deg,#ffd700,#00ccff,#ff66ff,#00ff88);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+        h1 small{font-size:10px;display:block;color:#3d5a70;-webkit-text-fill-color:#3d5a70;letter-spacing:2px}
+        .flex{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:3px 0}
+        .panel{background:rgba(255,255,255,0.03);padding:10px;border-radius:8px;margin-bottom:8px;border:1px solid rgba(0,200,255,0.08)}
+        .panel h3{font-size:10px;color:#3d5a70;letter-spacing:2px;margin-bottom:5px;text-transform:uppercase}
+        button{background:#0f0;color:#000;font-weight:bold;border:none;padding:4px 12px;border-radius:4px;font-family:monospace;font-size:10px;cursor:pointer}
+        button:hover{background:#0ff}
+        button.sec{background:transparent;color:#0f0;border:1px solid #0f0}
+        button.sec:hover{background:#0f0;color:#000}
+        button.gold{background:#ffd700;color:#000}
+        button.gold:hover{background:#ffaa00}
+        .grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:700px){.grid2{grid-template-columns:1fr}}
+        pre{background:rgba(0,0,0,0.4);padding:8px;border-radius:6px;border:1px solid rgba(0,200,255,0.05);font-size:9px;line-height:1.3;white-space:pre-wrap;color:#8ab4c8;margin:4px 0;max-height:120px;overflow:auto}
+        .badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:8px;margin:0 2px}
+        .badge.info{background:#0a1a2a;color:#66ccff}
+        .status-row{display:flex;flex-wrap:wrap;gap:6px;font-size:9px;margin:3px 0;color:#5a7a8a}
+        .status-row span{background:rgba(255,255,255,0.02);padding:2px 6px;border-radius:3px}
+        .console{background:#0a0a0a;padding:6px;border-radius:4px;font-size:7px;color:#3d5a70;max-height:80px;overflow-y:auto;border:1px solid #111}
+        .console .log-ok{color:#6bffa9}
+        .console .log-warn{color:#ffd700}
+        .console .log-info{color:#66ccff}
+        .console .log-err{color:#ff6b8a}
+        .matrix-3x2{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:4px 0}
+        .cell{background:#0a0a0a;padding:4px;text-align:center;font-size:8px;border:1px solid #111;border-radius:3px;color:#3d5a70}
+        .cell.active{background:#0a2a1a;color:#6bffa9;border-color:#0f0}
+        .cell.gold{background:#2a1a0a;color:#ffd700;border-color:#ffd700}
+        .axle-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:2px;margin:3px 0}
+        .axle-cell{background:#0a0a0a;padding:3px;text-align:center;font-size:7px;border:1px solid #111;border-radius:2px;color:#3d5a70;cursor:pointer}
+        .axle-cell.on{background:#0a2a1a;color:#6bffa9;border-color:#0f0}
+        .axle-cell.off{background:#0a0a0a;color:#3d5a70}
+        .metric-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin:4px 0}
+        .metric{background:#0a0a0a;padding:6px;border-radius:4px;text-align:center;border:1px solid #1a1a2a}
+        .metric .label{font-size:7px;color:#3d5a70;text-transform:uppercase}
+        .metric .value{font-size:16px;font-weight:bold;color:#6bffa9}
+        .metric .value.gold{color:#ffd700}
+        .metric .value.info{color:#66ccff}
+    </style>
 </head>
 <body>
-<div class="container">
 
-    <div class="header">
-        <h1>♟️ HISTORY CHESS · LEGO EDITION</h1>
-        <div class="sub">meKI-756 · HSF · echte Schachlogik · Animation · Tüftel-Panel</div>
+<h1>⭐ 3‑STERNE · GENERAL</h1>
+<h1 style="font-size:11px;margin-top:-2px;background:none;-webkit-text-fill-color:#3d5a70;color:#3d5a70;font-weight:400">PREFETCH · PREDICT · CACHE · VEREINHEITLICHTE LOGIK</h1>
+
+<div class="grid2">
+  <div>
+    <div class="panel">
+      <h3>🎯 INDUSTRY · STEUERUNG</h3>
+      <div class="flex">
+        <button class="gold" id="btnGeneral">⚡ GENERAL RUN</button>
+        <button id="btnReset">⟲ RESET</button>
+        <button class="sec" id="btnToggleAll">🔄 ALL TOGGLE</button>
+        <button id="btnRandom">🎲 RANDOM</button>
+        <button id="btnPump">💨 PUMP</button>
+        <button id="btnLoop">♾ LOOP ALL</button>
+      </div>
     </div>
 
-    <div class="main-grid">
-
-        <!-- BOARD -->
-        <div class="board-wrap" id="boardWrap">
-            <canvas id="chessCanvas"></canvas>
-           <canvas id="chessCanvas"></canvas>
-
-        </div>
-
-        <!-- RECHTE SEITE -->
-        <div class="right-panel">
-
-            <!-- TOOLBAR -->
-            <div class="toolbar">
-                <button class="active" data-filter="all">📚 Alle</button>
-                <button data-filter="pferd">🐴 Pferde</button>
-                <button data-filter="opfer">💥 Opfer</button>
-                <button data-filter="remis">⚖️ Remis</button>
-                <select id="sortSelect">
-                    <option value="year">Jahr</option>
-                    <option value="name">Name</option>
-                </select>
-                <button class="ice" id="btnIce">❄️ Ice</button>
-                <button class="water" id="btnWater">💧 Water</button>
-                <button class="fire" id="btnFire">🔥 Fire</button>
-                <button id="btnStep">⏭ Zug</button>
-                <button id="btnAuto">▶ Auto</button>
-                <button id="btnReset">⟲ Reset</button>
-            </div>
-
-            <!-- GAME LIST -->
-            <div class="game-list" id="gameList"></div>
-
-            <!-- DETAIL -->
-            <div class="detail" id="detailPanel">
-                <span class="highlight">📜 Wähle eine Partie</span>
-            </div>
-
-            <!-- STATUS -->
-            <div class="status-row">
-                <div class="turn">Zug: <span id="turnIndicator">Weiß</span></div>
-                <div>Zug <span id="moveCount">0</span>/<span id="totalMoves">0</span></div>
-                <div>🌀 <span id="manaIndicator">0</span></div>
-                <div style="color:#445555;">⚡ <span id="agentStatus">bereit</span></div>
-            </div>
-
-            <!-- TÜFTEL-PANEL -->
-            <div class="tueftel-panel">
-                <h3>🎛️ Tüftel-Panel</h3>
-                <div class="row"><span class="label">⏱️ Geschwindigkeit</span><span class="value" id="speedDisplay">700ms</span></div>
-                <input type="range" id="speedSlider" min="200" max="1500" value="700" step="50">
-                <div class="row"><span class="label">🎯 Spielstil</span>
-                    <select id="styleSelect">
-                        <option value="random">🎲 Zufall</option>
-                        <option value="aggressive">🔥 Aggressiv</option>
-                        <option value="defensive">🛡️ Defensiv</option>
-                        <option value="tactical">🧠 Taktisch</option>
-                    </select>
-                </div>
-                <div class="row"><span class="label">💪 KI-Stärke</span><span class="value" id="strengthDisplay">3</span></div>
-                <input type="range" id="strengthSlider" min="1" max="5" value="3" step="1">
-                <div class="btn-group">
-                    <button class="primary" id="btnLearn">🧬 Lernen</button>
-                    <button id="btnResetStats">📊 Stats reset</button>
-                    <button class="good" id="btnGood">👍 Gut</button>
-                    <button class="bad" id="btnBad">👎 Schlecht</button>
-                    <button id="btnExportTraining">💾 Export</button>
-                    <button id="btnImportTraining">📥 Import</button>
-                    <input type="file" id="fileInputTraining" accept=".json" style="display:none;">
-                </div>
-            </div>
-        </div>
+    <div class="panel">
+      <h3>🌀 9 ACHSEN · d e i n o r s u w</h3>
+      <div class="axle-grid" id="axleGrid"></div>
     </div>
 
-    <div class="footer"><span>♟️</span> HISTORY CHESS · LEGO EDITION · <span>wieimmer4u</span></div>
+    <div class="panel">
+      <h3>🔷 PUMP · STATIONEN</h3>
+      <div class="flex" style="font-size:8px;color:#5a7a8a;gap:2px">
+        <span class="badge info">HY</span><span class="badge info">PE</span>
+        <span class="badge info">PER</span><span class="badge info">DA</span>
+        <span class="badge info">NE</span><span class="badge info">BEN</span>
+        <span class="badge info">TRANS</span><span class="badge info">WARB</span>
+        <span class="badge info">KANAL</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>📊 STATUS</h3>
+      <div class="status-row">
+        <span>SCORE: <span id="scoreVal" style="color:#ffd700">0</span></span>
+        <span>PUMP: <span id="pumpVal" style="color:#6bffa9">0</span></span>
+        <span>QUOTE: <span id="quoteVal" style="color:#66ccff">0%</span></span>
+        <span>PREDICT: <span id="predictVal" style="color:#ffd700">IDLE</span></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>📜 CONSOLE · LOG</h3>
+      <div class="console" id="consoleLog">⏳ system initialisiert...</div>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel">
+      <h3>📊 3 ANZEIGEN · PREFETCH · PREDICT · CACHE</h3>
+      <div class="metric-grid">
+        <div class="metric">
+          <div class="label">📦 PREFETCH</div>
+          <div class="value" id="prefetchCount">0</div>
+        </div>
+        <div class="metric">
+          <div class="label">🧠 PREDICT</div>
+          <div class="value gold" id="predictCount">0</div>
+        </div>
+        <div class="metric">
+          <div class="label">💾 CACHE</div>
+          <div class="value info" id="cacheCount">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>📊 3×2 PREFETCH · IKI1UC</h3>
+      <div class="matrix-3x2" id="prefetchGrid"></div>
+    </div>
+
+    <div class="panel">
+      <h3>📈 MASSNAHME · ERGEBNISSE</h3>
+      <pre id="resultDisplay">⏳ berechne...</pre>
+    </div>
+
+    <div class="panel">
+      <h3>❓ MYSTERY ACHSEN · Q / D / F</h3>
+      <div class="flex" style="font-size:8px;gap:6px">
+        <span>Q: <span id="qVal" style="color:#66ccff">0</span></span>
+        <span>D: <span id="dVal" style="color:#6bffa9">0</span></span>
+        <span>F: <span id="fVal" style="color:#ffd700">0</span></span>
+        <span style="color:#3d5a70">|</span>
+        <span>ROOT: <span id="rootVal" style="color:#6bffa9">0</span></span>
+        <span>ACHSE: <span id="achseVal" style="color:#66ccff">A</span></span>
+        <span>TMP: <span id="tmpVal" style="color:#ffd700">128</span></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>🧠 CPU PREDICTIVE · SPRUNG</h3>
+      <div class="flex" style="font-size:8px;gap:6px">
+        <span>STATUS: <span id="cpuStatus" style="color:#6bffa9">ACTIVE</span></span>
+        <span>BIAS: <span id="cpuBias" style="color:#ffd700">FORWARD</span></span>
+        <span>SPRUNG: <span id="cpuJump" style="color:#ff6b8a">0</span></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>🔄 3×2 FENSTER · LIVE</h3>
+      <div class="matrix-3x2" id="liveWindow"></div>
+    </div>
+  </div>
 </div>
 
 <script>
-// ================================================================
-// BAUSTEIN 1: SCHACHLOGIK (Lego-Baustein: moveGenerator)
-// ================================================================
-function inBounds(r,c) { return r>=0 && r<8 && c>=0 && c<8; }
+// ============================================================
+// IKI1UC · 3‑STERNE‑GENERAL · PREFETCH · PREDICT · CACHE
+// VEREINHEITLICHT: eine einzige Berechnungsfunktion (sync),
+// die JEDE Aktion aufruft — nicht nur LOOP ALL — und nur EIN
+// render() pro Klick.
+// ============================================================
+const engine = {
 
-function getPseudoLegalMoves(board, r, c) {
-    const piece = board[r][c];
-    if (!piece) return [];
-    const moves = [];
-    const enemy = piece.color === 'white' ? 'black' : 'white';
-    const add = (nr, nc) => {
-        if (inBounds(nr, nc)) {
-            const target = board[nr][nc];
-            if (!target || target.color === enemy) moves.push({r:nr, c:nc});
-        }
-    };
-<script>
-// === AtmoBoard kommt HIER rein ===
-class AtmoBoard { ... }
+  state: {
+    score: 1000, pump: 0, quote: 0.5, predict: 'IDLE',
+    cpuJump: 0, cpuBias: 'FORWARD', root: 0, achse: 'A', tmp: 128,
+    q: 27, d: 81, f: 243,
+    prefetchCount: 0, predictCount: 0, cacheCount: 0
+  },
 
-// === danach kommen deine Schachlogik-Bausteine ===
-function inBounds(...) { ... }
-function getPseudoLegalMoves(...) { ... }
-...
+  axles: 'deinorsuw'.split('').map(ch => ({ name: ch, active: false })),
+  stations: ['HY','PE','PER','DA','NE','BEN','TRANS','WARB','KANAL'],
+  prefetch: [[3, 9], [27, 81], [243, 729]],
+  liveWindow: [['3','9'], ['27','81'], ['243','729']],
+  memory: { hits: 0, misses: 0, slides: [], jumps: [] },
 
-    switch(piece.type) {
-        case 'pawn': {
-            const dir = piece.color === 'white' ? -1 : 1;
-            if (inBounds(r+dir, c) && !board[r+dir][c]) moves.push({r:r+dir, c});
-            if ((piece.color==='white'&&r===6)||(piece.color==='black'&&r===1)) {
-                if (!board[r+dir][c] && !board[r+2*dir][c]) moves.push({r:r+2*dir, c});
-            }
-            for (const dc of [-1,1]) {
-                const nr = r+dir, nc = c+dc;
-                if (inBounds(nr, nc) && board[nr][nc] && board[nr][nc].color === enemy)
-                    moves.push({r:nr, c:nc});
-            }
-            break;
-        }
-        case 'rook': {
-            for (const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]) {
-                for (let i=1; i<8; i++) {
-                    const nr = r+dr*i, nc = c+dc*i;
-                    if (!inBounds(nr, nc)) break;
-                    const target = board[nr][nc];
-                    if (!target) moves.push({r:nr, c:nc});
-                    else {
-                        if (target.color === enemy) moves.push({r:nr, c:nc});
-                        break;
-                    }
-                }
-            }
-            break;
-        }
-        case 'knight': {
-            for (const [dr,dc] of [[1,2],[2,1],[-1,2],[-2,1],[1,-2],[2,-1],[-1,-2],[-2,-1]])
-                add(r+dr, c+dc);
-            break;
-        }
-        case 'bishop': {
-            for (const [dr,dc] of [[1,1],[1,-1],[-1,1],[-1,-1]]) {
-                for (let i=1; i<8; i++) {
-                    const nr = r+dr*i, nc = c+dc*i;
-                    if (!inBounds(nr, nc)) break;
-                    const target = board[nr][nc];
-                    if (!target) moves.push({r:nr, c:nc});
-                    else {
-                        if (target.color === enemy) moves.push({r:nr, c:nc});
-                        break;
-                    }
-                }
-            }
-            break;
-        }
-        case 'queen': {
-            // combine rook + bishop
-            const rookMoves = getPseudoLegalMoves(board, r, c, {type:'rook', color:piece.color});
-            const bishopMoves = getPseudoLegalMoves(board, r, c, {type:'bishop', color:piece.color});
-            return [...rookMoves, ...bishopMoves];
-        }
-        case 'king': {
-            for (const [dr,dc] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]])
-                add(r+dr, c+dc);
-            break;
-        }
-    }
-    return moves;
-}
+  log(msg, type = 'info') {
+    const el = document.getElementById('consoleLog');
+    const t = new Date().toLocaleTimeString();
+    const cls = type === 'ok' ? 'log-ok' : type === 'warn' ? 'log-warn' : type === 'err' ? 'log-err' : 'log-info';
+    el.innerHTML += `<div class="${cls}">[${t}] ${msg}</div>`;
+    el.scrollTop = el.scrollHeight;
+    if (el.children.length > 30) el.removeChild(el.firstChild);
+  },
 
-// Vereinfachte Legalitätsprüfung (ohne Rochade/en passant)
-function isLegalMove(board, from, to, color) {
-    const piece = board[from.r][from.c];
-    if (!piece || piece.color !== color) return false;
-    const moves = getPseudoLegalMoves(board, from.r, from.c);
-    return moves.some(m => m.r === to.r && m.c === to.c);
-}
+  // ============================================================
+  // ⭐ EINZIGE zentrale Berechnung — von JEDER Aktion aufgerufen.
+  // Keine zweite, abweichende Formel mehr an anderer Stelle.
+  // ============================================================
+  sync() {
+    const active = this.axles.filter(a => a.active).length;
+    const s = this.state;
 
-// KI-Zugauswahl nach Stil
-function selectMoveByStyle(moves, style, strength) {
-    if (moves.length === 0) return null;
-    if (style === 'random') return moves[Math.floor(Math.random() * moves.length)];
-    // Einfache Bewertung: Schlagen hat höheren Score
-    const scored = moves.map(m => {
-        let score = 0;
-        // Schlagbewertung
-        if (board[m.r][m.c] && board[m.r][m.c].color !== 'white') score += 10;
-        // Zentrum bevorzugen
-        const centerDist = Math.abs(m.r-3.5) + Math.abs(m.c-3.5);
-        score += (7 - centerDist) * 0.5;
-        if (style === 'aggressive') score += Math.random() * 5;
-        if (style === 'defensive') score += (7 - m.r) * 0.5; // zurückziehen
-        if (style === 'tactical') score += Math.random() * 8 + (moves.length * 0.1);
-        return { ...m, score };
-    });
-    scored.sort((a,b) => b.score - a.score);
-    // Stärke beeinflusst, wie oft der beste Zug genommen wird
-    const topN = Math.min(moves.length, Math.ceil(1 + (5 - strength) * 0.5));
-    return scored[Math.floor(Math.random() * topN)];
-}
+    s.root = active;
+    s.achse = active > 0 ? String.fromCharCode(64 + active) : '0';
+    s.tmp = 128 - s.pump;
 
-// ================================================================
-// BAUSTEIN 2: BOARD & SPIELSTAND (Lego-Baustein: boardManager)
-// ================================================================
-let board = [];
-let moveHistory = [];
-let currentColor = 'white';
+    s.q = 3 * active + (s.pump % 7);
+    s.d = 9 * active + Math.floor(s.pump / 4);
+    s.f = 27 * active + Math.floor(s.pump / 2);
 
-function initBoard() {
-    const backRankW = ['♖','♘','♗','♕','♔','♗','♘','♖'];
-    const backRankB = ['♜','♞','♝','♛','♚','♝','♞','♜'];
-    board = [];
-    for (let r=0; r<8; r++) {
-        const row = [];
-        for (let c=0; c<8; c++) {
-            let piece = null, color = null, type = null;
-            if (r===0) { piece = backRankW[c]; color='white'; type = ['rook','knight','bishop','queen','king','bishop','knight','rook'][c]; }
-            else if (r===1) { piece='♟'; color='white'; type='pawn'; }
-            else if (r===6) { piece='♟'; color='black'; type='pawn'; }
-            else if (r===7) { piece = backRankB[c]; color='black'; type = ['rook','knight','bishop','queen','king','bishop','knight','rook'][c]; }
-            row.push({ piece, color, type });
-        }
-        board.push(row);
-    }
-    currentColor = 'white';
-    moveHistory = [];
-}
+    s.cpuJump = active + Math.floor(s.pump / 8);
+    s.cpuBias = s.quote > 0.6 ? 'FORWARD' : 'REVERSE';
+    s.predict = (active > 0 && s.quote > 0.4) ? 'ACTIVE' : 'IDLE';
 
-function getLegalMovesForColor(color) {
-    const moves = [];
-    for (let r=0; r<8; r++) {
-        for (let c=0; c<8; c++) {
-            const p = board[r][c];
-            if (p && p.color === color) {
-                const pseudo = getPseudoLegalMoves(board, r, c);
-                for (const m of pseudo) {
-                    if (isLegalMove(board, {r,c}, m, color)) {
-                        moves.push({ from: {r,c}, to: m });
-                    }
-                }
-            }
-        }
-    }
-    return moves;
-}
-
-// ================================================================
-// BAUSTEIN 3: CANVAS & RENDER (Lego-Baustein: renderer)
-// ================================================================
-const canvas = document.getElementById('chessCanvas');
-const ctx = canvas.getContext('2d');
-let moveSpeed = 700; // ms
-let animations = [];
-
-function resizeCanvas() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    const s = Math.min(rect.width, rect.height, 480);
-    canvas.width = s;
-    canvas.height = s;
-    renderBoard();
-}
-window.addEventListener('resize', resizeCanvas);
-
-function renderBoard() {
-    const w = canvas.width, h = canvas.height, cs = w/8;
-    ctx.clearRect(0,0,w,h);
-    ctx.fillStyle = '#0a0a12';
-    ctx.fillRect(0,0,w,h);
-
-    for (let r=0; r<8; r++) {
-        for (let c=0; c<8; c++) {
-            const x = c*cs, y = r*cs, light = (r+c)%2===0;
-            ctx.fillStyle = light ? 'rgba(60,80,80,0.12)' : 'rgba(30,50,50,0.12)';
-            ctx.fillRect(x,y,cs,cs);
-            ctx.strokeStyle = 'rgba(60,120,100,0.02)';
-            ctx.lineWidth = 0.5;
-            ctx.strokeRect(x,y,cs,cs);
-            const p = board[r][c];
-            if (p && p.piece) {
-                ctx.font = `${cs*0.6}px 'Segoe UI','Arial Unicode MS',sans-serif`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.shadowColor = 'rgba(100,200,180,0.02)';
-                ctx.shadowBlur = 6;
-                ctx.fillStyle = p.color === 'white' ? '#ddeeee' : '#1a2a2a';
-                ctx.fillText(p.piece, x+cs/2, y+cs/2+2);
-                ctx.shadowBlur = 0;
-            }
-        }
-    }
-    // Koordinaten
-    ctx.fillStyle = 'rgba(255,255,255,0.03)';
-    ctx.font = '8px monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'top';
-    for (let i=0; i<8; i++) ctx.fillText(String.fromCharCode(97+i), i*cs+cs/2, 2);
-    ctx.textBaseline = 'bottom';
-    for (let i=0; i<8; i++) ctx.fillText(String(8-i), 2, i*cs+cs/2);
-}
-
-function animateMove(from, to, piece, callback) {
-    const cs = canvas.width/8;
-    const startX = from.c*cs + cs/2;
-    const startY = from.r*cs + cs/2;
-    const endX   = to.c*cs + cs/2;
-    const endY   = to.r*cs + cs/2;
-    const startTime = performance.now();
-    animations.push({
-        piece, from, to, startX, startY, endX, endY, startTime, duration: moveSpeed,
-        callback
-    });
-    if (animations.length === 1) renderLoop();
-}
-
-function renderLoop() {
-    const now = performance.now();
-    const cs = canvas.width/8;
-    renderBoard(); // Basisboard ohne animierte Figuren
-
-    animations = animations.filter(anim => {
-        const p = Math.min((now - anim.startTime) / anim.duration, 1);
-        const x = anim.startX + (anim.endX - anim.startX) * p;
-        const y = anim.startY + (anim.endY - anim.startY) * p;
-        ctx.font = `${cs*0.6}px 'Segoe UI','Arial Unicode MS',sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.shadowColor = 'rgba(255,215,0,0.2)';
-        ctx.shadowBlur = 12;
-        ctx.fillStyle = anim.piece.color === 'white' ? '#ddeeee' : '#1a2a2a';
-        ctx.fillText(anim.piece.piece, x, y+2);
-        ctx.shadowBlur = 0;
-        if (p >= 1) {
-            // Bewegung abschließen
-            board[anim.to.r][anim.to.c] = anim.piece;
-            board[anim.from.r][anim.from.c] = { piece: null, color: null, type: null };
-            if (anim.callback) anim.callback();
-            return false;
-        }
-        return true;
-    });
-
-    if (animations.length > 0) requestAnimationFrame(renderLoop);
-    else updateUI();
-}
-
-// ================================================================
-// BAUSTEIN 4: SPIELSTEUERUNG (Lego-Baustein: gameController)
-// ================================================================
-let autoMode = false;
-let autoTimer = null;
-let currentGameMoves = [];
-let moveIndex = 0;
-
-function loadGame(game) {
-    initBoard();
-    currentGameMoves = game.moves.slice();
-    moveIndex = 0;
-    document.getElementById('detailPanel').innerHTML =
-        `<span class="highlight">📜 ${game.name}</span> · ${game.year} · ${game.moves.length} Züge`;
-    document.getElementById('totalMoves').textContent = game.moves.length;
-    document.getElementById('moveCount').textContent = '0';
-    document.getElementById('turnIndicator').textContent = 'Weiß';
-    document.getElementById('manaIndicator').textContent = '0';
-    renderBoard();
-    if (currentGameMoves.length > 0) {
-        // Ersten Zug sofort anzeigen? Nein, warten auf Klick oder Auto.
-    }
-}
-
-function playNextMove() {
-    if (moveIndex >= currentGameMoves.length) {
-        if (autoMode) stopAuto();
-        return;
-    }
-    const m = currentGameMoves[moveIndex];
-    // Finde Figur auf dem Board
-    let from = null, piece = null;
-    for (let r=0; r<8; r++) {
-        for (let c=0; c<8; c++) {
-            if (board[r][c] && board[r][c].piece === m.piece) {
-                from = {r,c};
-                piece = board[r][c];
-                break;
-            }
-        }
-        if (from) break;
-    }
-    if (!from) {
-        // Fallback: suche nach irgendeiner Figur der richtigen Farbe
-        const color = moveIndex % 2 === 0 ? 'white' : 'black';
-        for (let r=0; r<8; r++) {
-            for (let c=0; c<8; c++) {
-                if (board[r][c] && board[r][c].color === color) {
-                    from = {r,c};
-                    piece = board[r][c];
-                    break;
-                }
-            }
-            if (from) break;
-        }
-    }
-    if (from && piece) {
-        const to = { r: 8 - parseInt(m.to[1]), c: m.to.charCodeAt(0)-97 };
-        if (inBounds(to.r, to.c)) {
-            animateMove(from, to, piece, () => {
-                moveIndex++;
-                document.getElementById('moveCount').textContent = moveIndex;
-                document.getElementById('turnIndicator').textContent = moveIndex % 2 === 0 ? 'Weiß' : 'Schwarz';
-                document.getElementById('manaIndicator').textContent = moveIndex;
-                document.getElementById('detailPanel').innerHTML =
-                    `<span class="highlight">📜 ${currentGameMoves[0]?.name||''}</span> · Zug ${moveIndex}/${currentGameMoves.length}: <span class="move-text">${m.notation}</span>`;
-                if (autoMode && moveIndex < currentGameMoves.length) {
-                    setTimeout(playNextMove, moveSpeed);
-                } else if (autoMode && moveIndex >= currentGameMoves.length) {
-                    stopAuto();
-                }
-                updateUI();
-            });
-        } else {
-            // ungültiger Zug – überspringen
-            moveIndex++;
-            setTimeout(playNextMove, 100);
-        }
+    // Trefferquote: EINE Regel, EINE Stelle
+    if (s.cpuJump > 0) {
+      this.memory.hits++;
+      s.predictCount++;
+      this.memory.slides.push(active);
+      this.memory.jumps.push(s.cpuJump);
     } else {
-        moveIndex++;
-        setTimeout(playNextMove, 100);
+      this.memory.misses++;
     }
-}
+    s.quote = (this.memory.hits + 1) / (this.memory.hits + this.memory.misses + 2);
 
-function stopAuto() {
-    autoMode = false;
-    if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
-    document.getElementById('btnAuto').textContent = '▶ Auto';
-}
+    // Live-Fenster: EINE Formel
+    const vals = [3,9,27,81,243,729];
+    const shift = (s.root + s.pump + s.cpuJump) % 6;
+    this.liveWindow = [
+      [vals[(shift)%6], vals[(shift+1)%6]],
+      [vals[(shift+2)%6], vals[(shift+3)%6]],
+      [vals[(shift+4)%6], vals[(shift+5)%6]]
+    ];
 
-// ================================================================
-// BAUSTEIN 5: KI (Lego-Baustein: aiController)
-// ================================================================
-let currentStyle = 'random';
-let strength = 3;
-let trainingData = { good: [], bad: [] };
+    // Metriken: laufen jetzt bei JEDER Aktion mit, nicht nur bei LOOP ALL
+    s.prefetchCount++;
+    if (s.tmp > 0) s.cacheCount++;
 
-function makeAIMove() {
-    const color = currentColor;
-    const moves = getLegalMovesForColor(color);
-    if (moves.length === 0) return;
-    const move = selectMoveByStyle(moves, currentStyle, strength);
-    if (!move) return;
-    const piece = board[move.from.r][move.from.c];
-    if (!piece) return;
-    animateMove(move.from, move.to, piece, () => {
-        currentColor = currentColor === 'white' ? 'black' : 'white';
-        document.getElementById('turnIndicator').textContent = currentColor === 'white' ? 'Weiß' : 'Schwarz';
-        updateUI();
-        if (autoMode) {
-            // nächster Zug?
-        }
+    this.render(); // genau EIN Render pro sync()-Aufruf
+  },
+
+  // ---------- RENDER ----------
+  render() {
+    this.renderAxles();
+    this.renderPrefetch();
+    this.renderLiveWindow();
+    this.updateStatus();
+    this.updateMystery();
+    this.updateCPU();
+    this.updateMetrics();
+    this.renderResult();
+  },
+
+  renderAxles() {
+    const grid = document.getElementById('axleGrid');
+    grid.innerHTML = '';
+    this.axles.forEach((a, i) => {
+      const cell = document.createElement('div');
+      cell.className = 'axle-cell' + (a.active ? ' on' : ' off');
+      cell.textContent = a.name.toUpperCase();
+      cell.onclick = () => this.toggleAxle(i);
+      grid.appendChild(cell);
     });
-}
+  },
 
-// ================================================================
-// BAUSTEIN 6: SPIELEDIEN (Lego-Baustein: gameData)
-// ================================================================
-function generateGames(n) {
-    const g = [];
-    const names = ['Unsterbliche','Opernpartie','Evergreen','Match des Jahrhunderts',
-        'Kasparov vs. Deep Blue','Unsterbliche Remis','Schäferzug','Läufer-Coup',
-        'Pferde-Tour','Opfer von Anderssen','Remis-Partie','Königsangriff',
-        'Damen-Oper','Turm-Sprung','Bauern-Welle','Verteidigung von Berlin'];
-    const themes = ['pferd','opfer','remis','laufer','schafer','könig','dame','turm','bauer'];
-    const emotions = ['😱','🎭','🌿','❄️','🤖','⚖️','🐴','♝','🐑','💥'];
-    for (let i=0; i<n; i++) {
-        const year = 1800 + Math.floor(Math.random()*200);
-        const name = names[i%names.length] + (i>15 ? ` (${i+1})` : '');
-        const theme = themes[i%themes.length];
-        const moves = [];
-        // Echte Schachzüge? Wir generieren hier nur Platzhalter für die Demo.
-        for (let j=0; j<12+Math.floor(Math.random()*25); j++) {
-            const from = String.fromCharCode(97+Math.floor(Math.random()*8)) + (1+Math.floor(Math.random()*8));
-            const to = String.fromCharCode(97+Math.floor(Math.random()*8)) + (1+Math.floor(Math.random()*8));
-            const piece = ['♟','♞','♝','♜','♛','♚'][Math.floor(Math.random()*6)];
-            moves.push({ piece, from, to, notation: `${from}→${to}` });
-        }
-        const winner = ['Weiß','Schwarz','Remis'][Math.floor(Math.random()*3)];
-        g.push({ id:i, name, year, theme, moves, winner, emotion: emotions[i%emotions.length], players: `Meister ${i+1} vs. ${i+2}` });
+  renderPrefetch() {
+    const grid = document.getElementById('prefetchGrid');
+    grid.innerHTML = '';
+    this.prefetch.forEach(row => row.forEach(val => {
+      const cell = document.createElement('div');
+      cell.className = 'cell active';
+      cell.textContent = val;
+      grid.appendChild(cell);
+    }));
+  },
+
+  renderLiveWindow() {
+    const grid = document.getElementById('liveWindow');
+    grid.innerHTML = '';
+    this.liveWindow.forEach(row => row.forEach(val => {
+      const cell = document.createElement('div');
+      cell.className = 'cell gold';
+      cell.textContent = val;
+      grid.appendChild(cell);
+    }));
+  },
+
+  updateStatus() {
+    document.getElementById('scoreVal').textContent = this.state.score;
+    document.getElementById('pumpVal').textContent = this.state.pump;
+    document.getElementById('quoteVal').textContent = Math.round(this.state.quote * 100) + '%';
+    document.getElementById('predictVal').textContent = this.state.predict;
+  },
+
+  updateMystery() {
+    document.getElementById('qVal').textContent = this.state.q;
+    document.getElementById('dVal').textContent = this.state.d;
+    document.getElementById('fVal').textContent = this.state.f;
+    document.getElementById('rootVal').textContent = this.state.root;
+    document.getElementById('achseVal').textContent = this.state.achse;
+    document.getElementById('tmpVal').textContent = this.state.tmp;
+  },
+
+  updateCPU() {
+    document.getElementById('cpuStatus').textContent = this.state.predict === 'ACTIVE' ? 'ACTIVE' : 'IDLE';
+    document.getElementById('cpuBias').textContent = this.state.cpuBias;
+    document.getElementById('cpuJump').textContent = this.state.cpuJump;
+  },
+
+  updateMetrics() {
+    document.getElementById('prefetchCount').textContent = this.state.prefetchCount;
+    document.getElementById('predictCount').textContent = this.state.predictCount;
+    document.getElementById('cacheCount').textContent = this.state.cacheCount;
+  },
+
+  renderResult() {
+    const el = document.getElementById('resultDisplay');
+    const active = this.axles.filter(a => a.active).length;
+    const s = this.state;
+    el.textContent =
+`MASSNAHME · IKI1UC
+─────────────────
+aktive Achsen : ${active} / 9
+Pump-Stack    : ${s.pump} / 128
+Trefferquote  : ${Math.round(s.quote*100)}%
+Predict       : ${s.predict}
+Sprung        : ${s.cpuJump}
+Bias          : ${s.cpuBias}
+ROOT          : ${s.root}
+ACHSE         : ${s.achse}
+TMP           : ${s.tmp}
+Q:${s.q}  D:${s.d}  F:${s.f}
+PREFETCH:${s.prefetchCount}  PREDICT:${s.predictCount}  CACHE:${s.cacheCount}`;
+  },
+
+  // ============================================================
+  // ⭐ AKTIONEN — verändern nur pump/score/axles, rufen danach
+  // genau EINMAL sync() auf. Keine eigene Predict-/Metrik-Logik
+  // mehr in den einzelnen Aktionen.
+  // ============================================================
+  toggleAxle(i) {
+    this.axles[i].active = !this.axles[i].active;
+    this.log(`achse ${this.axles[i].name} → ${this.axles[i].active ? 'ON' : 'OFF'}`, 'info');
+    this.sync();
+  },
+
+  pumpCycle() {
+    const active = this.axles.filter(a => a.active).length;
+    if (active === 0) {
+      this.log('❗ keine achse aktiv — pump gestoppt', 'err');
+      return;
     }
-    return g;
-}
-
-let allGames = generateGames(100);
-let filtered = [...allGames];
-let currentGame = null;
-
-function filterList() {
-    const f = document.querySelector('[data-filter].active')?.dataset.filter || 'all';
-    const s = document.getElementById('sortSelect').value;
-    let res = allGames.filter(g => f==='all' || g.theme===f);
-    if (s==='year') res.sort((a,b)=>a.year-b.year);
-    if (s==='name') res.sort((a,b)=>a.name.localeCompare(b.name));
-    filtered = res;
-    renderList();
-}
-
-function renderList() {
-    const list = document.getElementById('gameList');
-    list.innerHTML = '';
-    filtered.forEach(g => {
-        const d = document.createElement('div');
-        d.className = 'item';
-        d.innerHTML = `<div><div class="name">${g.name}</div><div class="year">${g.year} · ${g.players}</div></div><div class="emotion">${g.emotion}</div>`;
-        d.onclick = () => { if (autoMode) stopAuto(); currentGame = g; loadGame(g); };
-        list.appendChild(d);
+    this.stations.forEach((st, i) => {
+      if ((this.state.pump + i) % 3 === 0) {
+        this.log(`🔷 STATION ${st} → BOOST`, 'ok');
+        this.state.score += (active * (i + 1));
+      }
     });
-}
+    this.state.pump = Math.min(this.state.pump + active, 128);
+    this.state.score += active * 2;
+    this.log(`💨 PUMP · stack=${this.state.pump}`, 'ok');
+    this.sync();
+  },
 
-// ================================================================
-// BAUSTEIN 7: UI-UPDATE (Lego-Baustein: uiManager)
-// ================================================================
-function updateUI() {
-    // Wird bei jedem Rendering aufgerufen
-    // Zusätzlich zu den bereits aktualisierten Elementen in den Funktionen
-}
-
-// ================================================================
-// BAUSTEIN 8: EVENT-BINDINGS (Lego-Baustein: eventBinder)
-// ================================================================
-document.addEventListener('DOMContentLoaded', () => {
-    resizeCanvas();
-    setTimeout(resizeCanvas, 150);
-    initBoard();
-    filterList();
-    if (allGames.length) loadGame(allGames[0]);
-
-    // Filter
-    document.querySelectorAll('[data-filter]').forEach(b => {
-        b.onclick = () => {
-            document.querySelectorAll('[data-filter]').forEach(x => x.classList.remove('active'));
-            b.classList.add('active');
-            filterList();
-        };
-    });
-    document.getElementById('sortSelect').onchange = filterList;
-
-    // Steuerung
-    document.getElementById('btnStep').onclick = playNextMove;
-    document.getElementById('btnAuto').onclick = () => {
-        if (autoMode) { stopAuto(); return; }
-        if (!currentGame) { if (filtered.length) { currentGame = filtered[0]; loadGame(currentGame); } else return; }
-        autoMode = true;
-        document.getElementById('btnAuto').textContent = '⏸ Stop';
-        if (moveIndex === 0) playNextMove();
-        else if (moveIndex < currentGameMoves.length) playNextMove();
-        else { stopAuto(); }
-    };
-    document.getElementById('btnReset').onclick = () => { stopAuto(); initBoard(); renderBoard(); updateUI(); };
-
-    // Tüftel-Panel
-    document.getElementById('speedSlider').oninput = function() {
-        moveSpeed = parseInt(this.value);
-        document.getElementById('speedDisplay').textContent = moveSpeed+'ms';
-    };
-    document.getElementById('styleSelect').onchange = function() { currentStyle = this.value; };
-    document.getElementById('strengthSlider').oninput = function() {
-        strength = parseInt(this.value);
-        document.getElementById('strengthDisplay').textContent = strength;
-    };
-    document.getElementById('btnLearn').onclick = () => {
-        document.getElementById('detailPanel').innerHTML = '🧬 Lernen aktiviert – Muster werden analysiert.';
-        // Hier könnte man trainierte Muster aus den gespeicherten Zügen ableiten
-    };
-    document.getElementById('btnResetStats').onclick = () => {
-        trainingData = { good: [], bad: [] };
-        document.getElementById('detailPanel').innerHTML = '📊 Statistiken zurückgesetzt.';
-    };
-    document.getElementById('btnGood').onclick = () => {
-        const lastMove = currentGameMoves[moveIndex-1];
-        if (lastMove) {
-            trainingData.good.push(lastMove);
-            document.getElementById('detailPanel').innerHTML = `👍 Guter Zug: ${lastMove.notation}`;
-        }
-    };
-    document.getElementById('btnBad').onclick = () => {
-        const lastMove = currentGameMoves[moveIndex-1];
-        if (lastMove) {
-            trainingData.bad.push(lastMove);
-            document.getElementById('detailPanel').innerHTML = `👎 Schlechter Zug: ${lastMove.notation}`;
-        }
-    };
-    document.getElementById('btnExportTraining').onclick = () => {
-        const data = JSON.stringify(trainingData, null, 2);
-        const blob = new Blob([data], {type:'application/json'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `training_${Date.now()}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-    };
-    document.getElementById('btnImportTraining').onclick = () => document.getElementById('fileInputTraining').click();
-    document.getElementById('fileInputTraining').onchange = function(e) {
-        if (!e.target.files.length) return;
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-            try {
-                const data = JSON.parse(ev.target.result);
-                if (data.good && data.bad) {
-                    trainingData = data;
-                    document.getElementById('detailPanel').innerHTML = '✅ Trainingsdaten importiert.';
-                }
-            } catch(err) { alert('Import fehlgeschlagen: '+err.message); }
-        };
-        reader.readAsText(e.target.files[0]);
-        e.target.value = '';
-    };
-
-    // Effekt-Buttons
-    const effects = {
-        btnIce: { type: 'ice', msg: '❄️ ICE · kühle Präzision' },
-        btnWater: { type: 'water', msg: '💧 WATER · fließende Bewegung' },
-        btnFire: { type: 'fire', msg: '🔥 FIRE · brennender Impuls' }
-    };
-    for (const [id, data] of Object.entries(effects)) {
-        document.getElementById(id).onclick = () => {
-            const rect = canvas.getBoundingClientRect();
-            spawnEffect(rect.left+rect.width/2, rect.top+rect.height/2, data.type);
-            document.getElementById('detailPanel').innerHTML = data.msg;
-        };
+  runGeneral() {
+    this.axles.forEach(a => a.active = true);
+    for (let i = 0; i < 3; i++) {
+      this.state.pump = Math.min(this.state.pump + 9, 128);
+      this.state.score += 9 * 2;
     }
+    this.state.score += 50;
+    this.log('⚡ GENERAL RUN · alles aktiv · score+50', 'ok');
+    this.sync();
+  },
 
-    // Tastatur
-    document.addEventListener('keydown', (e) => {
-        if (e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); playNextMove(); }
-        if (e.key === 'r' || e.key === 'R') document.getElementById('btnReset').click();
-        if (e.key === 'a' || e.key === 'A') document.getElementById('btnAuto').click();
-        if (e.key === 'g' || e.key === 'G') document.getElementById('btnGood').click();
-        if (e.key === 'b' || e.key === 'B') document.getElementById('btnBad').click();
+  toggleAll() {
+    const allOn = this.axles.every(a => a.active);
+    this.axles.forEach(a => a.active = !allOn);
+    this.log(`🔄 ALL TOGGLE → ${allOn ? 'OFF' : 'ON'}`, 'info');
+    this.sync();
+  },
+
+  randomize() {
+    this.axles.forEach(a => a.active = Math.random() > 0.5);
+    this.state.score = Math.floor(Math.random() * 500) + 500;
+    this.state.pump = Math.floor(Math.random() * 30);
+    this.log('🎲 RANDOM · neuer zustand', 'warn');
+    this.sync();
+  },
+
+  loopAll() {
+    this.axles.forEach(a => a.active = !a.active);
+    this.state.pump = Math.min(this.state.pump + this.axles.filter(a=>a.active).length, 128);
+    this.log('♾ LOOP-ALL · orbit complete', 'ok');
+    this.sync(); // genau EIN sync()/render(), nicht mehr drei
+  },
+
+  resetAll() {
+    this.axles.forEach(a => a.active = false);
+    Object.assign(this.state, {
+      score: 1000, pump: 0, quote: 0.5, predict: 'IDLE', cpuJump: 0,
+      cpuBias: 'FORWARD', root: 0, achse: '0', tmp: 128, q: 27, d: 81, f: 243,
+      prefetchCount: 0, predictCount: 0, cacheCount: 0
     });
-});
-const atmo = new AtmoBoard(document.getElementById('atmoCanvas'), 8);
-atmo.resize(canvas.width, canvas.height);
-atmo.setMood('neon');
-atmo.start();
+    this.memory = { hits: 0, misses: 0, slides: [], jumps: [] };
+    this.liveWindow = [['3','9'], ['27','81'], ['243','729']];
+    document.getElementById('consoleLog').innerHTML = '⏳ system zurückgesetzt...';
+    this.log('⟲ RESET · komplett neu', 'ok');
+    this.render();
+  },
 
-function spawnEffect(x,y,type) {
-    const el = document.createElement('div');
-    const symbols = { ice:'❄️', water:'💧', fire:'🔥' };
-    el.textContent = symbols[type] || '✨';
-    el.style.cssText = `
-        position:fixed; pointer-events:none; font-size:32px; z-index:9999;
-        left:${x-16}px; top:${y-16}px; opacity:0.8;
-        animation: floatUp 0.8s ease-out forwards;
-    `;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 800);
-}
-// Style für floatUp (wird im Head bereits definiert, aber hier zur Sicherheit)
-if (!document.querySelector('#floatStyle')) {
-    const style = document.createElement('style');
-    style.id = 'floatStyle';
-    style.textContent = `
-        @keyframes floatUp {
-            0% { opacity:0.8; transform:translateY(0) scale(1); }
-            100% { opacity:0; transform:translateY(-80px) scale(0.5); }
-        }
-    `;
-    document.head.appendChild(style);
-}
+  init() {
+    this.log('⭐ 3‑STERNE · GENERAL · PREFETCH · PREDICT · CACHE', 'ok');
+    this.log('📊 vereinheitlichte sync()-Logik für alle Aktionen', 'info');
+    this.render();
+    setInterval(() => {
+      if (this.axles.some(a => a.active)) this.pumpCycle();
+    }, 8000);
+  }
+};
 
-console.log('♟️ HISTORY CHESS · LEGO EDITION geladen');
-console.log('⌨️  Leertaste=Nächster Zug  r=Reset  a=Auto  g=Gut  b=Schlecht');
+document.getElementById('btnGeneral').addEventListener('click', () => engine.runGeneral());
+document.getElementById('btnReset').addEventListener('click', () => engine.resetAll());
+document.getElementById('btnToggleAll').addEventListener('click', () => engine.toggleAll());
+document.getElementById('btnRandom').addEventListener('click', () => engine.randomize());
+document.getElementById('btnPump').addEventListener('click', () => engine.pumpCycle());
+document.getElementById('btnLoop').addEventListener('click', () => engine.loopAll());
+
+engine.init();
+window.engine = engine;
 </script>
 </body>
 </html>
