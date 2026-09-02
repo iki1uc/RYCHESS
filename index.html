@@ -31,14 +31,9 @@
             -webkit-text-fill-color: #3d5a70;
             letter-spacing: 2px;
         }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+        .container { max-width:1400px; margin:0 auto; }
         .flex { display:flex; flex-wrap:wrap; gap:4px; align-items:center; margin:3px 0; }
-        .grid2 { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-        @media(max-width:900px){ .grid2 { grid-template-columns:1fr; } }
-        .grid3 { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; }
+        .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
         @media(max-width:1100px){ .grid3 { grid-template-columns:1fr 1fr; } }
         @media(max-width:700px){ .grid3 { grid-template-columns:1fr; } }
 
@@ -171,7 +166,6 @@
             width: 100%; height: 100%;
             z-index: 1;
         }
-
         .badge {
             display: inline-block;
             padding: 1px 6px;
@@ -193,13 +187,12 @@
         .footer span { color: #ffd700; opacity: 0.3; }
 
         @keyframes floatUp {
-            0% { opacity: 0.8; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-80px) scale(0.5); }
+            0% { opacity:0.8; transform:translateY(0) scale(1); }
+            100% { opacity:0; transform:translateY(-80px) scale(0.5); }
         }
     </style>
 </head>
 <body>
-
 <div class="container">
 
     <h1>⭐ 3‑STERNE · GENERAL · CHESS · ATMOSPHERIC</h1>
@@ -324,17 +317,17 @@
 
             <div class="panel">
                 <h3>🔄 3×2 FENSTER · LIVE</h3>
-                <div class="matrix-3x2" id="liveWindow" style="display:grid;grid-template-columns:1fr 1fr;gap:2px;"></div>
+                <div id="liveWindow" style="display:grid;grid-template-columns:1fr 1fr;gap:2px;"></div>
             </div>
 
             <div class="panel">
                 <h3>🎛️ TÜFTEL · STEERING</h3>
-                <div class="flex" style="font-size:8px;gap:4px; flex-direction:column; align-items:stretch;">
-                    <div class="flex"><span style="width:80px;">⏱️ Speed</span>
+                <div style="display:flex;flex-direction:column;gap:4px;font-size:8px;">
+                    <div class="flex"><span style="width:70px;">⏱️ Speed</span>
                         <input type="range" id="speedSlider" min="200" max="1500" value="700" step="50" style="flex:1;">
                         <span id="speedDisplay" style="width:50px;">700ms</span>
                     </div>
-                    <div class="flex"><span style="width:80px;">🎯 Stil</span>
+                    <div class="flex"><span style="width:70px;">🎯 Stil</span>
                         <select id="styleSelect" style="background:#1a1a2a;color:#d0d9e6;border:1px solid #2a2a3a;border-radius:4px;padding:2px;flex:1;">
                             <option value="random">🎲 Zufall</option>
                             <option value="aggressive">🔥 Aggressiv</option>
@@ -342,7 +335,7 @@
                             <option value="tactical">🧠 Taktisch</option>
                         </select>
                     </div>
-                    <div class="flex"><span style="width:80px;">💪 Stärke</span>
+                    <div class="flex"><span style="width:70px;">💪 Stärke</span>
                         <input type="range" id="strengthSlider" min="1" max="5" value="3" step="1" style="flex:1;">
                         <span id="strengthDisplay" style="width:30px;">3</span>
                     </div>
@@ -401,12 +394,13 @@ class AtmoBoard {
 
     setMood(mood) {
         this.mood = mood;
-        switch(mood) {
-            case 'cool': this.colors.light={r:40,g:80,b:140}; this.colors.dark={r:20,g:40,b:80}; break;
-            case 'warm': this.colors.light={r:200,g:120,b:60}; this.colors.dark={r:120,g:60,b:30}; break;
-            case 'golden': this.colors.light={r:255,g:215,b:0}; this.colors.dark={r:180,g:140,b:0}; break;
-            default: this.colors.light={r:0,g:255,b:200}; this.colors.dark={r:0,g:150,b:120}; break;
-        }
+        const colors = {
+            cool:   { light: {r:40,g:80,b:140}, dark: {r:20,g:40,b:80} },
+            warm:   { light: {r:200,g:120,b:60}, dark: {r:120,g:60,b:30} },
+            golden: { light: {r:255,g:215,b:0}, dark: {r:180,g:140,b:0} },
+            neon:   { light: {r:0,g:255,b:200}, dark: {r:0,g:150,b:120} }
+        };
+        this.colors = colors[mood] || colors.neon;
     }
 
     resize(width, height) {
@@ -530,29 +524,23 @@ const engine = {
     },
 
     syncChess() {
-        // Verbinde General mit Schach
         const active = this.axles.filter(a=>a.active).length;
         const s = this.state;
-        // KI-Stärke aus pump und active ableiten
         const strength = Math.min(5, 1 + Math.floor(active/2) + Math.floor(s.pump/25));
         document.getElementById('strengthSlider').value = strength;
         document.getElementById('strengthDisplay').textContent = strength;
-        // Spielstil aus cpuBias ableiten
         const styleMap = { 'FORWARD':'aggressive', 'REVERSE':'defensive' };
         const style = s.cpuBias === 'FORWARD' ? 'aggressive' : (s.quote>0.5 ? 'tactical' : 'random');
         document.getElementById('styleSelect').value = style;
-        // Speed aus pump
         const speed = Math.max(200, 1500 - s.pump * 10);
         document.getElementById('speedSlider').value = speed;
         document.getElementById('speedDisplay').textContent = speed+'ms';
-        // Mood aus predict
         const moodMap = { 'ACTIVE':'neon', 'IDLE':'cool' };
         if (window.atmo) atmo.setMood(moodMap[s.predict] || 'neon');
     },
 
     render() {
         this.renderAxles();
-        this.renderPrefetch();
         this.renderLiveWindow();
         this.updateStatus();
         this.updateMystery();
@@ -573,18 +561,6 @@ const engine = {
         });
     },
 
-    renderPrefetch() {
-        const grid = document.getElementById('prefetchGrid');
-        if (!grid) return;
-        grid.innerHTML = '';
-        this.prefetch.forEach(row => row.forEach(val => {
-            const cell = document.createElement('div');
-            cell.className = 'cell active';
-            cell.textContent = val;
-            grid.appendChild(cell);
-        }));
-    },
-
     renderLiveWindow() {
         const grid = document.getElementById('liveWindow');
         if (!grid) return;
@@ -593,6 +569,7 @@ const engine = {
             const cell = document.createElement('div');
             cell.className = 'cell gold';
             cell.textContent = val;
+            cell.style.cssText = 'background:#2a1a0a;color:#ffd700;border-color:#ffd700;padding:4px;text-align:center;font-size:8px;border:1px solid #111;border-radius:3px;';
             grid.appendChild(cell);
         }));
     },
@@ -720,7 +697,7 @@ PREFETCH:${s.prefetchCount}  PREDICT:${s.predictCount}  CACHE:${s.cacheCount}`;
 };
 
 // ================================================================
-// BAUSTEIN 2: SCHACHLOGIK (vereinfacht)
+// BAUSTEIN 2: SCHACHLOGIK (korrigiert)
 // ================================================================
 function inBounds(r,c){ return r>=0 && r<8 && c>=0 && c<8; }
 
@@ -818,7 +795,7 @@ function selectMoveByStyle(moves, style, strength) {
 }
 
 // ================================================================
-// BAUSTEIN 3: CHESS BOARD & RENDER
+// BAUSTEIN 3: CHESS BOARD & RENDER (korrigiert)
 // ================================================================
 let board = [];
 let currentColor = 'white';
@@ -833,6 +810,7 @@ const canvas = document.getElementById('chessCanvas');
 const ctx = canvas.getContext('2d');
 const atmoCanvas = document.getElementById('atmoCanvas');
 const atmo = new AtmoBoard(atmoCanvas, 8);
+window.atmo = atmo;
 
 function initBoard() {
     const backRankW = ['♖','♘','♗','♕','♔','♗','♘','♖'];
@@ -943,7 +921,7 @@ function renderLoop() {
 }
 
 // ================================================================
-// BAUSTEIN 4: CHESS GAME DATA & CONTROL
+// BAUSTEIN 4: CHESS GAME DATA & CONTROL (korrigiert)
 // ================================================================
 function generateGames(n) {
     const g = [];
@@ -962,7 +940,14 @@ function generateGames(n) {
             const from = String.fromCharCode(97+Math.floor(Math.random()*8))+(1+Math.floor(Math.random()*8));
             const to = String.fromCharCode(97+Math.floor(Math.random()*8))+(1+Math.floor(Math.random()*8));
             const piece = ['♟','♞','♝','♜','♛','♚'][Math.floor(Math.random()*6)];
-            moves.push({ piece, from, to, notation:`${from}→${to}` });
+            moves.push({
+                piece: piece,
+                from: from,
+                to: to,
+                notation: `${from}→${to}`,
+                type: ['pawn','knight','bishop','rook','queen','king'][['♟','♞','♝','♜','♛','♚'].indexOf(piece)],
+                color: j%2===0 ? 'white' : 'black'
+            });
         }
         const winner = ['Weiß','Schwarz','Remis'][Math.floor(Math.random()*3)];
         g.push({ id:i, name, year, theme, moves, winner, emotion: emotions[i%emotions.length], players:`Meister ${i+1} vs. ${i+2}` });
@@ -978,8 +963,6 @@ function loadGame(game) {
     currentGameMoves = game.moves.slice();
     moveIndex = 0;
     currentGame = game;
-    document.getElementById('detailPanel').innerHTML =
-        `<span class="highlight">📜 ${game.name}</span> · ${game.year} · ${game.moves.length} Züge`;
     document.getElementById('totalMoves').textContent = game.moves.length;
     document.getElementById('moveCount').textContent = '0';
     document.getElementById('turnIndicator').textContent = 'Weiß';
@@ -993,21 +976,25 @@ function playNextMove() {
         return;
     }
     const m = currentGameMoves[moveIndex];
+    // Suche nach Typ + Farbe (NICHT nach Unicode)
     let from=null, piece=null;
+    const color = moveIndex % 2 === 0 ? 'white' : 'black';
     for (let r=0; r<8; r++) {
         for (let c=0; c<8; c++) {
-            if (board[r][c] && board[r][c].piece === m.piece) {
-                from={r,c}; piece=board[r][c];
+            const p = board[r][c];
+            if (p && p.type === m.type && p.color === m.color) {
+                from={r,c};
+                piece=p;
                 break;
             }
         }
         if (from) break;
     }
+    // Fallback: suche nach Unicode (nur falls Typ nicht passt)
     if (!from) {
-        const color = moveIndex%2===0?'white':'black';
         for (let r=0; r<8; r++) {
             for (let c=0; c<8; c++) {
-                if (board[r][c] && board[r][c].color === color) {
+                if (board[r][c] && board[r][c].piece === m.piece) {
                     from={r,c}; piece=board[r][c];
                     break;
                 }
@@ -1016,21 +1003,28 @@ function playNextMove() {
         }
     }
     if (from && piece) {
-        const to = { r:8-parseInt(m.to[1]), c:m.to.charCodeAt(0)-97 };
+        // Korrekte Koordinatenberechnung
+        const to = {
+            r: 8 - parseInt(m.to[1]),
+            c: m.to.charCodeAt(0) - 97
+        };
         if (inBounds(to.r, to.c)) {
             animateMove(from, to, piece, () => {
                 moveIndex++;
                 document.getElementById('moveCount').textContent = moveIndex;
                 document.getElementById('turnIndicator').textContent = moveIndex%2===0?'Weiß':'Schwarz';
                 document.getElementById('manaIndicator').textContent = moveIndex;
-                document.getElementById('detailPanel').innerHTML =
-                    `<span class="highlight">📜 ${currentGame.name}</span> · Zug ${moveIndex}/${currentGameMoves.length}: <span class="move-text">${m.notation}</span>`;
                 if (autoMode && moveIndex < currentGameMoves.length) setTimeout(playNextMove, moveSpeed);
                 else if (autoMode && moveIndex >= currentGameMoves.length) stopAuto();
-                updateUI();
             });
-        } else { moveIndex++; setTimeout(playNextMove, 100); }
-    } else { moveIndex++; setTimeout(playNextMove, 100); }
+        } else {
+            moveIndex++;
+            setTimeout(playNextMove, 100);
+        }
+    } else {
+        moveIndex++;
+        setTimeout(playNextMove, 100);
+    }
 }
 
 function stopAuto() { autoMode=false; document.getElementById('btnAuto').textContent='▶ Auto'; }
@@ -1071,7 +1065,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (moveIndex < currentGameMoves.length) playNextMove();
         else { stopAuto(); }
     });
-    document.getElementById('btnResetBoard').addEventListener('click', () => { stopAuto(); initBoard(); renderBoard(); updateUI(); });
+    document.getElementById('btnResetBoard').addEventListener('click', () => { stopAuto(); initBoard(); renderBoard(); });
 
     // Speed
     document.getElementById('speedSlider').addEventListener('input', function() {
@@ -1100,7 +1094,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(id).addEventListener('click', () => {
             const rect = canvas.getBoundingClientRect();
             spawnEffect(rect.left+rect.width/2, rect.top+rect.height/2, data.type);
-            document.getElementById('detailPanel').innerHTML = data.msg;
         });
     }
 
