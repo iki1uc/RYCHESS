@@ -1,493 +1,686 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>♟️ HISTORISCHE SCHACHPARTIEN · 3 · 4 · 5 · 6</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>♟️ HISTORY CHESS · meKI-756 · HSF · PROFESSIONAL</title>
 
-<style>
-  :root {
-    --bg: #0a0a12;
-    --fg: #0f0;
-    --gold: #ffaa00;
-    --red: #ff4444;
-    --blue: #4444ff;
-    --shadow: #00000088;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    background: var(--bg);
-    color: var(--fg);
-    font-family: 'Georgia', 'Times New Roman', serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background-image: radial-gradient(circle at 20% 30%, #1a1a2a 0%, #0a0a12 80%);
-  }
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #0a0a12;
+            color: #d0d8e0;
+            font-family: 'Segoe UI', 'Consolas', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            background-image: radial-gradient(ellipse at 30% 40%, #0a0a20, #000);
+        }
 
-  .container {
-    max-width: 800px;
-    width: 100%;
-    background: rgba(10,10,20,0.8);
-    border: 1px solid #2a2a4a;
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 0 80px rgba(100,100,255,0.03);
-    backdrop-filter: blur(10px);
-    text-align: center;
-  }
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(10, 10, 20, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 80px rgba(0, 0, 0, 0.6);
+        }
 
-  h1 {
-    font-size: 32px;
-    background: linear-gradient(90deg, var(--gold), var(--red), var(--blue));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 10px;
-    letter-spacing: 4px;
-  }
+        .header {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 6px;
+            background: linear-gradient(90deg, #4fc3f7, #ffd700, #ff7043);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header .sub {
+            color: #445555;
+            font-size: 11px;
+            letter-spacing: 3px;
+            font-weight: 300;
+        }
+        .header .sub span { color: #88ddbb; }
 
-  .sub {
-    color: #666;
-    font-size: 14px;
-    letter-spacing: 2px;
-    margin-bottom: 30px;
-    font-style: italic;
-  }
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 850px) { .main-grid { grid-template-columns: 1fr; } }
 
-  .sub span { color: var(--gold); }
+        .board-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            aspect-ratio: 1/1;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 215, 0, 0.05);
+            overflow: hidden;
+            transition: box-shadow 0.4s;
+        }
+        .board-wrap:hover {
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.03);
+        }
+        #chessCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
 
-  .game-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 15px;
-    margin: 20px 0 30px 0;
-  }
+        /* ===== RECHTE SEITE ===== */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-  .game-card {
-    background: rgba(20,20,30,0.6);
-    border: 1px solid #2a2a4a;
-    border-radius: 12px;
-    padding: 20px 10px;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-align: center;
-  }
-  .game-card:hover {
-    border-color: var(--gold);
-    transform: translateY(-4px);
-    box-shadow: 0 0 40px rgba(255,170,0,0.05);
-  }
-  .game-card .year {
-    font-size: 12px;
-    color: var(--gold);
-    letter-spacing: 2px;
-  }
-  .game-card .name {
-    font-size: 16px;
-    color: #fff;
-    margin: 8px 0;
-  }
-  .game-card .players {
-    font-size: 11px;
-    color: #666;
-  }
-  .game-card .emotion {
-    font-size: 20px;
-    margin-top: 6px;
-  }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: flex-end;
+        }
+        .toolbar button, .toolbar select {
+            background: rgba(20, 30, 30, 0.3);
+            color: #8a9a9a;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            padding: 5px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 9px;
+            transition: all 0.25s;
+            letter-spacing: 0.5px;
+        }
+        .toolbar button:hover {
+            background: rgba(40, 60, 60, 0.15);
+            border-color: rgba(255, 215, 0, 0.15);
+            color: #c8d8d8;
+        }
+        .toolbar button.active {
+            border-color: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.04);
+        }
+        .toolbar button.gold { color: #ffd700; border-color: rgba(255, 215, 0, 0.05); }
+        .toolbar button.gold:hover { border-color: rgba(255, 215, 0, 0.15); }
+        .toolbar button.ice { color: #4fc3f7; border-color: rgba(79, 195, 247, 0.05); }
+        .toolbar button.ice:hover { border-color: rgba(79, 195, 247, 0.15); }
+        .toolbar button.fire { color: #ff7043; border-color: rgba(255, 112, 67, 0.05); }
+        .toolbar button.fire:hover { border-color: rgba(255, 112, 67, 0.15); }
+        .toolbar button.water { color: #4dd0e1; border-color: rgba(77, 208, 225, 0.05); }
+        .toolbar button.water:hover { border-color: rgba(77, 208, 225, 0.15); }
+        .toolbar select { background: rgba(20, 30, 30, 0.3); cursor: pointer; }
 
-  .controls {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin: 15px 0;
-  }
+        .game-list {
+            background: rgba(10, 10, 20, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            padding: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        .game-list::-webkit-scrollbar { width: 3px; }
+        .game-list::-webkit-scrollbar-thumb { background: rgba(255, 215, 0, 0.1); border-radius: 2px; }
+        .game-list .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 6px;
+        }
+        .game-list .item:hover { background: rgba(255, 215, 0, 0.03); }
+        .game-list .item .name { color: #c8d0d0; font-size: 11px; font-weight: 300; }
+        .game-list .item .year { color: #445555; font-size: 9px; }
+        .game-list .item .emotion { font-size: 13px; opacity: 0.5; }
 
-  button {
-    background: #111;
-    color: var(--fg);
-    border: 1px solid #333;
-    padding: 10px 25px;
-    border-radius: 30px;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 14px;
-    transition: 0.3s;
-  }
-  button:hover { background: #1a1a2a; border-color: var(--fg); }
-  button.primary { border-color: var(--gold); color: var(--gold); }
-  button.primary:hover { background: var(--gold); color: #000; }
-  button.danger { border-color: var(--red); color: var(--red); }
-  button.danger:hover { background: var(--red); color: #000; }
-  button.blue { border-color: var(--blue); color: var(--blue); }
-  button.blue:hover { background: var(--blue); color: #000; }
+        .detail {
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            font-size: 11px;
+            color: #8a9a9a;
+            line-height: 1.5;
+            border-left: 2px solid rgba(255, 215, 0, 0.1);
+            min-height: 50px;
+            font-weight: 300;
+        }
+        .detail .highlight { color: #ffd700; }
+        .detail .move-text { color: #88ddbb; font-family: monospace; }
 
-  #info {
-    margin-top: 20px;
-    padding: 15px;
-    background: rgba(0,0,0,0.4);
-    border-radius: 10px;
-    font-size: 13px;
-    color: #8a8a9a;
-    line-height: 1.6;
-    border-left: 3px solid var(--gold);
-    text-align: left;
-  }
-  #info .highlight { color: var(--gold); }
-  #info .emotion { color: var(--red); }
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #445555;
+            padding: 4px 2px;
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
+            margin-top: 4px;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .status-row .turn { color: #88ddbb; }
+        .status-row .moves span { color: #88ddbb; }
+        .status-row .mana { color: #88ddbb; }
 
-  .footer {
-    margin-top: 30px;
-    font-size: 11px;
-    color: #333;
-    letter-spacing: 1px;
-  }
-  .footer span { color: var(--gold); }
+        .bottom-bar {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            margin-top: 6px;
+        }
+        .bottom-bar button {
+            background: rgba(20, 30, 30, 0.2);
+            color: #668888;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            padding: 4px 14px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 9px;
+            transition: all 0.2s;
+        }
+        .bottom-bar button:hover {
+            background: rgba(40, 60, 60, 0.1);
+            border-color: rgba(255, 215, 0, 0.05);
+            color: #aabbbb;
+        }
+        .bottom-bar button.primary { color: #ffd700; border-color: rgba(255, 215, 0, 0.05); }
 
-  @media (max-width: 700px) {
-    .game-grid { grid-template-columns: 1fr 1fr; }
-  }
-  @media (max-width: 480px) {
-    .game-grid { grid-template-columns: 1fr; }
-    .container { padding: 20px; }
-  }
-</style>
+        .footer {
+            text-align: center;
+            margin-top: 14px;
+            color: #1a1a1a;
+            font-size: 8px;
+            letter-spacing: 2px;
+            border-top: 1px solid rgba(255, 255, 255, 0.01);
+            padding-top: 10px;
+        }
+        .footer span { color: #ffd700; opacity: 0.3; }
+
+        .ice-effect, .water-effect, .fire-effect {
+            position: fixed;
+            pointer-events: none;
+            font-size: 24px;
+            opacity: 0.3;
+            animation: floatUp 0.8s ease-out forwards;
+            z-index: 999;
+        }
+        @keyframes floatUp {
+            0% { opacity: 0.8; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-80px) scale(0.5); }
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
 
-  <h1>♟️ 3 · 4 · 5 · 6</h1>
-  <div class="sub">HISTORISCHE SCHACHPARTIEN · <span>ANGSTSCHWEISS</span> · 18. & 19. JAHRHUNDERT</div>
+    <!-- HEADER -->
+    <div class="header">
+        <h1>♟️ HISTORY CHESS · meKI-756</h1>
+        <div class="sub"><span>HSF</span> · <span>MXU</span> · <span>9 BEWEGUNGEN</span> · <span style="color:#4fc3f7;">ice</span> · <span style="color:#4dd0e1;">water</span> · <span style="color:#ff7043;">fire</span></div>
+    </div>
 
-  <!-- GAME SELECTION -->
-  <div class="game-grid" id="gameGrid">
-    <div class="game-card" data-game="unsterblich">
-      <div class="year">1851</div>
-      <div class="name">Die Unsterbliche</div>
-      <div class="players">Anderssen vs. Kieseritzky</div>
-      <div class="emotion">😱🔥</div>
-    </div>
-    <div class="game-card" data-game="oper">
-      <div class="year">1858</div>
-      <div class="name">Die Opernpartie</div>
-      <div class="players">Morphy vs. Herzog & Graf</div>
-      <div class="emotion">🎭💎</div>
-    </div>
-    <div class="game-card" data-game="evergreen">
-      <div class="year">1852</div>
-      <div class="name">Die Evergreen</div>
-      <div class="players">Anderssen vs. Dufresne</div>
-      <div class="emotion">🌿💥</div>
-    </div>
-    <div class="game-card" data-game="fischer">
-      <div class="year">1972</div>
-      <div class="name">Match des Jahrhunderts</div>
-      <div class="players">Fischer vs. Spassky</div>
-      <div class="emotion">❄️🔥</div>
-    </div>
-    <div class="game-card" data-game="deepblue">
-      <div class="year">1997</div>
-      <div class="name">Kasparov vs. Deep Blue</div>
-      <div class="players">Mensch vs. Maschine</div>
-      <div class="emotion">🤖🧠</div>
-    </div>
-    <div class="game-card" data-game="remis">
-      <div class="year">1850</div>
-      <div class="name">Die Unsterbliche Remis</div>
-      <div class="players">Zwei Meister</div>
-      <div class="emotion">⚖️😰</div>
-    </div>
-  </div>
+    <!-- MAIN -->
+    <div class="main-grid">
 
-  <!-- CONTROLS -->
-  <div class="controls">
-    <button class="primary" id="btnStart">▶ Partie starten</button>
-    <button class="danger" id="btnReset">⟲ Reset</button>
-    <button class="blue" id="btnAuto">▶ Auto-Züge</button>
-  </div>
+        <!-- BOARD -->
+        <div class="board-wrap" id="boardWrap">
+            <canvas id="chessCanvas"></canvas>
+        </div>
 
-  <!-- INFO -->
-  <div id="info">
-    <span class="highlight">📜 Wähle eine Partie</span><br>
-    Klick auf eine Karte, dann auf <span class="highlight">"Partie starten"</span><br>
-    Die Züge werden Schritt für Schritt gezeigt – mit dem <span class="emotion">Angstschweiß</span> des 19. Jahrhunderts!
-  </div>
+        <!-- RECHTE SEITE -->
+        <div class="right-panel">
 
-  <div class="footer">
-    <span>♟️</span> HISTORISCHE SCHACHPARTIEN · 3 · 4 · 5 · 6 · <span>wieimmer4u</span>
-  </div>
+            <!-- TOOLBAR (rechtsbündig) -->
+            <div class="toolbar">
+                <button class="active" data-filter="all">📚 Alle</button>
+                <button data-filter="pferd">🐴 Pferde</button>
+                <button data-filter="opfer">💥 Opfer</button>
+                <button data-filter="remis">⚖️ Remis</button>
+                <select id="sortSelect">
+                    <option value="year">Jahr</option>
+                    <option value="name">Name</option>
+                </select>
+                <button class="ice" id="btnIce">❄️ Ice</button>
+                <button class="water" id="btnWater">💧 Water</button>
+                <button class="fire" id="btnFire">🔥 Fire</button>
+                <button id="btnStep">⏭ Zug</button>
+                <button id="btnAuto">▶ Auto</button>
+                <button id="btnReset">⟲ Reset</button>
+            </div>
 
+            <!-- GAME LIST -->
+            <div class="game-list" id="gameList"></div>
+
+            <!-- DETAIL -->
+            <div class="detail" id="detailPanel">
+                <span class="highlight">📜 Wähle eine Partie</span>
+            </div>
+
+            <!-- STATUS -->
+            <div class="status-row">
+                <div class="turn">Zug: <span id="turnIndicator">Weiß</span></div>
+                <div class="moves">Zug <span id="moveCount">0</span>/<span id="totalMoves">0</span></div>
+                <div class="mana">🌀 <span id="manaIndicator">0</span></div>
+                <div style="color:#445555;">⚡ <span id="agentStatus">bereit</span></div>
+            </div>
+
+            <!-- BOTTOM BAR -->
+            <div class="bottom-bar">
+                <button id="btnHelp">🆘 Help</button>
+                <button id="btnSense">👁️ Sense</button>
+                <button id="btnWraight">✅ Wraight</button>
+                <button id="btnCoach">🧑‍🏫 Coach</button>
+                <button id="btnExport">📤 Export</button>
+                <button id="btnImport">📥 Import</button>
+                <input type="file" id="fileInput" accept=".json" style="display:none;">
+            </div>
+        </div>
+    </div>
+
+    <div class="footer"><span>♟️</span> HISTORY CHESS · meKI-756 · HSF · MXU · <span>wieimmer4u</span></div>
 </div>
 
 <script>
 // ============================================================
-// HISTORISCHE SCHACHPARTIEN · 3 · 4 · 5 · 6
+// HISTORY CHESS · meKI-756 · PROFESSIONAL · NEON · ICE/WATER/FIRE
 // ============================================================
 
-// ─── DIE PARTIEN (vereinfachte Züge) ──────────────────────
-const GAMES = {
-  unsterblich: {
-    name: 'Die Unsterbliche',
-    year: 1851,
-    players: 'Anderssen vs. Kieseritzky',
-    emotion: '😱🔥',
-    moves: [
-      '1. e4 e5', '2. f4 exf4', '3. Lc4 Dh4+', '4. Kf1 b5',
-      '5. Lxb5 Sf6', '6. Sf3 Dh6', '7. d3 Sg4', '8. Sxh8 Sxh8',
-      '9. d4 Dd6', '10. c3 Sc6', '11. Sc3 g5', '12. d5 Se7',
-      '13. h3 Sgf6', '14. hxg4 Sxg4', '15. Lf4 Df6', '16. Tg1 Sf2',
-      '17. Dxf2 Lg7', '18. Df3 Sxg1', '19. Kxg1 Ld7', '20. Ld2 Tg8',
-      '21. Lc3 b4', '22. Lxb4 a5', '23. Lxa5 Tb8', '24. Db3 Lxb5',
-      '25. Sxb5 Dg5', '26. Sxc7+ Kf8', '27. Sxe6+ fxe6', '28. Df3+ Kg8',
-      '29. Lc3 Lxc3', '30. bxc3 Df5', '31. Dxf5 exf5', '32. Td1 Tb2',
-      '33. Kf1 Txc2', '34. d6 Tc6', '35. d7 Tc7', '36. d8=D+ Txd8',
-      '37. Txd8+'
-    ],
-    winner: 'Weiß (Anderssen)',
-    angst: 'Anderssen opfert fast alles – ein Angriff, der bis heute unvergessen ist!'
-  },
-  oper: {
-    name: 'Die Opernpartie',
-    year: 1858,
-    players: 'Morphy vs. Herzog & Graf',
-    emotion: '🎭💎',
-    moves: [
-      '1. e4 e5', '2. Sf3 d6', '3. d4 Lg4', '4. dxe5 Lxf3',
-      '5. Dxf3 dxe5', '6. Lc4 Sf6', '7. Db3 Dd7', '8. Sc3 c6',
-      '9. Lg5 b5', '10. Sxb5 cxb5', '11. Lxb5+ Sbd7', '12. O-O-O Td8',
-      '13. Txd7 Txd7', '14. Dxd7+'
-    ],
-    winner: 'Weiß (Morphy)',
-    angst: 'Morphy entwickelt sich meisterhaft – die Gegner sind chancenlos!'
-  },
-  evergreen: {
-    name: 'Die Evergreen',
-    year: 1852,
-    players: 'Anderssen vs. Dufresne',
-    emotion: '🌿💥',
-    moves: [
-      '1. e4 e5', '2. Sf3 Sc6', '3. Lc4 Lc5', '4. b4 Lxb4',
-      '5. c3 La5', '6. d4 exd4', '7. O-O d3', '8. Dxd3 Sf6',
-      '9. e5 d5', '10. exf6 dxc4', '11. Td1 Db6', '12. Lg5 Sb6',
-      '13. c5 Sxc5', '14. Dxc5 Ld7', '15. Lxd7+ Kxd7', '16. Df5+ Ke8',
-      '17. Dxc8+'
-    ],
-    winner: 'Weiß (Anderssen)',
-    angst: 'Ein Angriff, der wie ein Blitz aus heiterem Himmel kommt!'
-  },
-  fischer: {
-    name: 'Match des Jahrhunderts',
-    year: 1972,
-    players: 'Fischer vs. Spassky',
-    emotion: '❄️🔥',
-    moves: [
-      '1. d4 Sf6', '2. c4 e6', '3. Sf3 d5', '4. Sc3 c5',
-      '5. cxd5 exd5', '6. g3 Sc6', '7. Lg2 Le6', '8. Lg5 De7',
-      '9. O-O Sd8', '10. Tb1 Sbd7', '11. b4 cxb4', '12. a3 bxa3',
-      '13. Txb7 Db4', '14. Lxf6 Sxf6', '15. Txb4'
-    ],
-    winner: 'Weiß (Fischer)',
-    angst: 'Der Kalte Krieg auf dem Schachbrett – jede Bewegung ist politisch!'
-  },
-  deepblue: {
-    name: 'Kasparov vs. Deep Blue',
-    year: 1997,
-    players: 'Mensch vs. Maschine',
-    emotion: '🤖🧠',
-    moves: [
-      '1. e4 e5', '2. Sf3 Sc6', '3. Lb5 a6', '4. La4 Sf6',
-      '5. O-O Le7', '6. Te1 b5', '7. Lb3 O-O', '8. c3 d5',
-      '9. exd5 Sxd5', '10. Sxe5 Sxe5', '11. Txe5 Sf6',
-      '12. d4 Ld6', '13. Te1 Lg4', '14. Dd3 Lh5', '15. Sd2 Lg6',
-      '16. Dd1 Lxd4', '17. cxd4 Lxd3', '18. Sf3 Lf5'
-    ],
-    winner: 'Schwarz (Deep Blue)',
-    angst: 'Die Maschine schlägt den Menschen – ein historischer Moment!'
-  },
-  remis: {
-    name: 'Die Unsterbliche Remis',
-    year: 1850,
-    players: 'Zwei Meister',
-    emotion: '⚖️😰',
-    moves: [
-      '1. e4 e5', '2. Sf3 Sc6', '3. Lc4 Lc5', '4. c3 Sf6',
-      '5. d4 exd4', '6. cxd4 Lb4+', '7. Sc3 Sxe4', '8. O-O Sxc3',
-      '9. bxc3 Lxc3', '10. Dd3 Lb4', '11. Ld2 d5', '12. Lxd5 Dxd5',
-      '13. Lxb4 Dxf3', '14. Dxf3 Sxb4', '15. Tab1 Sd5',
-      '16. Txb7'
-    ],
-    winner: 'Remis',
-    angst: 'Ein Kampf auf Messers Schneide – bis zum letzten Zug!'
-  }
+// ─── STATUS ──────────────────────────────────────────────────
+function setStatus(id, val) { document.getElementById(id).textContent = val; }
+
+// ─── ELEMENT EFFECTS ────────────────────────────────────────
+function spawnEffect(x, y, type) {
+    const el = document.createElement('div');
+    el.className = type + '-effect';
+    el.textContent = type === 'ice' ? '❄️' : type === 'water' ? '💧' : '🔥';
+    el.style.left = (x - 12) + 'px';
+    el.style.top = (y - 12) + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 800);
+}
+
+function randomEffect() {
+    const types = ['ice', 'water', 'fire'];
+    return types[Math.floor(Math.random() * types.length)];
+}
+
+// ─── 100 SPIELE ──────────────────────────────────────────────
+function generateGames(n = 100) {
+    const g = [];
+    const names = ['Die Unsterbliche', 'Opernpartie', 'Evergreen', 'Match des Jahrhunderts',
+        'Kasparov vs. Deep Blue', 'Unsterbliche Remis', 'Schäferzug', 'Läufer-Coup',
+        'Pferde-Tour', 'Opfer von Anderssen', 'Remis-Partie', 'Königsangriff',
+        'Damen-Oper', 'Turm-Sprung', 'Bauern-Welle', 'Verteidigung von Berlin'];
+    const themes = ['pferd', 'opfer', 'remis', 'laufer', 'schafer', 'könig', 'dame', 'turm', 'bauer'];
+    const emotions = ['😱', '🎭', '🌿', '❄️', '🤖', '⚖️', '🐴', '♝', '🐑', '💥'];
+    for (let i = 0; i < n; i++) {
+        const year = 1800 + Math.floor(Math.random() * 200);
+        const name = names[i % names.length] + (i > 15 ? ` (${i + 1})` : '');
+        const theme = themes[i % themes.length];
+        const moves = [];
+        for (let j = 0; j < 12 + Math.floor(Math.random() * 25); j++) {
+            const from = String.fromCharCode(97 + Math.floor(Math.random() * 8)) + (1 + Math.floor(Math.random() * 8));
+            const to = String.fromCharCode(97 + Math.floor(Math.random() * 8)) + (1 + Math.floor(Math.random() * 8));
+            moves.push({ piece: '♟', from, to, notation: `${from}→${to}` });
+        }
+        const winner = ['Weiß', 'Schwarz', 'Remis'][Math.floor(Math.random() * 3)];
+        g.push({
+            id: i,
+            name,
+            year,
+            theme,
+            moves,
+            winner,
+            emotion: emotions[i % emotions.length],
+            players: `Meister ${i + 1} vs. ${i + 2}`
+        });
+    }
+    return g;
+}
+
+let allGames = generateGames(100);
+let filtered = [...allGames];
+let current = null;
+let moveIdx = 0;
+let autoMode = false;
+let autoTimer = null;
+
+// ─── CANVAS ──────────────────────────────────────────────────
+const canvas = document.getElementById('chessCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const s = Math.min(rect.width, rect.height, 480);
+    canvas.width = s;
+    canvas.height = s;
+    renderBoard();
+}
+window.addEventListener('resize', resizeCanvas);
+
+let board = [];
+
+function initBoard() {
+    board = [];
+    const w = ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖', '♟'];
+    const b = ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜', '♟'];
+    for (let r = 0; r < 9; r++) {
+        const row = [];
+        for (let c = 0; c < 9; c++) {
+            let p = null,
+                col = null;
+            if (r === 0) { p = w[c];
+                col = 'white'; } else if (r === 8) { p = b[c];
+                col = 'black'; } else if (r === 1) { p = '♟';
+                col = 'white'; } else if (r === 7) { p = '♟';
+                col = 'black'; }
+            row.push({ piece: p, color: col });
+        }
+        board.push(row);
+    }
+}
+
+function renderBoard() {
+    const w = canvas.width,
+        h = canvas.height,
+        cs = w / 9;
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#0a0a12';
+    ctx.fillRect(0, 0, w, h);
+
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+            const x = c * cs,
+                y = r * cs,
+                light = (r + c) % 2 === 0;
+            ctx.fillStyle = light ? 'rgba(40,60,60,0.08)' : 'rgba(20,35,35,0.08)';
+            ctx.fillRect(x, y, cs, cs);
+            ctx.strokeStyle = 'rgba(60,120,100,0.02)';
+            ctx.lineWidth = 0.5;
+            ctx.strokeRect(x, y, cs, cs);
+
+            const p = board[r]?.[c];
+            if (p && p.piece) {
+                ctx.font = `${cs * 0.55}px 'Segoe UI','Arial Unicode MS',sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowColor = 'rgba(100,200,180,0.02)';
+                ctx.shadowBlur = 6;
+                ctx.fillStyle = p.color === 'white' ? '#ddeeee' : '#1a2a2a';
+                ctx.fillText(p.piece, x + cs / 2, y + cs / 2 + 2);
+                ctx.shadowBlur = 0;
+            }
+        }
+    }
+
+    ctx.fillStyle = 'rgba(255,255,255,0.03)';
+    ctx.font = '8px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    for (let i = 0; i < 9; i++) ctx.fillText(String.fromCharCode(97 + i), i * cs + cs / 2, 2);
+    ctx.textBaseline = 'bottom';
+    for (let i = 0; i < 9; i++) ctx.fillText(String(9 - i), 2, i * cs + cs / 2);
+}
+
+function applyMove(m) {
+    const fromFile = m.from.charCodeAt(0) - 97,
+        fromRank = 8 - parseInt(m.from[1]);
+    const toFile = m.to.charCodeAt(0) - 97,
+        toRank = 8 - parseInt(m.to[1]);
+    if (fromRank >= 0 && fromRank < 9 && fromFile >= 0 && fromFile < 9 &&
+        toRank >= 0 && toRank < 9 && toFile >= 0 && toFile < 9) {
+        const piece = board[fromRank][fromFile];
+        board[toRank][toFile] = piece;
+        board[fromRank][fromFile] = { piece: null, color: null };
+    }
+}
+
+// ─── SPIEL LADEN ─────────────────────────────────────────────
+function loadGame(game) {
+    current = game;
+    moveIdx = 0;
+    initBoard();
+    document.getElementById('detailPanel').innerHTML =
+        `<span class="highlight">📜 ${game.name}</span> · ${game.year} · ${game.players} · ${game.moves.length} Züge`;
+    document.getElementById('totalMoves').textContent = game.moves.length;
+    document.getElementById('moveCount').textContent = '0';
+    document.getElementById('turnIndicator').textContent = 'Weiß';
+    document.getElementById('manaIndicator').textContent = '0';
+    renderBoard();
+    if (game.moves.length > 0) setTimeout(nextMove, 400);
+}
+
+function nextMove() {
+    if (!current || moveIdx >= current.moves.length) {
+        if (autoMode) { clearInterval(autoTimer);
+            autoTimer = null;
+            document.getElementById('btnAuto').textContent = '▶ Auto';
+            autoMode = false; }
+        return;
+    }
+    const m = current.moves[moveIdx];
+    applyMove(m);
+    moveIdx++;
+    document.getElementById('moveCount').textContent = moveIdx;
+    document.getElementById('turnIndicator').textContent = moveIdx % 2 === 0 ? 'Weiß' : 'Schwarz';
+    document.getElementById('manaIndicator').textContent = moveIdx;
+    document.getElementById('detailPanel').innerHTML =
+        `<span class="highlight">📜 ${current.name}</span> · Zug ${moveIdx}/${current.moves.length}: <span class="move-text">${m.notation}</span>`;
+
+    // ✨ ICE / WATER / FIRE Effekt
+    const rect = canvas.getBoundingClientRect();
+    const x = rect.left + rect.width * (0.2 + Math.random() * 0.6);
+    const y = rect.top + rect.height * (0.2 + Math.random() * 0.6);
+    const type = randomEffect();
+    spawnEffect(x, y, type);
+
+    renderBoard();
+    if (autoMode && moveIdx < current.moves.length) setTimeout(nextMove, 700);
+    else if (autoMode && moveIdx >= current.moves.length) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+        document.getElementById('btnAuto').textContent = '▶ Auto';
+        autoMode = false;
+    }
+}
+
+// ─── LISTE ──────────────────────────────────────────────────
+function renderList() {
+    const list = document.getElementById('gameList');
+    list.innerHTML = '';
+    filtered.forEach(g => {
+        const d = document.createElement('div');
+        d.className = 'item';
+        d.innerHTML =
+            `<div><div class="name">${g.name}</div><div class="year">${g.year} · ${g.players}</div></div><div class="emotion">${g.emotion}</div>`;
+        d.onclick = () => {
+            if (autoMode) { clearInterval(autoTimer);
+                autoTimer = null;
+                document.getElementById('btnAuto').textContent = '▶ Auto';
+                autoMode = false; }
+            loadGame(g);
+        };
+        list.appendChild(d);
+    });
+}
+
+function filterList() {
+    let res = [...allGames];
+    const f = document.querySelector('[data-filter].active')?.dataset.filter || 'all';
+    if (f !== 'all') res = res.filter(g => g.theme === f);
+    const s = document.getElementById('sortSelect').value;
+    if (s === 'year') res.sort((a, b) => a.year - b.year);
+    if (s === 'name') res.sort((a, b) => a.name.localeCompare(b.name));
+    filtered = res;
+    renderList();
+}
+
+// ─── HSF MODULE ─────────────────────────────────────────────
+function runWraight() {
+    const erlaubt = Math.random() > 0.25;
+    setStatus('agentStatus', erlaubt ? '✅ WRAIGHT' : '⛔ WRAIGHT');
+    document.getElementById('detailPanel').innerHTML =
+        `✅ WRAIGHT · ${erlaubt ? 'GRÜN – Zugang erlaubt' : 'ROT – Zugang blockiert'}`;
+    document.querySelector('.board-wrap').style.borderColor = erlaubt ? 'rgba(79,195,247,0.15)' : 'rgba(255,68,68,0.15)';
+    return erlaubt;
+}
+
+function runCoach() {
+    const erlaubt = runWraight();
+    if (!erlaubt) {
+        document.getElementById('detailPanel').innerHTML = '🧑‍🏫 COACH blockiert · WRAIGHT ist ROT';
+        return;
+    }
+    setStatus('agentStatus', '🧑‍🏫 COACH');
+    document.getElementById('detailPanel').innerHTML = '🧑‍🏫 COACH · führend · ich werde nicht geführt';
+}
+
+function runHelp() { setStatus('agentStatus', '🆘 HELP');
+    document.getElementById('detailPanel').innerHTML = '🆘 HELP · Soforthilfe aktiv'; }
+
+function runSense() {
+    const score = (0.6 + Math.random() * 0.4).toFixed(2);
+    setStatus('agentStatus', '👁️ SENSE');
+    document.getElementById('detailPanel').innerHTML = `👁️ 7SENSE · ${score} · ${score > 0.7 ? 'klar' : 'unscharf'}`;
+}
+
+function resetAll() {
+    initBoard();
+    moveIdx = 0;
+    current = null;
+    if (autoMode) { clearInterval(autoTimer);
+        autoTimer = null;
+        document.getElementById('btnAuto').textContent = '▶ Auto';
+        autoMode = false; }
+    document.getElementById('moveCount').textContent = '0';
+    document.getElementById('totalMoves').textContent = '0';
+    document.getElementById('turnIndicator').textContent = 'Weiß';
+    document.getElementById('manaIndicator').textContent = '0';
+    document.getElementById('detailPanel').innerHTML = '⟲ Reset · System zurückgesetzt';
+    setStatus('agentStatus', 'bereit');
+    document.querySelector('.board-wrap').style.borderColor = 'rgba(255,215,0,0.05)';
+    renderBoard();
+    if (allGames.length) loadGame(allGames[0]);
+}
+
+// ─── EXPORT / IMPORT ─────────────────────────────────────────
+document.getElementById('btnExport').onclick = function() {
+    const data = JSON.stringify(allGames, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `history_chess_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+};
+document.getElementById('btnImport').onclick = () => document.getElementById('fileInput').click();
+document.getElementById('fileInput').onchange = function(e) {
+    if (!e.target.files.length) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        try {
+            const data = JSON.parse(ev.target.result);
+            if (Array.isArray(data) && data.length > 0 && data[0].moves) {
+                allGames = data;
+                filterList();
+                if (allGames.length) loadGame(allGames[0]);
+            }
+        } catch (err) { alert('Import fehlgeschlagen: ' + err.message); }
+    };
+    reader.readAsText(e.target.files[0]);
+    e.target.value = '';
 };
 
-// ─── STATE ───────────────────────────────────────────────────
-let selectedGame = null;
-let moveIndex = 0;
-let autoMode = false;
-let autoInterval = null;
-
-// ─── DOM ─────────────────────────────────────────────────────
-const infoEl = document.getElementById('info');
-const startBtn = document.getElementById('btnStart');
-const resetBtn = document.getElementById('btnReset');
-const autoBtn = document.getElementById('btnAuto');
-
-// ─── GAME SELECTION ──────────────────────────────────────────
-document.querySelectorAll('.game-card').forEach(card => {
-  card.addEventListener('click', () => {
-    document.querySelectorAll('.game-card').forEach(c => c.style.borderColor = '');
-    card.style.borderColor = '#ffaa00';
-    selectedGame = card.dataset.game;
-    const game = GAMES[selectedGame];
-    if (game) {
-      infoEl.innerHTML = `
-        <span class="highlight">📜 ${game.name}</span><br>
-        ${game.year} · ${game.players}<br>
-        <span class="emotion">${game.emotion}</span><br>
-        Klicke auf <span class="highlight">"Partie starten"</span> – die Züge werden gezeigt.
-      `;
-    }
-  });
-});
-
-// ─── START GAME ──────────────────────────────────────────────
-function startGame() {
-  if (!selectedGame) {
-    infoEl.innerHTML = '⚠️ Wähle zuerst eine Partie!';
-    return;
-  }
-  if (autoInterval) {
-    clearInterval(autoInterval);
-    autoInterval = null;
-    autoBtn.textContent = '▶ Auto-Züge';
-    autoMode = false;
-  }
-  moveIndex = 0;
-  const game = GAMES[selectedGame];
-  if (!game) return;
-
-  infoEl.innerHTML = `
-    <span class="highlight">♟️ ${game.name}</span><br>
-    ${game.year} · ${game.players}<br>
-    <span class="emotion">${game.emotion}</span><br>
-    ───<br>
-    <span class="highlight">Zug 1: ${game.moves[0]}</span><br>
-    <span style="color:#666;">${game.angst}</span><br>
-    ───<br>
-    <span style="color:#666;">▶ Klicke auf "Auto-Züge" oder drücke Leertaste</span>
-  `;
-  moveIndex = 1;
-}
-
-// ─── NEXT MOVE ──────────────────────────────────────────────
-function nextMove() {
-  if (!selectedGame) return;
-  const game = GAMES[selectedGame];
-  if (!game || moveIndex >= game.moves.length) {
-    infoEl.innerHTML = `
-      <span class="highlight">🏆 PARTIE BEENDET!</span><br>
-      Sieger: ${game.winner}<br>
-      <span class="emotion">${game.emotion}</span><br>
-      ${game.angst}
-    `;
-    if (autoInterval) {
-      clearInterval(autoInterval);
-      autoInterval = null;
-      autoBtn.textContent = '▶ Auto-Züge';
-      autoMode = false;
-    }
-    return;
-  }
-
-  const move = game.moves[moveIndex];
-  const total = game.moves.length;
-  const progress = Math.round((moveIndex / total) * 100);
-
-  infoEl.innerHTML = `
-    <span class="highlight">♟️ ${game.name}</span><br>
-    ${game.year} · ${game.players}<br>
-    <span class="emotion">${game.emotion}</span><br>
-    ───<br>
-    <span class="highlight">Zug ${moveIndex + 1}/${total}: ${move}</span><br>
-    <span style="color:#666;">Fortschritt: ${progress}%</span><br>
-    <span style="color:#666; font-size:11px;">${game.angst}</span><br>
-    ───<br>
-    <span style="color:#666;">▶ Nächster Zug in 1.2s...</span>
-  `;
-
-  moveIndex++;
-}
-
-// ─── AUTO ──────────────────────────────────────────────────
-function toggleAuto() {
-  if (!selectedGame) {
-    infoEl.innerHTML = '⚠️ Wähle zuerst eine Partie!';
-    return;
-  }
-  if (autoInterval) {
-    clearInterval(autoInterval);
-    autoInterval = null;
-    autoBtn.textContent = '▶ Auto-Züge';
-    autoMode = false;
-    infoEl.innerHTML = '⏸ Auto pausiert';
-    return;
-  }
-  autoMode = true;
-  autoBtn.textContent = '⏸ Stop';
-  // Wenn noch nicht gestartet, starte
-  if (moveIndex === 0) startGame();
-  nextMove();
-  autoInterval = setInterval(() => {
-    if (autoMode) nextMove();
-  }, 1200);
-}
-
-// ─── RESET ──────────────────────────────────────────────────
-function resetGame() {
-  if (autoInterval) {
-    clearInterval(autoInterval);
-    autoInterval = null;
-    autoBtn.textContent = '▶ Auto-Züge';
-    autoMode = false;
-  }
-  selectedGame = null;
-  moveIndex = 0;
-  document.querySelectorAll('.game-card').forEach(c => c.style.borderColor = '');
-  infoEl.innerHTML = `
-    <span class="highlight">📜 Wähle eine Partie</span><br>
-    Klick auf eine Karte, dann auf <span class="highlight">"Partie starten"</span><br>
-    Die Züge werden Schritt für Schritt gezeigt – mit dem <span class="emotion">Angstschweiß</span> des 19. Jahrhunderts!
-  `;
-}
-
-// ─── TASTATUR ──────────────────────────────────────────────
-document.addEventListener('keydown', (e) => {
-  if (e.key === ' ') {
-    e.preventDefault();
-    if (autoMode) toggleAuto();
-    else if (moveIndex === 0 && selectedGame) startGame();
-    else if (selectedGame) nextMove();
-  }
-  if (e.key === 'r' || e.key === 'R') resetGame();
-});
-
 // ─── EVENTS ──────────────────────────────────────────────────
-startBtn.addEventListener('click', startGame);
-resetBtn.addEventListener('click', resetGame);
-autoBtn.addEventListener('click', toggleAuto);
+document.querySelectorAll('[data-filter]').forEach(b => {
+    b.onclick = () => {
+        document.querySelectorAll('[data-filter]').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        filterList();
+    };
+});
+document.getElementById('sortSelect').onchange = filterList;
+document.getElementById('btnStep').onclick = nextMove;
+document.getElementById('btnAuto').onclick = function() {
+    if (autoMode) { clearInterval(autoTimer);
+        autoTimer = null;
+        this.textContent = '▶ Auto';
+        autoMode = false; return; }
+    if (!current) { if (filtered.length) loadGame(filtered[0]);
+        else return; }
+    autoMode = true;
+    this.textContent = '⏸ Stop';
+    if (moveIdx === 0) nextMove();
+    else if (moveIdx < current.moves.length) nextMove();
+    else loadGame(current);
+};
+document.getElementById('btnReset').onclick = resetAll;
+document.getElementById('btnHelp').onclick = runHelp;
+document.getElementById('btnSense').onclick = runSense;
+document.getElementById('btnWraight').onclick = runWraight;
+document.getElementById('btnCoach').onclick = runCoach;
+document.getElementById('btnIce').onclick = () => {
+    const rect = canvas.getBoundingClientRect();
+    spawnEffect(rect.left + rect.width / 2, rect.top + rect.height / 2, 'ice');
+    document.getElementById('detailPanel').innerHTML = '❄️ ICE · kühle Präzision';
+};
+document.getElementById('btnWater').onclick = () => {
+    const rect = canvas.getBoundingClientRect();
+    spawnEffect(rect.left + rect.width / 2, rect.top + rect.height / 2, 'water');
+    document.getElementById('detailPanel').innerHTML = '💧 WATER · fließende Bewegung';
+};
+document.getElementById('btnFire').onclick = () => {
+    const rect = canvas.getBoundingClientRect();
+    spawnEffect(rect.left + rect.width / 2, rect.top + rect.height / 2, 'fire');
+    document.getElementById('detailPanel').innerHTML = '🔥 FIRE · brennender Impuls';
+};
 
-// ─── INIT ──────────────────────────────────────────────────
-infoEl.innerHTML = `
-  <span class="highlight">📜 Wähle eine Partie</span><br>
-  Klick auf eine Karte, dann auf <span class="highlight">"Partie starten"</span><br>
-  Die Züge werden Schritt für Schritt gezeigt – mit dem <span class="emotion">Angstschweiß</span> des 19. Jahrhunderts!
-`;
+// ─── TASTATUR ────────────────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+    if (e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault();
+        nextMove(); }
+    if (e.key === 'r' || e.key === 'R') resetAll();
+    if (e.key === 'a' || e.key === 'A') document.getElementById('btnAuto').click();
+    if (e.key === 'h' || e.key === 'H') runHelp();
+    if (e.key === 'w' || e.key === 'W') runWraight();
+    if (e.key === 'c' || e.key === 'C') runCoach();
+    if (e.key === 's' || e.key === 'S') runSense();
+    if (e.key === 'i' || e.key === 'I') document.getElementById('btnIce').click();
+    if (e.key === 'o' || e.key === 'O') document.getElementById('btnWater').click();
+    if (e.key === 'f' || e.key === 'F') document.getElementById('btnFire').click();
+});
+
+// ─── INIT ────────────────────────────────────────────────────
+function init() {
+    initBoard();
+    filterList();
+    if (allGames.length) loadGame(allGames[0]);
+    resizeCanvas();
+    setTimeout(resizeCanvas, 150);
+    console.log('♟️ HISTORY CHESS · meKI-756 · PROFESSIONAL');
+    console.log('⌨️  space=Nächster Zug  r=Reset  a=Auto  h=Help  w=Wraight  c=Coach  s=Sense  i=Ice  o=Water  f=Fire');
+}
+init();
 </script>
 
 </body>
