@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>REAL.ATOM — ui(atom(ui.atom))</title>
+<style>
+:root{--bg:#050507;--gold:#ffd700;--tx:#e8e6d9;--green:#7cfc00;--red:#ff453a;--org:#ff8c00}
+*{box-sizing:border-box;font-family:ui-monospace,Menlo,Consolas,monospace}
+body{margin:0;background:var(--bg);color:var(--tx);min-height:100vh}
+header{position:sticky;top:0;z-index:30;background:rgba(5,5,7,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,215,0,.2);padding:10px 14px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.logo{display:flex;gap:10px;align-items:center}
+.logo b.i{width:28px;height:28px;border:1px solid var(--gold);background:rgba(255,215,0,.1);color:var(--gold);display:grid;place-items:center;border-radius:3px}
+h1{margin:0;font-size:14px;letter-spacing:.2em;color:var(--gold)}
+.sub{font-size:9px;letter-spacing:.16em;opacity:.6;margin-top:3px}
+button{font:inherit;cursor:pointer}
+.tb{padding:6px 12px;border:1px solid rgba(255,215,0,.4);background:transparent;color:var(--gold);font-size:11px;letter-spacing:.14em}
+.tb.on{background:var(--gold);color:#000;border-color:var(--gold)}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:10px;border-top:1px solid rgba(255,215,0,.1);padding-top:10px}
+.sl .l{display:flex;justify-content:space-between;font-size:9px;letter-spacing:.16em;opacity:.8}.sl .l b{color:var(--gold)}
+.sl input{width:100%;accent-color:var(--gold)}.sl small{display:block;font-size:8px;opacity:.4}
+.koop{display:flex;gap:10px;align-items:stretch}
+.kb{flex:1;border:1px solid rgba(255,215,0,.3);background:rgba(255,215,0,.06);padding:6px 10px}
+.kb small{font-size:9px;letter-spacing:.2em;opacity:.6}.kb .n{font-size:26px;font-weight:700;color:var(--gold);line-height:1.1}
+.cl{width:86px;border:1px solid rgba(255,255,255,.1);padding:6px 8px;font-size:8px;letter-spacing:.14em}.cl b{display:block;font-size:20px;color:#fff}
+.main{max-width:1500px;margin:0 auto;padding:14px;display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:1000px){.main{grid-template-columns:2fr 1fr}}
+.box{border:1px solid rgba(255,215,0,.18);background:#0a0a0c;margin-bottom:12px}
+.box>h2{margin:0;padding:8px 12px;border-bottom:1px solid rgba(255,215,0,.1);font-size:10px;letter-spacing:.2em;color:var(--gold);font-weight:400;display:flex;justify-content:space-between}
+.pad{padding:10px 12px}
+.cwrap{position:relative;height:560px;background:#050507}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+.hint{position:absolute;left:8px;top:8px;font-size:8px;line-height:1.5;opacity:.6;border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.6);padding:4px 8px;pointer-events:none}
+.hw{position:absolute;right:8px;bottom:8px;display:flex;gap:4px;pointer-events:none}
+.hw div{border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.7);padding:3px 6px;font-size:7px}.hw b{color:var(--gold);display:block}
+.btns{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,215,0,.2)}
+.btns button{padding:12px 4px;font-size:10px;letter-spacing:.14em;background:#0d0d10;color:var(--gold);border:0;border-right:1px solid rgba(255,215,0,.2)}
+.btns button:last-child{border:0;color:var(--green);font-weight:700}
+.btns button.on{background:var(--gold);color:#000}.btns button.o{color:var(--org)}.btns button.o.on{background:var(--org);color:#000}
+.btns button.pulse{background:var(--green);color:#000;animation:p 1s infinite}@keyframes p{50%{opacity:.6}}
+.pair{border:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.4);padding:7px 8px;margin-bottom:6px}
+.pair.c{border-color:rgba(255,215,0,.3);background:rgba(255,215,0,.04)}
+.pair .h{display:flex;justify-content:space-between;font-size:10px;font-weight:700;letter-spacing:.1em}
+.tag{font-size:9px;padding:1px 5px;border:1px solid rgba(255,255,255,.12);opacity:.5}.tag.g{border-color:rgba(124,252,0,.5);color:var(--green);background:rgba(124,252,0,.1);opacity:1}.tag.r{border-color:rgba(255,69,58,.5);color:var(--red);background:rgba(255,69,58,.1);opacity:1}
+.pair .b{margin-top:4px;font-size:9px;line-height:1.5;opacity:.85}.pair .b b{color:var(--gold)}
+.hwr{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid rgba(255,215,0,.08)}
+.hwr .m{font-size:18px;font-weight:700;color:var(--gold);text-align:right}.hwr small{opacity:.45;font-size:8px;display:block}
+.fin{border:1px solid rgba(255,215,0,.4);background:rgba(255,215,0,.08);padding:10px 12px;font-size:11px;line-height:1.6}.fin .n{font-size:22px;font-weight:700;color:var(--gold)}
+.def{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));font-size:11px;line-height:1.6;opacity:.8}.def b{color:var(--gold)}
+.loose{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}.loose span{font-size:8px;border:1px solid rgba(255,255,255,.1);padding:3px 6px;opacity:.5}
+footer{max-width:1500px;margin:0 auto;padding:0 14px 30px}.chips{display:flex;flex-wrap:wrap;gap:6px;font-size:10px}.chips span{border:1px solid rgba(255,215,0,.2);color:var(--gold);padding:3px 8px}
+</style>
+</head>
+<body>
+<header>
+  <div class="row">
+    <div class="logo"><b class="i">◉</b><div><h1>REAL.ATOM — ui(atom(ui.atom))</h1><div class="sub">CENTRAL ATOM REPLACING 4 SEPARATE COMPONENTS / MAINBOARD-LOGIK → ATOM-MODELL</div></div></div>
+    <div style="display:flex;gap:8px"><button class="tb on" id="run">■ STOP</button><button class="tb on" id="vec">VECTORS:ON</button></div>
+  </div>
+  <div class="ctl">
+    <div class="sl"><div class="l"><span>MAGNIFY — VERSTÄRKUNGSFAKTOR</span><b id="tv">1.20x</b></div><input type="range" id="mag" min="0.1" max="5" step="0.1" value="1.2"><small>grav · magnify · koop = Σ(cluster) · magnify</small></div>
+    <div class="sl"><div class="l"><span>GRAVITATION THRESHOLD — CLUSTER SCHWELLE</span><b id="iv">0.45</b></div><input type="range" id="thr" min="0.05" max="1.8" step="0.05" value="0.45"><small>grav &gt; threshold → Linie + Cluster</small></div>
+    <div class="koop"><div class="kb"><small>KOOP / POOL — SHARED VALUE</small><div class="n" id="koop">0.0</div></div><div class="cl">CLUSTERS<b id="cn">0/6</b><span id="cs" style="color:var(--red)">FRAGMENTED</span></div></div>
+  </div>
+</header>
+
+<div class="main">
+  <div>
+    <div class="box">
+      <h2><span>ATOM_CANVAS :: NUCLEUS=PQ(2t) :: ELECTRONS=KAISER/DRACHE/POOL/QUEUE</span><span><span style="color:var(--green)">■</span> BALANCED <span style="color:var(--red)">■</span> UNBALANCED</span></h2>
+      <div class="cwrap" id="cw"><canvas id="cv"></canvas>
+        <div class="hint">grav = (m1·m2·compat)/dist² · magnify · 18<br>nucleus: PQ = Frage + Ort + Queue</div>
+        <div class="hw" id="hwl"></div></div>
+      <div class="btns"><button id="reset">↻ RESET_ORBITS</button><button id="kb">KAISER_BOOST(CPU)</button><button class="o" id="db">DRACHE_BOOST(GPU)</button><button id="fu">FUSION — FORCE_CLUSTER</button></div>
+    </div>
+    <div class="box"><h2><span>ui(atom(ui.atom)) — RECURSIVE DEFINITION</span></h2><div class="pad"><div class="def">
+      <div><b>ui(atom(...))</b> = UI, die ein ATOM enthält. Nicht vier Panels, sondern ein zentrales Atom. Hardware sind Elektronen um den Kern.</div>
+      <div><b>atom(ui.atom)</b> = Das Atom enthält UI.ATOM: die UI selbst ist Teil des Kraftfelds. Frage + Ort + Queue wohnen im Kern PQ.</div>
+      <div><b>koop/pool</b> = Summe der Cluster-Gravitationen. Sinkt die Schwelle, entstehen mehr Cluster → höherer KOOP. Fusion erzwingt KOOP.</div></div></div></div>
+  </div>
+  <div>
+    <div class="box"><h2><span>COMPATIBILITY → GRAVITATION</span><span style="opacity:.4;font-size:8px">REAL CALCULATION</span></h2><div class="pad" id="pairs"></div></div>
+    <div class="box"><h2><span id="clt">CLUSTER LOGIC — 0 ACTIVE</span></h2><div class="pad" id="clus"></div></div>
+    <div class="box"><h2><span>HARDWARE DB — MASS = SCORE</span></h2><div id="hwdb"></div></div>
+    <div class="fin"><small style="letter-spacing:.25em;opacity:.6;font-size:9px">KOOP/POOL — FINAL FEEDBACK</small><div style="opacity:.7" id="fexp"></div><span class="n" id="fnum">0.0 KOOP</span> <small id="fmsg" style="opacity:.6"></small></div>
+  </div>
+</div>
+<footer><div class="chips"><span title="Nine — Single Question">9</span><span title="Place">99</span><span title="Queue">999</span><span title="PQ = 2t höchste">PQ</span><span title="REAL_PC V2">REAL_PC</span></div></footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const COMPAT={'CPU-GPU':[.92,'Balance'],'CPU-RAM':[.88,'Memory'],'CPU-SSD':[.95,'Storage'],'GPU-RAM':[.76,'VRAM-Bridge'],'GPU-SSD':[.82,'IO-Balance'],'RAM-SSD':[.91,'Pool-Sync']};
+const compat=(a,b)=>COMPAT[a+'-'+b]||COMPAT[b+'-'+a]||[.8,'Link'];
+const HW={CPU:{n:'Ryzen 7 5800X',r:'KAISER',m:85,d:'8C/16T 4.7GHz | Balance-Anchor',c:'#ffd700'},GPU:{n:'RTX 3070',r:'DRACHE',m:90,d:'5888 CUDA 20TF | Render-Core',c:'#ff8c00'},RAM:{n:'32GB DDR4-3600',r:'POOL',m:70,d:'Dual-Ch 32GB*3600MHz | Memory-Matrix',c:'#7cfc00'},SSD:{n:'NVMe 1TB Gen4',r:'QUEUE',m:75,d:'7000 MB/s | Place-Holder',c:'#00e5ff'}};
+$('hwl').innerHTML=Object.values(HW).map(h=>`<div><b>${h.r}</b>${h.n}</div>`).join('');
+$('hwdb').innerHTML=Object.entries(HW).map(([k,h])=>`<div class="hwr"><div><b style="color:var(--gold)">${k}</b> <span class="tag">${h.r}</span><div style="font-size:10px;opacity:.8">${h.n}</div><small>${h.d}</small></div><div class="m">${h.m}<small>MASS</small></div></div>`).join('')+'<div style="padding:8px 12px;font-size:8px;opacity:.4;line-height:1.4">mass = Hardware-Score. Kompatibilität = 3 Checks aus REAL_PC: Balance 0.92, Memory 0.88, Storage 0.95 + abgeleitet.</div>';
+
+const OFF={CPU:[150,30,0,-1.8],GPU:[-150,30,0,1.8],RAM:[-10,-150,1.6,0],SSD:[0,170,-1.6,0]};
+const S={run:true,vec:true,mag:1.2,thr:.45,kaiser:false,drache:false,fusion:false,t:0,pairs:[],pool:0,bodies:[]};
+const cv=$('cv'),cx=cv.getContext('2d'),W=()=>$('cw').clientWidth,H=()=>$('cw').clientHeight;
+function fit(){const r=$('cw').getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);cv.width=r.width*d;cv.height=r.height*d;cx.setTransform(d,0,0,d,0,0)}
+addEventListener('resize',fit);fit();
+function init(rand){S.bodies=Object.keys(HW).map(id=>{const o=OFF[id],c={x:W()/2,y:H()/2};let x=c.x+o[0],y=c.y+o[1],vx=o[2],vy=o[3];
+ if(rand){const a=Math.random()*Math.PI*2,m=120+Math.random()*80;x=c.x+Math.cos(a)*m;y=c.y+Math.sin(a)*m;vx=-Math.sin(a)*1.6;vy=Math.cos(a)*1.6}
+ return{id,base:HW[id].m,mass:HW[id].m,c:HW[id].c,x,y,vx,vy,trail:[]}})}
+init(false);
+const T=()=>S.mag*(S.fusion?2.8:1),I=()=>S.thr*(S.fusion?.25:1);
+
+$('run').onclick=e=>{S.run=!S.run;e.target.textContent=S.run?'■ STOP':'▶ RUN';e.target.classList.toggle('on',S.run)};
+$('vec').onclick=e=>{S.vec=!S.vec;e.target.textContent='VECTORS:'+(S.vec?'ON':'OFF');e.target.classList.toggle('on',S.vec)};
+$('mag').oninput=e=>{S.mag=+e.target.value};$('thr').oninput=e=>{S.thr=+e.target.value};
+$('reset').onclick=()=>init(true);
+$('kb').onclick=e=>{S.kaiser=!S.kaiser;e.target.classList.toggle('on',S.kaiser);e.target.textContent=S.kaiser?'★ KAISER_ACTIVE':'KAISER_BOOST(CPU)'};
+$('db').onclick=e=>{S.drache=!S.drache;e.target.classList.toggle('on',S.drache);e.target.textContent=S.drache?'▲ DRACHE_ACTIVE':'DRACHE_BOOST(GPU)'};
+let ft=null;$('fu').onclick=e=>{S.fusion=true;e.target.classList.add('pulse');e.target.textContent='◎ FUSIONING...';clearTimeout(ft);ft=setTimeout(()=>{S.fusion=false;e.target.classList.remove('pulse');e.target.textContent='FUSION — FORCE_CLUSTER'},3200)};
+
+function step(){const w=W(),h=H(),Cx=w/2,Cy=h/2,B=S.bodies,t=T(),th=I(),P=[];
+ B.forEach(b=>{b.mass=b.base*((b.id==='CPU'&&S.kaiser)||(b.id==='GPU'&&S.drache)?1.6:1)});
+ for(let i=0;i<B.length;i++){const a=B[i];let fx=0,fy=0;const dx=Cx-a.x,dy=Cy-a.y,d=Math.hypot(dx,dy)+30,F=120*a.mass*.55*t/(d*d)*42;fx+=dx/d*F;fy+=dy/d*F;
+  for(let j=0;j<B.length;j++){if(i===j)continue;const b=B[j],ex=b.x-a.x,ey=b.y-a.y,dd=Math.hypot(ex,ey)+18,[cp,nm]=compat(a.id,b.id),g=a.mass*b.mass*cp/(dd*dd)*t*18;fx+=ex/dd*g;fy+=ey/dd*g;
+   if(i<j)P.push({a:a.id,b:b.id,cp,nm,dist:dd,grav:g,cl:g>th})}
+  a.vx+=fx*.016;a.vy+=fy*.016;a.vx*=.993;a.vy*=.993;a.x+=a.vx;a.y+=a.vy;a.trail.push({x:a.x,y:a.y});if(a.trail.length>22)a.trail.shift()}
+ S.pairs=P;S.pool=P.filter(p=>p.cl).reduce((s,p)=>s+p.grav,0)*t*88.4}
+
+function draw(){const w=W(),h=H(),Cx=w/2,Cy=h/2,t=S.t,B=S.bodies;cx.fillStyle='#050507';cx.fillRect(0,0,w,h);
+ cx.strokeStyle='rgba(255,215,0,.04)';cx.lineWidth=1;for(let x=0;x<w;x+=36){cx.beginPath();cx.moveTo(x,0);cx.lineTo(x,h);cx.stroke()}for(let y=0;y<h;y+=36){cx.beginPath();cx.moveTo(0,y);cx.lineTo(w,y);cx.stroke()}
+ const pu=Math.sin(t*2.2)*.12+1;for(let k=1;k<=3;k++){cx.beginPath();cx.strokeStyle=`rgba(255,215,0,${.18/k})`;cx.lineWidth=k===2?1.2:.6;cx.setLineDash(k===1?[6,8]:[]);cx.arc(Cx,Cy,52*k*pu,0,7);cx.stroke()}cx.setLineDash([]);
+ S.pairs.forEach(p=>{if(!p.cl)return;const a=B.find(b=>b.id===p.a),b=B.find(b=>b.id===p.b),ok=p.cp>=.85;cx.beginPath();cx.strokeStyle=ok?`rgba(124,252,0,${.2+p.grav*.15})`:`rgba(255,69,58,${.22+p.grav*.15})`;cx.lineWidth=1+p.grav*1.6;cx.shadowColor=ok?'#7cfc00':'#ff453a';cx.shadowBlur=S.fusion?18:8;
+  const mx=(a.x+b.x)/2+Math.sin(t*1.5+p.grav)*8,my=(a.y+b.y)/2+Math.cos(t*1.5+p.grav)*8;cx.moveTo(a.x,a.y);cx.quadraticCurveTo(mx,my,b.x,b.y);cx.stroke();cx.shadowBlur=0;
+  if(p.grav>I()*1.2){cx.fillStyle=ok?'rgba(124,252,0,.9)':'rgba(255,69,58,.9)';cx.font='9px monospace';cx.textAlign='left';cx.fillText(p.grav.toFixed(2),mx+6,my-4)}});
+ B.forEach(b=>{if(b.trail.length<2)return;cx.strokeStyle=b.c;cx.lineWidth=1;for(let i=0;i<b.trail.length-1;i++){cx.globalAlpha=i/b.trail.length*.5;cx.beginPath();cx.moveTo(b.trail[i].x,b.trail[i].y);cx.lineTo(b.trail[i+1].x,b.trail[i+1].y);cx.stroke()}cx.globalAlpha=1});
+ const nr=26*pu+(S.fusion?8:0),gr=cx.createRadialGradient(Cx,Cy,0,Cx,Cy,nr*2.6);gr.addColorStop(0,'#fff9c4');gr.addColorStop(.2,'#ffd700');gr.addColorStop(.6,'#ff8c00');gr.addColorStop(1,'rgba(0,0,0,0)');cx.fillStyle=gr;cx.beginPath();cx.arc(Cx,Cy,nr*2.6,0,7);cx.fill();
+ cx.fillStyle='#050507';cx.strokeStyle='#ffd700';cx.lineWidth=2.5;cx.beginPath();cx.arc(Cx,Cy,nr,0,7);cx.fill();cx.stroke();
+ cx.fillStyle='#ffd700';cx.font=`bold ${S.fusion?15:13}px monospace`;cx.textAlign='center';cx.textBaseline='middle';cx.fillText('PQ',Cx,Cy-2);cx.font='7px monospace';cx.fillStyle='rgba(255,215,0,.7)';cx.fillText('2t HÖCHSTE',Cx,Cy+9);
+ B.forEach(b=>{cx.shadowColor=b.c;cx.shadowBlur=(S.kaiser&&b.id==='CPU')||(S.drache&&b.id==='GPU')?20:12;cx.fillStyle='#0a0a0c';cx.strokeStyle=b.c;cx.lineWidth=2;cx.beginPath();cx.arc(b.x,b.y,18,0,7);cx.fill();cx.stroke();cx.shadowBlur=0;
+  cx.fillStyle=b.c;cx.beginPath();cx.arc(b.x,b.y,3+b.mass/90*3,0,7);cx.fill();cx.textAlign='center';cx.fillStyle='#e8e6d9';cx.font='bold 10px monospace';cx.fillText(b.id,b.x,b.y-28);cx.fillStyle=b.c+'cc';cx.font='8px monospace';cx.fillText(HW[b.id].r,b.x,b.y+29);cx.fillStyle='rgba(232,230,217,.6)';cx.font='7px monospace';cx.fillText('m='+b.mass.toFixed(0),b.x,b.y+38);
+  if(S.vec&&Math.hypot(b.vx,b.vy)>.01){cx.beginPath();cx.strokeStyle=b.c+'88';cx.setLineDash([2,3]);cx.moveTo(b.x,b.y);cx.lineTo(b.x+b.vx*18,b.y+b.vy*18);cx.stroke();cx.setLineDash([])}});
+ if(S.pool>200){cx.strokeStyle=`rgba(255,215,0,${.1+Math.sin(t*3)*.05})`;cx.lineWidth=1;cx.beginPath();cx.arc(Cx,Cy,200+Math.sin(t*2)*10,0,7);cx.stroke()}}
+
+function ui(){const P=[...S.pairs].sort((a,b)=>b.grav-a.grav),C=P.filter(p=>p.cl),L=P.filter(p=>!p.cl),t=T();
+ $('tv').textContent=t.toFixed(2)+'x';$('iv').textContent=I().toFixed(2);$('koop').textContent=S.pool.toFixed(1);
+ $('cn').innerHTML=C.length+'<small style="opacity:.4;font-size:10px">/6</small>';$('cs').textContent=C.length>=4?'FUSION READY':'FRAGMENTED';$('cs').style.color=C.length>=4?'var(--green)':'var(--red)';
+ $('pairs').innerHTML=P.map(p=>{const a=HW[p.a],b=HW[p.b],pc=Math.round(p.cp*100);return`<div class="pair ${p.cl?'c':''}"><div class="h"><span>${p.a} ↔ ${p.b} <span class="tag">${p.nm}</span></span><span class="tag ${p.cl?(p.cp>=.85?'g':'r'):''}">${p.cl?'CLUSTERED':'LOOSE'}</span></div><div class="b">masses: ${a.m} · ${b.m} · compat <span style="color:${pc>=85?'var(--green)':'#ffae00'}">${pc}% (${p.nm})</span><br>grav = ${a.m}·${b.m}·${p.cp.toFixed(2)} / ${p.dist.toFixed(0)}² · ${t.toFixed(1)} · 18 = <b>${p.grav.toFixed(3)}</b></div></div>`}).join('');
+ $('clt').textContent='CLUSTER LOGIC — '+C.length+' ACTIVE';
+ $('clus').innerHTML=(C.length?C.map(p=>`<div class="pair c"><div class="h"><span>${p.a}+${p.b}</span><span>${p.nm} ${Math.round(p.cp*100)}%</span><b style="color:var(--gold)">${p.grav.toFixed(2)}</b></div></div>`).join(''):'<div style="opacity:.4;text-align:center;padding:16px 0;border:1px dashed rgba(255,255,255,.1)">KEINE CLUSTER — Schwelle senken, Magnify erhöhen oder FUSION</div>')+(L.length?`<div style="margin-top:8px;font-size:8px;letter-spacing:.14em;opacity:.4">LOOSE (UNTER SCHWELLE ${I().toFixed(2)}):</div><div class="loose">${L.map(p=>`<span>${p.a}-${p.b}:${p.grav.toFixed(2)}</span>`).join('')}</div>`:'');
+ $('fexp').innerHTML='pool = Σ clustered_grav · magnify · 88.4<br><span style="opacity:.6">= '+(C.map(p=>p.grav.toFixed(2)).join(' + ')||'0')+' · '+t.toFixed(1)+' · 88.4</span>';
+ $('fnum').textContent=S.pool.toFixed(1)+' KOOP';$('fmsg').textContent=S.pool>180?'→ BESTES KOOP-FEEDBACK':S.pool>80?'→ STABILER CLUSTER':'→ FRAGMENTIERT — FUSION NUTZEN'}
+
+let last=performance.now(),fr=0;
+(function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,(now-last)/1000);last=now;if(S.run){S.t+=dt;step()}draw();if(++fr%6===0)ui()})(last);
+</script>
+</body>
+</html>
