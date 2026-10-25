@@ -1,0 +1,204 @@
+!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VESTA · HOME BIOS · EVIG · ROOT — 9→99→999→PQ→HOME→ORT→INDEX→REAL.PC</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Syne:wght@700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;font-family:"JetBrains Mono",monospace}
+:root{--bg:#05060a;--surface:#0a0e14;--surface2:#111825;--border:#1a2332;--text:#f0eee6;--muted:#5a6e84;--gold:#ffcc44;--cyan:#5fc8ff;--green:#00ff41;--red:#ff5a7a;--purple:#b388ff;--co2:#5a6e84;--o2:#00ff41}
+body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.syne{font-family:"Syne",sans-serif}
+button{cursor:pointer;transition:all 0.2s}
+button:hover{transform:translateY(-1px)}
+a{color:inherit;text-decoration:none}
+@media(max-width:900px){.main-split{grid-template-columns:1fr !important}.cards-grid{grid-template-columns:repeat(2,1fr) !important}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="module">
+import React from 'https://esm.sh/react@18.3.1';
+import {createRoot} from 'https://esm.sh/react-dom@18.3.1/client';
+const {useState,useRef,useEffect}=React;
+const h=React.createElement;
+const PATH=["9","99","999","PQ","HOME","ORT","INDEX","REAL.PC"];
+const CARDS=[
+  {id:"9",        name:"9.HTML",           label:"NEUN",       color:"#ffcc44", href:"9.html",           layer:"SURFACE"},
+  {id:"99",       name:"99.HTML",          label:"NEUNZIG",    color:"#ffcc44", href:"99.html",          layer:"HOME"},
+  {id:"999",      name:"999.HTML",         label:"NOTRUF",     color:"#ff5a7a", href:"999.html",         layer:"BENCH"},
+  {id:"PQ",       name:"PQ.HTML",          label:"PQ",         color:"#b388ff", href:"PQ.html",          layer:"PRIOR"},
+  {id:"HOME",     name:"HOME.HTML",        label:"HOME BIOS",  color:"#5fc8ff", href:"home.html",        layer:"BIOS"},
+  {id:"ORT",      name:"ORT.HTML",         label:"ORT",        color:"#5fc8ff", href:"ort.html",         layer:"SITE"},
+  {id:"INDEX",    name:"INDEX.HTML",       label:"INDEX",      color:"#00ff41", href:"index.html",       layer:"ROOT", self:true},
+  {id:"REAL",     name:"REAL.PC",          label:"REAL.PC",    color:"#ffcc44", href:"REAL.PC",          layer:"PC"},
+  {id:"FASSER",   name:"KNOTEN.FASSER",    label:"FASSER",     color:"#ffcc44", href:"KNOTEN.FASSER.html", layer:"KNOTEN"},
+  {id:"MIND",     name:"MAIN.MIND",        label:"MIND",       color:"#b388ff", href:"main.mind.html",   layer:")brain("},
+  {id:"TERRAIN",  name:"TERRAIN.HTML",     label:"TERRAIN",    color:"#00ff41", href:"terrain.html",     layer:"3.FELD"},
+  {id:"STICK",    name:"STICK.HTML",       label:"STICK",      color:"#ff66c8", href:"stick.html",       layer:"ALL-IN-ONE"},
+  {id:"ALLES",    name:"ALL.HTML",         label:"ALLES",      color:"#f0eee6", href:"all.html",         layer:"SUITE"},
+  {id:"FELD",     name:"1/FELD.HTML",      label:"FELD",       color:"#00ff41", href:"./1/feld.html",    layer:"81-MATRIX"},
+  {id:"EYE",      name:"EYE.BRAIN",        label:"EYE.BRAIN",  color:"#ffcc44", href:"eye.brain.html",   layer:"55Hz"},
+  {id:"NOAH",     name:"NOAH.HTML",        label:"NOAH L14",   color:"#5fc8ff", href:"noah.html",        layer:"20 MODULE"},
+  {id:"MAIN",     name:"MAINBOARD.HTML",   label:"MAINBOARD",  color:"#ff8a4a", href:"mainboard.html",   layer:"RUNTIME"},
+  {id:"WEG",      name:"WEG.WEISER.HTML",  label:"WEG.WEISER", color:"#b388ff", href:"weg.weiser.html",  layer:"OS OZZ"},
+];
+function App(){
+  const [activePath,setActivePath]=useState(7);
+  const [activeCard,setActiveCard]=useState(null);
+  const [energy,setEnergy]=useState(111);
+  const [qi,setQi]=useState(111);
+  const [breath,setBreath]=useState(0);
+  const canvasRef=useRef(null);
+  const [log,setLog]=useState(["VESTA · HOME BIOS · EVIG · ROOT initialized","EIGENUMGEBUNG: 8 files online (9,99,999,PQ,REAL_PC,home,ort,index)","UNABHÄNGIGKEIT: CLOSED → OPEN","ABGESONDERTE FÜHRUNG: führt sich selbst"]);
+  const pushLog=(msg)=>setLog(l=>[`[${new Date().toLocaleTimeString()}] ${msg}`,...l].slice(0,15));
+  useEffect(()=>{
+    const c=canvasRef.current; if(!c) return;
+    const ctx=c.getContext("2d");
+    let W=0,H=0,R=window.devicePixelRatio||1,anim=0,t=0;
+    const co2=[],o2=[];
+    const resize=()=>{
+      const b=c.parentElement.getBoundingClientRect();
+      W=b.width; H=b.height;
+      c.width=W*R; c.height=H*R;
+      c.style.width=W+"px"; c.style.height=H+"px";
+      ctx.setTransform(R,0,0,R,0,0);
+    };
+    resize();
+    window.addEventListener("resize",resize);
+    const loop=()=>{
+      t+=0.02;
+      ctx.clearRect(0,0,W,H);
+      const grad=ctx.createRadialGradient(W/2,H/2,20,W/2,H/2,Math.max(W,H)/2);
+      grad.addColorStop(0,"rgba(10,14,20,0.5)");
+      grad.addColorStop(1,"rgba(5,6,10,0)");
+      ctx.fillStyle=grad; ctx.fillRect(0,0,W,H);
+      const cx=W*0.42, cy=H*0.5;
+      const br=(Math.sin(t)+1)/2;
+      const r1=36+br*12, r2=64+br*8, r3=92+br*4;
+      ctx.lineWidth=2;
+      ctx.strokeStyle=`rgba(255,204,68,${0.35+br*0.5})`;
+      ctx.beginPath(); ctx.arc(cx,cy,r1,0,Math.PI*2); ctx.stroke();
+      ctx.strokeStyle=`rgba(95,200,255,${0.35+br*0.5})`;
+      ctx.beginPath(); ctx.arc(cx,cy,r2,0,Math.PI*2); ctx.stroke();
+      ctx.strokeStyle=`rgba(0,255,65,${0.35+br*0.5})`;
+      ctx.beginPath(); ctx.arc(cx,cy,r3,0,Math.PI*2); ctx.stroke();
+      const g2=ctx.createRadialGradient(cx,cy,0,cx,cy,r1);
+      g2.addColorStop(0,`rgba(255,204,68,${0.15+br*0.3})`);
+      g2.addColorStop(1,"rgba(255,204,68,0)");
+      ctx.fillStyle=g2; ctx.beginPath(); ctx.arc(cx,cy,r1,0,Math.PI*2); ctx.fill();
+      ctx.font="700 9px JetBrains Mono";
+      ctx.textAlign="center";
+      ctx.fillStyle="#ffcc44"; ctx.fillText("QI",cx,cy-r1-6);
+      ctx.fillStyle="#5fc8ff"; ctx.fillText("IQ",cx,cy-r2-6);
+      ctx.fillStyle="#00ff41"; ctx.fillText("IQQ",cx,cy-r3-6);
+      ctx.fillStyle="#f0eee6";
+      ctx.font="900 22px Syne";
+      const qv=111+Math.floor(br*888);
+      ctx.fillText(qv,cx,cy+8);
+      setQi(qv);
+      if(Math.random()<0.18){
+        co2.push({x:-8,y:cy+(Math.random()-0.5)*100,vx:1.2+Math.random()*2,r:1.5+Math.random()*1.5});
+      }
+      for(let i=co2.length-1;i>=0;i--){
+        const p=co2[i]; p.x+=p.vx;
+        const dx=p.x-cx,dy=p.y-cy,d=Math.hypot(dx,dy);
+        if(d<r1){
+          co2.splice(i,1);
+          for(let k=0;k<2;k++) o2.push({x:cx,y:cy,vx:2+Math.random()*2.5,vy:(Math.random()-0.5)*2,r:1.8+Math.random()*1.2});
+          continue;
+        }
+        ctx.fillStyle=`rgba(90,110,132,0.85)`;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+      }
+      for(let i=o2.length-1;i>=0;i--){
+        const p=o2[i]; p.x+=p.vx; p.y+=p.vy;
+        if(p.x>W+20||p.y<0||p.y>H){o2.splice(i,1);continue;}
+        ctx.fillStyle=`rgba(0,255,65,0.9)`;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+      }
+      ctx.strokeStyle="rgba(90,110,132,0.4)";
+      ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(20,cy); ctx.lineTo(cx-r1-8,cy); ctx.stroke();
+      ctx.fillStyle="rgba(90,110,132,0.6)"; ctx.font="700 8px JetBrains Mono"; ctx.textAlign="left";
+      ctx.fillText("CO2",8,cy-8);
+      ctx.strokeStyle="rgba(0,255,65,0.4)";
+      ctx.beginPath(); ctx.moveTo(cx+r1+8,cy); ctx.lineTo(W-20,cy); ctx.stroke();
+      ctx.fillStyle="rgba(0,255,65,0.8)"; ctx.textAlign="right";
+      ctx.fillText("O2",W-8,cy-8);
+      const newE=111+Math.floor(br*888);
+      setEnergy(newE);
+      setBreath(br);
+      anim=requestAnimationFrame(loop);
+    };
+    loop();
+    return ()=>{cancelAnimationFrame(anim);window.removeEventListener("resize",resize)};
+  },[]);
+  const handlePath=(i)=>{
+    setActivePath(i);
+    pushLog(`PATH: ${PATH.slice(0,i+1).join(" → ")}`);
+  };
+  const handleCard=(c)=>{
+    setActiveCard(c.id);
+    pushLog(`OPEN: ${c.name} · layer=${c.layer}`);
+  };
+  return h("div",{style:{maxWidth:"1640px",margin:"0 auto",padding:"12px"}},[
+    h("header",{key:"hdr",style:{borderBottom:"3px solid var(--text)",paddingBottom:"12px",marginBottom:"12px",display:"flex",flexWrap:"wrap",justifyContent:"space-between",alignItems:"center",gap:"12px"}},[
+      h("div",{key:"logo",style:{display:"flex",alignItems:"center",gap:"12px"}},[
+        h("div",{key:"mark",style:{width:"46px",height:"46px",display:"grid",placeItems:"center",fontSize:"24px",background:"var(--gold)",color:"black",fontWeight:900,border:"2px solid black",boxShadow:"0 0 24px var(--gold),3px 3px 0 var(--text)"}},"◭"),
+        h("div",{key:"txt"},[
+          h("div",{className:"syne",style:{fontSize:"16px",fontWeight:800,letterSpacing:"0.18em",color:"var(--gold)"}},"VESTA · HOME BIOS · EVIG · ROOT"),
+          h("div",{style:{fontSize:"9px",letterSpacing:"0.22em",color:"var(--muted)",marginTop:"2px"}},"EIGENUMGEBUNG · UNABHÄNGIGKEIT · ABGESONDERTE FÜHRUNG · ATEM CO2→O2"),
+        ]),
+      ]),
+      h("div",{key:"status",style:{display:"flex",gap:"8px",flexWrap:"wrap",alignItems:"center"}},[
+        h("div",{key:"g",style:{padding:"6px 12px",borderRadius:"999px",border:"2px solid var(--green)",background:"rgba(0,255,65,0.15)",fontSize:"10px",fontWeight:900,letterSpacing:"0.14em",color:"var(--green)"}},"◉ ONLINE · OFFLINE-FIRST"),
+        h("div",{key:"c",style:{padding:"6px 12px",borderRadius:"999px",border:"2px solid var(--cyan)",background:"rgba(95,200,255,0.1)",fontSize:"10px",fontWeight:900,letterSpacing:"0.14em",color:"var(--cyan)"}},"CLOSED → OPEN"),
+        h("div",{key:"p",style:{padding:"6px 12px",borderRadius:"999px",border:"2px solid var(--gold)",background:"rgba(255,204,68,0.1)",fontSize:"10px",fontWeight:900,letterSpacing:"0.14em",color:"var(--gold)"}},`ENERGIE ${energy}/999`),
+      ]),
+    ]),
+    h("div",{key:"path",style:{display:"flex",flexWrap:"wrap",gap:"6px",marginBottom:"12px",alignItems:"center"}},[
+      h("span",{key:"lbl",style:{fontSize:"9px",letterSpacing:"0.22em",color:"var(--muted)",marginRight:"8px"}},"PATH:"),
+      ...PATH.map((p,i)=>h("div",{key:p,style:{display:"flex",alignItems:"center",gap:"6px"}},[
+        h("button",{onClick:()=>handlePath(i),style:{padding:"6px 14px",borderRadius:"6px",border:activePath>=i?"2px solid var(--gold)":"1px solid var(--border)",background:activePath===i?"var(--gold)":activePath>i?"rgba(255,204,68,0.15)":"transparent",color:activePath===i?"black":activePath>i?"var(--gold)":"var(--muted)",fontSize:"11px",fontWeight:900,letterSpacing:"0.1em"}},p),
+        i<PATH.length-1&&h("span",{key:"a",style:{color:"var(--muted)",fontSize:"10px"}},"→")
+      ]))
+    ]),
+    h("div",{key:"main",className:"main-split",style:{display:"grid",gridTemplateColumns:"1.2fr 1fr",gap:"12px"}},[
+      h("div",{key:"atem",style:{border:"2px solid var(--border)",borderRadius:"12px",background:"var(--surface)",padding:"14px",position:"relative",overflow:"hidden"}},[
+        h("div",{key:"hdr",style:{display:"flex",justifyContent:"space-between",marginBottom:"10px"}},[
+          h("span",{key:"l",style:{fontSize:"10px",letterSpacing:"0.2em",color:"var(--gold)"}},"ATEM · QI · IQ · IQQ"),
+          h("span",{key:"r",style:{fontSize:"9px",color:"var(--muted)"}},`CO2 schluckt → O2 verströmt · breath ${Math.round(breath*100)}%`),
+        ]),
+        h("div",{key:"canvas-wrap",style:{position:"relative",height:"340px",background:"#000",borderRadius:"8px",border:"1px solid var(--border)",overflow:"hidden"}},[
+          h("canvas",{key:"c",ref:canvasRef,style:{position:"absolute",inset:0,width:"100%",height:"100%"}}),
+        ]),
+        h("div",{key:"qi",style:{marginTop:"10px",padding:"10px",borderRadius:"8px",background:"var(--surface2)",border:"1px solid var(--border)",display:"flex",justifyContent:"space-between",alignItems:"center"}},[
+          h("span",{key:"l",style:{fontSize:"10px",letterSpacing:"0.2em",color:"var(--muted)"}},"LIVE QI"),
+          h("span",{key:"v",style:{fontSize:"22px",fontWeight:900,color:"var(--gold)"}},qi),
+          h("span",{key:"e",style:{fontSize:"9px",color:"var(--muted)"}},qi>500?"↑ FLOW":"↓ REST"),
+        ]),
+      ]),
+      h("div",{key:"right",style:{display:"flex",flexDirection:"column",gap:"12px"}},[
+        h("div",{key:"log",style:{border:"2px solid var(--border)",borderRadius:"12px",background:"var(--surface)",padding:"12px",flex:1,minHeight:"120px"}},[
+          h("div",{key:"hdr",style:{fontSize:"9px",letterSpacing:"0.2em",color:"var(--muted)",marginBottom:"6px"}},"LOG"),
+          h("div",{key:"body",style:{fontSize:"8px",lineHeight:1.6,maxHeight:"180px",overflowY:"auto",color:"var(--muted)"}}, log.map((l,i)=>h("div",{key:i,style:{opacity:Math.max(0.2,1-i*0.06)}},l)))
+        ]),
+      ]),
+    ]),
+    h("div",{key:"cards-hdr",style:{marginTop:"14px",marginBottom:"8px",display:"flex",justifyContent:"space-between",alignItems:"baseline"}},[
+      h("span",{key:"l",style:{fontSize:"11px",letterSpacing:"0.22em",color:"var(--gold)",fontWeight:900}},"18 CARDS · ALLE SEITEN"),
+    ]),
+    h("div",{key:"cards",className:"cards-grid",style:{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:"8px"}},[
+      ...CARDS.map(c=>h("button",{key:c.id,onClick:()=>handleCard(c),style:{padding:"12px 8px",borderRadius:"8px",border:activeCard===c.id?`2px solid ${c.color}`:"1px solid var(--border)",background:activeCard===c.id?`${c.color}15`:"var(--surface)",color:c.color,display:"flex",flexDirection:"column",alignItems:"flex-start",gap:"4px"}} ,[
+        h("div",{key:"name",style:{fontSize:"10px",fontWeight:900}},c.name),
+        h("div",{key:"layer",style:{fontSize:"7px",opacity:0.5}},`[${c.layer}]`),
+      ]))
+    ]),
+  ]);
+}
+createRoot(document.getElementById("root")).render(h(React.StrictMode,null,h(App,null)));
+</script>
+</body>
+</html>
