@@ -1,0 +1,61 @@
+{
+  "raw-x": {
+    "version": "1.0",
+    "raw-id": "X.raw",
+    "axis-id": 1,
+    "axis-name": "X",
+    "raw-type": "line",
+    "deck": 3,
+
+    "raw-style": {
+      "color": "#ff3b3b",
+      "opacity": 0.8,
+      "blur": 2,
+      "pulse": false,
+      "dash": false,
+      "wave": false,
+      "width": 2
+    },
+
+    "raw-vector": {
+      "x": 1.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+
+    "raw-sync": {
+      "latency": 0.1,
+      "mode": "hard",
+      "speed": 1.0
+    },
+
+    "raw-fusion": {
+      "pair": "Z+X",
+      "strength": 1.0,
+      "mode": "vector",
+      "color": "#3399ff"
+    },
+
+    "raw-routing": {
+      "axis-route": "RAW-X-AXIS",
+      "sync-route": "RAW-X-SYNC",
+      "visual-route": "RAW-X-VISUAL",
+      "fusion-route": "RAW-X-FUSION",
+      "deck-route": "RAW-X-DECK"
+    },
+
+    "raw-flags": {
+      "enable-style": true,
+      "enable-sync": true,
+      "enable-fusion": true,
+      "enable-routing": true
+    },
+
+    "raw-output": {
+      "raw-x-core": "RAW-X-CORE",
+      "raw-x-visual": "RAW-X-VISUAL",
+      "raw-x-system": "RAW-X-SYSTEM"
+    }
+  }
+}
+

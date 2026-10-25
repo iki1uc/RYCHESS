@@ -1,0 +1,61 @@
+{
+  "raw-flow": {
+    "version": "1.0",
+    "raw-id": "flow.raw",
+    "axis-id": 8,
+    "axis-name": "FLOW",
+    "raw-type": "wave",
+    "deck": 3,
+
+    "raw-style": {
+      "color": "#00ffee",
+      "opacity": 1.0,
+      "wave": true,
+      "blur": 0,
+      "pulse": false,
+      "dash": false,
+      "width": 3
+    },
+
+    "raw-vector": {
+      "x": 0.5,
+      "y": 0.5,
+      "z": 1.0
+    },
+
+    "raw-sync": {
+      "latency": 0.05,
+      "mode": "wave",
+      "speed": 1.4
+    },
+
+    "raw-fusion": {
+      "pair": "FLOW+T",
+      "strength": 1.2,
+      "mode": "wave",
+      "color": "#00ffee"
+    },
+
+    "raw-routing": {
+      "axis-route": "RAW-FLOW-AXIS",
+      "sync-route": "RAW-FLOW-SYNC",
+      "visual-route": "RAW-FLOW-VISUAL",
+      "fusion-route": "RAW-FLOW-FUSION",
+      "deck-route": "RAW-FLOW-DECK"
+    },
+
+    "raw-flags": {
+      "enable-style": true,
+      "enable-sync": true,
+      "enable-fusion": true,
+      "enable-routing": true
+    },
+
+    "raw-output": {
+      "raw-flow-core": "RAW-FLOW-CORE",
+      "raw-flow-visual": "RAW-FLOW-VISUAL",
+      "raw-flow-system": "RAW-FLOW-SYSTEM"
+    }
+  }
+}
+

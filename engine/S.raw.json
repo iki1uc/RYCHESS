@@ -1,0 +1,62 @@
+{
+  "raw-s": {
+    "version": "1.0",
+    "raw-id": "S.raw",
+    "axis-id": 5,
+    "axis-name": "S",
+    "raw-type": "soft",
+    "deck": 3,
+
+    "raw-style": {
+      "color": "#ffffff",
+      "opacity": 0.5,
+      "blur": 1,
+      "pulse": false,
+      "dash": false,
+      "wave": false,
+      "width": 1,
+      "alpha": 0.6
+    },
+
+    "raw-vector": {
+      "x": 1.0,
+      "y": 0.0,
+      "z": 1.0
+    },
+
+    "raw-sync": {
+      "latency": 0.3,
+      "mode": "soft",
+      "speed": 0.8
+    },
+
+    "raw-fusion": {
+      "pair": "T+S",
+      "strength": 0.8,
+      "mode": "pulse",
+      "color": "#ffaa00"
+    },
+
+    "raw-routing": {
+      "axis-route": "RAW-S-AXIS",
+      "sync-route": "RAW-S-SYNC",
+      "visual-route": "RAW-S-VISUAL",
+      "fusion-route": "RAW-S-FUSION",
+      "deck-route": "RAW-S-DECK"
+    },
+
+    "raw-flags": {
+      "enable-style": true,
+      "enable-sync": true,
+      "enable-fusion": true,
+      "enable-routing": true
+    },
+
+    "raw-output": {
+      "raw-s-core": "RAW-S-CORE",
+      "raw-s-visual": "RAW-S-VISUAL",
+      "raw-s-system": "RAW-S-SYSTEM"
+    }
+  }
+}
+
