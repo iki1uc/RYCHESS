@@ -1,0 +1,28 @@
+/* NC.world · TIME Layer */
+
+.rime-time {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+    background: #0b0b0b;
+    border: 1px solid #222;
+    border-radius: 6px;
+}
+
+.rime-frame {
+    color: var(--nc-time);
+    font-weight: bold;
+}
+
+.rime-pulse {
+    color: #ffcc00;
+}
+
+.rime-drift {
+    color: #ffaa00;
+}
+
+.rime-angle {
+    color: #ffee88;
+}

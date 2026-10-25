@@ -1,0 +1,57 @@
+/* NC.world · Minimal Engine CSS */
+
+:root {
+    --nc-space: #1a1a1a;
+    --nc-kraft: #4a8cff;
+    --nc-figur: #ff4a8c;
+    --nc-time: #ffd24a;
+
+    --nc-font: "Courier New", monospace;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--nc-space);
+    color: #eee;
+    font-family: var(--nc-font);
+}
+
+/* FRAME (TIME) */
+.nc-time {
+    border-left: 4px solid var(--nc-time);
+    padding: 10px;
+    margin: 10px;
+}
+
+/* SPACE (GEO) */
+.nc-space {
+    border-left: 4px solid var(--nc-space);
+    padding: 10px;
+    margin: 10px;
+    background: #111;
+}
+
+/* KRAFT (PHYSIK) */
+.nc-kraft {
+    border-left: 4px solid var(--nc-kraft);
+    padding: 10px;
+    margin: 10px;
+}
+
+/* FIGUR (AUA) */
+.nc-figur {
+    border-left: 4px solid var(--nc-figur);
+    padding: 10px;
+    margin: 10px;
+}
+
+/* NC.world Panel */
+.nc-panel {
+    padding: 20px;
+    margin: 20px;
+    background: #0d0d0d;
+    border: 1px solid #333;
+    border-radius: 6px;
+}
+
